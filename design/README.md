@@ -64,23 +64,25 @@ sets `data-face="night"` on `<html>`, or when the system prefers dark and the pa
 | `raised` | `#ffffff` | `#1b232b` | what sits above a surface |
 | `sunken` | `#cbd9e0` | `#0a0d10` | wells and inputs |
 | `hair` | `#bccbd3` | `#29333c` | dividers |
-| `rule` | `#7b8e99` | `#636e79` | stronger lines and control outlines, at least 3:1 against page, surface and raised |
+| `rule` | `#738691` | `#636e79` | stronger lines and control outlines, at least 3:1 against page, surface and raised |
 | `ink` | `#11171d` | `#e6ebee` | text, and the interaction layer |
-| `ink-2` | `#56636e` | `#aab5be` | secondary text |
+| `ink-2` | `#525f6a` | `#aab5be` | secondary text |
 | `lume` | `#c4f03c` | `#c4f03c` | the identity: a fill only, never a line or text |
 | `on-lume` | `#11171d` | `#11171d` | text and marks on lume |
 | `plate` | `#11171d` | `#11171d` | the plate under the marks and app icons |
 | `hand`, `ring`, `face` | | | the landing page's dial only |
 | `window-edge` | `#11171d` | transparent | the edge of a window of lume: the dial's, the measurements headline's |
-| `fault-ink`, `fault-fill` | `#c42b2b`, `#ef4b4b` | `#ef4b4b` | something failed |
-| `attention-ink`, `attention-fill` | `#b45309`, `#f1710d` | `#f1710d` | something needs a look |
+| `fault-ink`, `fault-fill` | `#b81c20`, `#ef4b4b` | `#f24e4d`, `#ef4b4b` | something failed |
+| `attention-ink`, `attention-fill` | `#924a03`, `#f1710d` | `#f1710d` | something needs a look |
 | `on-status` | `#11171d` | `#11171d` | text on a status fill |
 | `series-verge` | `#0f8a6c` | `#1aa384` | Verge in data |
 | `series-nxp` | `#2a78d6` | `#3987e5` | NXP's firmware in data |
 | `series-context` | `#47525c` | `#aab5be` | reference probes in data |
 
-Ink is for text and lines and fill is for areas, in each status pair. A status colour always comes
-with an icon or words: fault and attention sit close under deuteranopia (2.4 apart by day).
+Every text role (`ink`, `ink-2` and both status inks) keeps at least 4.5:1 on page, surface, raised
+and sunken, in both faces. Ink is for text and lines and fill is for areas, in each status pair. A
+status colour always comes with an icon or words: fault and attention sit close, 10.3 apart in
+normal vision and 2.1 under deuteranopia by day (OKLab ΔE ×100).
 
 Interaction has no hue. Focus is a 2 px ink ring. What the pointer is on gets a wash of ink at
 12 % (`--wash`), and what is selected an ink fill with page text.
@@ -89,7 +91,10 @@ Interaction has no hue. Focus is a 2 px ink ring. What the pointer is on gets a 
 
 A colour follows the probe it measures, never its rank, so a filter never repaints what remains.
 Verge and NXP's firmware are 18.0 apart under colour-vision deficiency and 18.9 in normal vision
-(OKLab ΔE ×100) on both faces' surfaces, and at least 8.8 from both status colours. No third hue
+(OKLab ΔE ×100) on both faces' surfaces. Both status inks are at least 9.7 from both. The status
+fills come closer: by day the fault fill is 6.1 from Verge's teal under protanopia, which their icon
+or words make up for. Data sits on page, surface or raised, never in a sunken well: by day Verge's
+teal is 2.98:1 on sunken, under the 3:1 a line needs. No third hue
 passed against all of these, so reference probes share the context colour and are told apart by
 pattern and name. The day context is a step darker than `ink-2`: at `ink-2` it sat 12.7 from
 Verge's teal, under the floor of 15.

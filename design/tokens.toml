@@ -3,8 +3,9 @@
 # fonts verge-gui embeds. Colours are by role, each with a day and a night value; a role keeps its
 # meaning on every surface. Decisions and their reasons: design/README.md.
 
-# Core neutrals. Rule outlines controls, so it keeps 3:1 against page, surface and raised in both
-# faces (night was #353b46, 1.54:1 against the surface).
+# Core neutrals. Text roles keep 4.5:1 on page, surface, raised and sunken in both faces (day ink-2
+# was #56636e, 4.27:1 on sunken). Rule outlines controls, so it keeps 3:1 against page, surface and
+# raised (night was #353b46, 1.54:1 against the surface; day #7b8e99, 2.72:1 against the page).
 [color.page]
 day = "#dce8ed"
 night = "#0e1216"
@@ -21,13 +22,13 @@ night = "#0a0d10"
 day = "#bccbd3"
 night = "#29333c"
 [color.rule]
-day = "#7b8e99"
+day = "#738691"
 night = "#636e79"
 [color.ink]
 day = "#11171d"
 night = "#e6ebee"
 [color.ink-2]
-day = "#56636e"
+day = "#525f6a"
 night = "#aab5be"
 
 # Identity. Lume is a fill only, never a line or text, with on-lume on it. The plate carries the
@@ -58,15 +59,16 @@ day = "#11171d"
 night = "transparent"
 
 # Status, always with an icon or words: ink for text and lines, fill for areas, on-status for
-# text on a fill (4.9:1 on the fault fill).
+# text on a fill (4.9:1 on the fault fill). The inks keep 4.5:1 on every ground: by day, attention
+# moved toward amber as it darkened (#b45309 was 4.02:1 on the page), away from the fault red.
 [color.fault-ink]
-day = "#c42b2b"
-night = "#ef4b4b"
+day = "#b81c20"
+night = "#f24e4d"
 [color.fault-fill]
 day = "#ef4b4b"
 night = "#ef4b4b"
 [color.attention-ink]
-day = "#b45309"
+day = "#924a03"
 night = "#f1710d"
 [color.attention-fill]
 day = "#f1710d"
