@@ -6,3 +6,7 @@ description = "Open firmware for NXP's MCU-Link and MCU-Link Pro debug probes, w
 default_language = "en"
 compile_sass = false
 build_search_index = false
+
+[extra]
+# The organisation the repository links go to, in both zola serve and zola build.
+github = "https://github.com/Escapement-Project"
