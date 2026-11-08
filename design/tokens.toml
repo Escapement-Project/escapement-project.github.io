@@ -1,0 +1,167 @@
+# The Escapement Project's design tokens: one source for the web pages and verge-gui.
+# `uv run design/build.py` writes static/tokens.css, the web fonts, design/out/tokens.rs and the
+# fonts verge-gui embeds. Colours are by role, each with a day and a night value; a role keeps its
+# meaning on every surface. Decisions and their reasons: design/README.md.
+
+# Core neutrals. Rule outlines controls, so it keeps 3:1 against page, surface and raised in both
+# faces (night was #353b46, 1.54:1 against the surface).
+[color.page]
+day = "#dce8ed"
+night = "#0e1216"
+[color.surface]
+day = "#eef4f6"
+night = "#151b21"
+[color.raised]
+day = "#ffffff"
+night = "#1b232b"
+[color.sunken]
+day = "#cbd9e0"
+night = "#0a0d10"
+[color.hair]
+day = "#bccbd3"
+night = "#29333c"
+[color.rule]
+day = "#7b8e99"
+night = "#636e79"
+[color.ink]
+day = "#11171d"
+night = "#e6ebee"
+[color.ink-2]
+day = "#56636e"
+night = "#aab5be"
+
+# Identity. Lume is a fill only, never a line or text, with on-lume on it. The plate carries the
+# marks and the app icon in both faces.
+[color.lume]
+day = "#c4f03c"
+night = "#c4f03c"
+[color.on-lume]
+day = "#11171d"
+night = "#11171d"
+[color.plate]
+day = "#11171d"
+night = "#11171d"
+
+# The landing page's hero dial alone: its hand, ring and face. The window's edge outlines a window
+# of lume by day: the dial's, and the measurements page's headline.
+[color.hand]
+day = "#c8102e"
+night = "#ef3b4a"
+[color.ring]
+day = "#eef4f6"
+night = "#1b232b"
+[color.face]
+day = "#dce8ed"
+night = "#11171d"
+[color.window-edge]
+day = "#11171d"
+night = "transparent"
+
+# Status, always with an icon or words: ink for text and lines, fill for areas, on-status for
+# text on a fill (4.9:1 on the fault fill).
+[color.fault-ink]
+day = "#c42b2b"
+night = "#ef4b4b"
+[color.fault-fill]
+day = "#ef4b4b"
+night = "#ef4b4b"
+[color.attention-ink]
+day = "#b45309"
+night = "#f1710d"
+[color.attention-fill]
+day = "#f1710d"
+night = "#f1710d"
+[color.on-status]
+day = "#11171d"
+night = "#11171d"
+
+# Data: a colour follows the probe it measures, never its rank. Verge and NXP's firmware were
+# validated all-pairs against both faces' surfaces and the status colours; no third hue passed, so
+# reference probes take the context colour and a pattern of their own. The day context is a step
+# darker than ink-2: at ink-2 it sat 12.7 from Verge's teal in normal vision, under the floor of 15.
+[color.series-verge]
+day = "#0f8a6c"
+night = "#1aa384"
+[color.series-nxp]
+day = "#2a78d6"
+night = "#3987e5"
+[color.series-context]
+day = "#47525c"
+night = "#aab5be"
+
+# Interaction is hue-free: a 2 px ink focus ring, an ink wash at 12 % for what the pointer is on,
+# an ink fill with page text for what is selected.
+[interaction]
+focus-width = 2
+wash = 0.12
+
+# Line patterns, as stroke dash arrays at a 2 px line. A probe's headline build (Clang) is solid
+# and its other build (GCC) dashed; a figure measured where the firmware reads wrong is dotted, its
+# points hollow; a reference probe dash-dotted; a run under energy capture thinner and at 60 %.
+[pattern]
+second-build = [6, 3]
+misread = [2, 4]
+reference = [8, 3, 2, 3]
+capture-opacity = 0.6
+capture-width = 1.5
+
+# Type: Saira's wide cut for display, Hanken Grotesk for text, Martian Mono for figures that change
+# in place (wide) and for code (normal width).
+[type.display]
+family = "Saira"
+fallback = ["Hanken Grotesk", "sans-serif"]
+stretch = 125
+weight = 500
+[type.text]
+family = "Hanken Grotesk"
+fallback = ["Helvetica Neue", "Arial", "sans-serif"]
+[type.figures]
+family = "Martian Mono"
+fallback = ["ui-monospace", "monospace"]
+stretch = 112.5
+weight = 500
+[type.code]
+family = "Martian Mono"
+fallback = ["ui-monospace", "monospace"]
+stretch = 100
+weight = 500
+
+# The font files, from google/fonts at a pinned commit, all under the SIL Open Font License 1.1
+# with no Reserved Font Name. `web` is the axis range the site keeps (a subset to the characters
+# below); `fixed` are the instances verge-gui embeds, egui having no variable axes.
+[fonts]
+characters = "U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2010-2027, U+2030-205E, U+2070-209F, U+20AC, U+2122, U+2190-2193, U+2212, U+2264-2265"
+
+[fonts.saira]
+family = "Saira"
+commit = "8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5"
+file = "ofl/saira/Saira[wdth,wght].ttf"
+license = "ofl/saira/OFL.txt"
+web = { name = "saira-expanded", wdth = [125, 125], wght = [500, 600] }
+fixed = [
+  { name = "Saira-Expanded-Medium", wdth = 125, wght = 500 },
+  { name = "Saira-Expanded-SemiBold", wdth = 125, wght = 600 },
+]
+
+[fonts.hanken-grotesk]
+family = "Hanken Grotesk"
+commit = "c1eda9233c33ad7775b27efd794f931095cf6133"
+file = "ofl/hankengrotesk/HankenGrotesk[wght].ttf"
+license = "ofl/hankengrotesk/OFL.txt"
+web = { name = "hanken-grotesk", wght = [400, 600] }
+fixed = [
+  { name = "HankenGrotesk-Regular", wght = 400 },
+  { name = "HankenGrotesk-Medium", wght = 500 },
+  { name = "HankenGrotesk-SemiBold", wght = 600 },
+]
+
+[fonts.martian-mono]
+family = "Martian Mono"
+commit = "c8bba5c4a69195e4fabc69d75136814c65fe0cf5"
+file = "ofl/martianmono/MartianMono[wdth,wght].ttf"
+license = "ofl/martianmono/OFL.txt"
+web = { name = "martian-mono", wdth = [100, 112.5], wght = [500, 500] }
+fixed = [
+  { name = "MartianMono-Medium", wdth = 100, wght = 500 },
+  { name = "MartianMono-SemiExpanded-Medium", wdth = 112.5, wght = 500 },
+]
