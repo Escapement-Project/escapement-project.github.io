@@ -16,6 +16,7 @@ zola build      # the site, into public/
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `data/landing.json` | the figures the landing page shows, and where they come from |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
+| `.github/workflows/publish.yml` | builds the site with the measurements page and publishes it to GitHub Pages |
 
 `static/tokens.css`, `static/fonts/` and `design/out/` are generated: edit `design/tokens.toml` and
 run `uv run design/build.py` rather than editing them.
@@ -35,3 +36,8 @@ ln -s ../../mculink-bench/page/out static/measurements
 
 Git ignores the link. `zola serve` follows it, so a rebuilt measurements page shows on the next
 reload.
+
+To publish, the workflow copies `page/out` from mculink-bench's default branch in place of the link.
+A new measurements page goes live on the workflow's next run: push here, or run it by hand. The
+workflow needs mculink-bench to be public, and this repository's Pages settings to deploy from
+GitHub Actions.
