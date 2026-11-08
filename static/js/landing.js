@@ -430,11 +430,15 @@ function scopeSVG(key, W) {
   s.push("</svg>");
   return s.join("");
 }
-// The trace sweeps in when it opens, and each note shows once the sweep is past it.
-let scopeToken = 0;
+// The trace sweeps in when it opens, and each note shows once the sweep is past it. A touch can be
+// followed by emulated mouse events that close the trace and open it again as the finger lifts
+// (seen with Firefox's touch emulation): a trace reopened that soon shows drawn, without a second
+// sweep.
+let scopeToken = 0, lastClosed = { key: null, at: -Infinity };
 function openScope(key) {
   const box = document.getElementById("scope");
   if (!box.hidden && box.dataset.key === key) return;
+  const again = lastClosed.key === key && performance.now() - lastClosed.at < 800;
   const token = ++scopeToken, W = Math.min(box.parentNode.clientWidth, 440) - 14;
   box.dataset.key = key;
   // The title is HTML, so it wraps on a narrow screen.
@@ -446,14 +450,19 @@ function openScope(key) {
   const clip = box.querySelector("#scope-sweep rect"), L = SCOPE.left, R = W - 6, t0 = performance.now();
   const frame = (now) => {
     if (token !== scopeToken) return;
-    const x = reduced.matches ? W : L + (R - L) * clamp01((now - t0) / SCOPE.ms);
+    const x = reduced.matches || again ? W : L + (R - L) * clamp01((now - t0) / SCOPE.ms);
     clip.setAttribute("width", f1(x));
     for (const [t, right] of notes) t.style.visibility = x >= right ? "" : "hidden";
     if (x < R) requestAnimationFrame(frame);
   };
   frame(t0);
 }
-function closeScope() { scopeToken++; document.getElementById("scope").hidden = true; }
+function closeScope() {
+  const box = document.getElementById("scope");
+  if (!box.hidden) lastClosed = { key: box.dataset.key, at: performance.now() };
+  scopeToken++;
+  box.hidden = true;
+}
 const vergeOff = () => { showCommand("list"); closeScope(); };
 for (const ref of document.querySelectorAll("#verge .ref")) {
   const on = () => { showCommand(ref.dataset.cmd); if (ref.dataset.wire) openScope(ref.dataset.wire); else closeScope(); };
