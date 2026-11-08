@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Page not found – {{ config.title }}{% endblock title %}
+{% block description %}There is no page at this address.{% endblock description %}
+{% block content %}
+<div class="wrap">
+  <div class="notfound">
+    {# The project's dial with its edge left flat: the trace never rises. One path, no clip, from the
+       mark's own coordinates (design/marks/dial.svg). #}
+    <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M32,3 A29,29 0 1,0 32.01,3 Z M32,9 A23,23 0 1,0 32.01,9 Z"/><path fill="currentColor" d="M9.796,38 H54.204 A23,23 0 0,1 51.621,44 H12.379 A23,23 0 0,1 9.796,38 Z"/></svg>
+    <div>
+      <h1>No page at this address</h1>
+      <p class="lede">The address may be mistyped, or the page has moved. Everything published so far is linked from the landing page.</p>
+      <p class="ways"><a href="{{ config.base_url | safe }}/">Go to the landing page</a><a href="{{ config.base_url | safe }}/measurements/">All measurements</a></p>
+    </div>
+  </div>
+</div>
+{% endblock content %}

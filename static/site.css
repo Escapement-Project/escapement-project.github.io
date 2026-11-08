@@ -132,7 +132,7 @@ td.dim, th.dim { color: var(--ink-2); }
 .repos dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
 
 footer { border-top: 1px solid var(--hair); }
-footer .wrap { display: flex; justify-content: space-between; gap: 16px; padding-top: 28px; padding-bottom: 48px; color: var(--ink-2); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding-top: 28px; padding-bottom: 48px; color: var(--ink-2); font-size: 14px; }
 
 @media (min-width: 2000px) {
   .wrap { max-width: 1720px; }
@@ -159,4 +159,14 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; padding
 @media (max-width: 400px) {
   header .wrap { column-gap: 8px; }
   .brand svg { width: 24px; height: 24px; }
+}
+
+/* The not-found page: the dial with its edge left flat, beside what to do next. */
+.notfound { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: center; padding: 88px 0 104px; }
+.notfound svg { width: 136px; height: 136px; color: var(--ink-2); }
+.notfound .lede { text-wrap: pretty; }
+.notfound .ways { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 8px 0 0; font-weight: 600; }
+@media (max-width: 640px) {
+  .notfound { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 48px 0 72px; }
+  .notfound svg { width: 96px; height: 96px; }
 }
