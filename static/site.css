@@ -9,7 +9,17 @@ a { color: inherit; }
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 3px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
 
+/* The header stays on screen. It is fixed over room the page keeps for it at its full height, so
+   compacting it once the page has scrolled (header.js sets .scrolled) moves nothing beneath it.
+   --header is the full height, --header-compact the compact one, each with the 1 px rule. */
+:root { --header: 77px; --header-compact: 61px; }
+body { padding-top: var(--header); }
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--page); border-bottom: 1px solid transparent; }
+.scrolled header { border-bottom-color: var(--hair); }
+section[id] { scroll-margin-top: var(--header-compact); }
+@media print { header { position: static; } body { padding-top: 0; } }
 header .wrap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "brand nav face"; align-items: center; gap: 12px 26px; min-height: 76px; }
+.scrolled header .wrap { min-height: 60px; }
 .brand { grid-area: brand; display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 14px/1 var(--font-display); letter-spacing: .04em; white-space: nowrap; }
 .brand svg { width: 28px; height: 28px; }
 header nav { grid-area: nav; justify-self: end; display: flex; align-items: center; gap: 26px; font-size: 15px; font-weight: 500; }
@@ -142,8 +152,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   section .wrap > .two:first-child { grid-column: 2; }
 }
 @media (max-width: 860px) {
-  header .wrap { grid-template-columns: auto auto; grid-template-areas: "brand face" "nav nav"; justify-content: space-between; padding-top: 14px; padding-bottom: 10px; }
+  /* Two rows at the top of the page; once it scrolls, one: the mark without its name, the
+     sections and the switch. */
+  :root { --header: 91px; --header-compact: 51px; }
+  header .wrap { grid-template-columns: auto auto; grid-template-rows: 34px 24px; grid-template-areas: "brand face" "nav nav"; justify-content: space-between; row-gap: 10px; min-height: 0; padding-top: 12px; padding-bottom: 10px; }
   header nav { justify-self: start; gap: 22px; }
+  .scrolled header .wrap { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: 34px; grid-template-areas: "brand nav face"; min-height: 0; padding-top: 8px; padding-bottom: 8px; }
+  .scrolled header nav { justify-self: center; gap: 18px; }
+  .scrolled .brand .name { display: none; }
   .hero, .two { grid-template-columns: minmax(0, 1fr); }
   .repos-cols { display: none; }
   .repos > div { grid-template-columns: minmax(0, 1fr); }
@@ -158,6 +174,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 }
 @media (max-width: 400px) {
   header .wrap { column-gap: 8px; }
+  .scrolled header nav { gap: 12px; font-size: 14px; }
   .brand svg { width: 24px; height: 24px; }
 }
 
