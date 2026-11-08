@@ -165,3 +165,23 @@ fixed = [
   { name = "MartianMono-Medium", wdth = 100, wght = 500 },
   { name = "MartianMono-SemiExpanded-Medium", wdth = 112.5, wght = 500 },
 ]
+
+# Icons: a mark from design/marks/ in `ink` on a plate of `ground`, both colour roles at their day
+# values. The plate's corners round by `corner` of its side; a 64-unit master sits `inset` of the
+# side in from each edge. At a size with a master fitted to the pixel grid (NAME-SIZE.svg), that
+# master is drawn instead, at full size.
+[icon]
+corner = 0.21875
+inset = 0.125
+
+# The project's: the dial, ink on lume. The sites' favicon, the iOS icon and the org's avatar.
+[icon.project]
+mark = "dial"
+ground = "lume"
+ink = "on-lume"
+
+# Verge's: the V of samples, lume on the plate. verge-gui's app icon on every platform.
+[icon.verge]
+mark = "verge"
+ground = "plate"
+ink = "lume"

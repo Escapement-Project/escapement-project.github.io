@@ -9,6 +9,10 @@ source, `tokens.toml`, generates everything else:
 | `static/fonts/` | the web fonts `tokens.css` loads, subset to Latin |
 | `design/out/tokens.rs` | verge-gui's colours, patterns and font list |
 | `design/out/fonts/` | the fixed font files verge-gui embeds |
+| `static/favicon.ico`, `static/apple-touch-icon.png` | the sites' favicon and iOS icon |
+| `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS), and the org's avatar |
+| `static/preview.png` | the site's link preview |
+| `design/out/previews/` | each published repository's social preview, to upload on GitHub |
 
 Edit `tokens.toml`, then rebuild:
 
@@ -16,7 +20,9 @@ Edit `tokens.toml`, then rebuild:
 uv run design/build.py
 ```
 
-The source fonts download once, from google/fonts at the commit `tokens.toml` pins.
+The source fonts download once, from google/fonts at the commit `tokens.toml` pins. The icons
+come from the marks in `marks/`. The link previews also read the headline from `data/landing.json`
+and the repositories from `content/_index.md`.
 
 ## Keeping copies current
 
@@ -24,15 +30,25 @@ A page or program outside this repository keeps its own copy of the files it use
 run this from this repository:
 
 ```sh
-uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/*
+uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/* \
+    ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
+    ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png
 ```
 
-Today's copies: the measurements page in mculink-bench (`page/tokens.css` and `page/out/fonts/`).
-verge-gui takes `tokens.rs` and the fixed fonts when it moves onto the tokens.
+Today's copies:
 
-It rebuilds everything from `tokens.toml`. It fails if the committed outputs differ from that
-build, or if a copy differs from the output of the same name. The build always writes the same bytes
-for the same source, which is why it pins fontTools and Brotli exactly.
+- the measurements page in mculink-bench: `page/tokens.css`, `page/out/fonts/`, `page/dial.svg`
+  and `page/favicon.ico`. The page inlines all but the fonts, so after updating a copy, rebuild the
+  page; `page/build.py --check` fails while the page still carries the old one.
+- verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
+  the app icon's PNGs in `gui/icons/`.
+
+The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
+fails if a committed output differs from that build, if the build no longer makes a file it made
+before (`design/out/outputs.txt` lists what the last build wrote), or if a copy differs from the
+output or mark of the same name. Copies are matched by name, so the build refuses two outputs or
+marks that share a name and differ. It always writes the same bytes for the same source, on any
+system, which is why it pins fontTools, Brotli, resvg and Pillow exactly.
 
 ## Colours
 
@@ -104,3 +120,52 @@ Martian Mono Medium and SemiExpanded Medium.
 
 The fonts are under the SIL Open Font License 1.1, with no Reserved Font Name. Each family's
 licence sits beside its files.
+
+## Icons
+
+There are two marks in `marks/`: the project's dial with one rising edge, and Verge's V of samples.
+Each has a master on a 64-unit grid. At 16, 24 and 32 px, a master fitted to the pixel grid takes
+over (`dial-16.svg`, `verge-24.svg` and so on). Its straight edges sit on whole pixels, so the mark
+stays sharp where the scaled master would blur. A fitted master fills its plate at the size it
+names.
+
+An icon is a mark on a plate, both set in `tokens.toml` by colour role:
+
+| Icon | Mark | Plate | For |
+|---|---|---|---|
+| `project` | the dial in `on-lume` | `lume` | the sites' favicon, the iOS icon, the org's avatar |
+| `verge` | the V in `lume` | `plate` | verge-gui's app icon |
+
+The plate's corners round by 14/64 of its side, and a 64-unit master sits an eighth of the side in
+from each edge. iOS and GitHub round an icon's corners themselves, so the iOS icon and the avatar
+are square. The macOS icon follows Apple's grid: an 824 plate on a 1024 canvas.
+
+The site's header and the landing page's Verge plate inline the 64-unit masters. Those two masters
+must not refer to anything by `url(#id)`: a page that sets another base URL breaks the reference.
+The fitted masters are only ever drawn into images, so their clips are fine. Two drawings carry
+their own copy of the dial's geometry, which nothing checks: the hero's larger step in
+`static/js/landing.js`, and the not-found page's dial with its edge left flat in
+`templates/404.html`.
+
+Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name.
+
+The org's avatar is uploaded by hand, in the org's settings on GitHub:
+`design/out/icons/escapement-project-avatar.png`.
+
+## Link previews
+
+A link to the site shows `static/preview.png`: the project's mark, the page's headline, and the
+measured ratio in its lume window with the clocks the claim depends on. Each published repository
+gets a social preview with its name, the `summary` from `content/_index.md`, its language and
+licence (the content's default, or its own `licence`). Verge's three repositories also carry
+Verge's icon (`icon = "verge"`). A repository without a language is not published yet and gets no
+preview.
+
+The previews are drawn on the night face, with the plate as ground. They use the fixed fonts the
+build makes and never the system's, so any machine draws the same bytes. The build fails when a
+character has no glyph in its font, or when text would run past its room: a name into the icon, a
+summary into the rule below it. Change the headline or a summary and `--check` reports the preview
+as stale.
+
+GitHub takes a repository's preview by hand, in the repository's settings:
+`design/out/previews/<repository>.png`.

@@ -101,11 +101,21 @@ pub const CAPTURE_WIDTH: f32 = 1.5;
 
 /// The fixed font instances under fonts/, each with the axis values it was cut at.
 pub const FONTS: &[(&str, &str)] = &[
-    ("Saira-Expanded-Medium", "Saira-Expanded-Medium.ttf"), // wdth 125, wght 500
-    ("Saira-Expanded-SemiBold", "Saira-Expanded-SemiBold.ttf"), // wdth 125, wght 600
-    ("HankenGrotesk-Regular", "HankenGrotesk-Regular.ttf"), // wght 400
-    ("HankenGrotesk-Medium", "HankenGrotesk-Medium.ttf"), // wght 500
-    ("HankenGrotesk-SemiBold", "HankenGrotesk-SemiBold.ttf"), // wght 600
-    ("MartianMono-Medium", "MartianMono-Medium.ttf"), // wdth 100, wght 500
-    ("MartianMono-SemiExpanded-Medium", "MartianMono-SemiExpanded-Medium.ttf"), // wdth 112.5, wght 500
+    // wdth 125, wght 500
+    ("Saira-Expanded-Medium", "Saira-Expanded-Medium.ttf"),
+    // wdth 125, wght 600
+    ("Saira-Expanded-SemiBold", "Saira-Expanded-SemiBold.ttf"),
+    // wght 400
+    ("HankenGrotesk-Regular", "HankenGrotesk-Regular.ttf"),
+    // wght 500
+    ("HankenGrotesk-Medium", "HankenGrotesk-Medium.ttf"),
+    // wght 600
+    ("HankenGrotesk-SemiBold", "HankenGrotesk-SemiBold.ttf"),
+    // wdth 100, wght 500
+    ("MartianMono-Medium", "MartianMono-Medium.ttf"),
+    // wdth 112.5, wght 500
+    (
+        "MartianMono-SemiExpanded-Medium",
+        "MartianMono-SemiExpanded-Medium.ttf",
+    ),
 ];

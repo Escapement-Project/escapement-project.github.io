@@ -18,8 +18,10 @@ zola build      # the site, into public/
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/workflows/publish.yml` | builds the site with the measurements page and publishes it to GitHub Pages |
 
-`static/tokens.css`, `static/fonts/` and `design/out/` are generated: edit `design/tokens.toml` and
-run `uv run design/build.py` rather than editing them.
+`static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/apple-touch-icon.png`,
+`static/preview.png` and `design/out/` are generated: edit `design/tokens.toml`, the marks in
+`design/marks/` or the content the previews show, and run `uv run design/build.py` rather than
+editing them.
 
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
