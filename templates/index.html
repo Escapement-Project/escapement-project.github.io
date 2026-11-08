@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block description %}{{ section.description }}{% endblock description %}
+{% block content %}
+{% set d = load_data(path="data/landing.json") %}
+{% set h = d.headline %}
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Open firmware for NXP's <span class="nb">MCU-Link</span></h1>
+      <p class="lede">We build open firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span> debug probes, with the tools to install it and to measure it against the firmware NXP ships on them.</p>
+      <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
+    </div>
+    <div>
+      <div class="dialface" id="dialface"></div>
+      <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
+    </div>
+  </div>
+</div>
+
+<section id="verge">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        {# Verge's mark: a V traced by samples, in lume on the plate. #}
+        <div class="app"><div class="plate" id="app"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><circle cx="8" cy="12" r="5.4"/><circle cx="16" cy="25" r="5.4"/><circle cx="24" cy="38" r="5.4"/><circle cx="32" cy="50" r="5.4"/><circle cx="40" cy="38" r="5.4"/><circle cx="48" cy="25" r="5.4"/><circle cx="56" cy="12" r="5.4"/></g></svg></div><div><h2 class="name">Verge</h2><p>for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
+        <p>A probe's firmware decides how fast it talks to a target, which protocols it speaks, and how reliably it reads what comes back.</p>
+        <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
+      </div>
+      <div class="specs-col">
+        <dl class="specs">
+          <div id="wires"><dt>Wires</dt><dd><span class="ref" tabindex="0" data-cmd="swd" data-wire="swd">SWD</span>, <span class="ref" tabindex="0" data-cmd="jtag" data-wire="jtag">JTAG</span>, and <span class="ref" tabindex="0" data-cmd="cjtag" data-wire="cjtag">cJTAG</span> in <span class="ref" tabindex="0" data-cmd="oscan">OScan1, 2, 5 and 6</span></dd></div>
+          <div><dt>Trace</dt><dd>SWO, and serial consoles</dd></div>
+          <div><dt>On the Pro</dt><dd><span class="ref" tabindex="0" data-cmd="power">Target supply</span>, <span class="ref" tabindex="0" data-cmd="energy">energy capture</span> and <span class="ref" tabindex="0" data-cmd="dio">DIO</span></dd></div>
+          <div><dt>Hosts</dt><dd>Any CMSIS-DAP host; probe-rs for cJTAG</dd></div>
+          <div><dt>Update</dt><dd>verge, <span class="ref" tabindex="0" data-cmd="update">a command line</span> and a desktop app</dd></div>
+        </dl>
+        <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"></b></code><p id="cmd-what"></p></div>
+        <div class="scope" id="scope" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="measurements">
+  <div class="wrap">
+    <div class="head"><h2>Measured</h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ d.date }}</span></p></div>
+    <div>
+      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
+      <div class="two">
+        <figure>
+          <div class="chart" id="chart"></div>
+          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. Past {{ h.stockAt }} MHz NXP's firmware reads wrong: its line is dashed and its points hollow.</figcaption>
+        </figure>
+        <figure>
+          {# The table is the page's own: a reader without scripts gets every figure. The script adds the
+             highlights, by these rows' clocks, cells' series and "series@MHz" references. #}
+          <table id="table">
+            <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP</th></tr>
+            <tr><th data-s="clang">Clang</th><th data-s="gcc">GCC</th><th data-s="stock">V3.174</th></tr>
+            {%- for m in d.clocks %}{% set i = loop.index0 %}
+            <tr data-i="{{ i }}"><td class="clock">{{ m }}</td>
+              {%- for id in ["clang", "gcc", "stock"] %}{% for s in d.series %}{% if s.id == id %}
+              {%- set limit = s.rightUpTo | default(value=1000000) %}
+              <td data-s="{{ id }}" data-ref="{{ id }}@{{ m }}" class="{% if m > limit %}wrong{% endif %}">{{ s.table[i] }}{% if m > limit %}<span class="mark"> *</span>{% endif %}</td>
+              {%- endif %}{% endfor %}{% endfor %}
+            </tr>
+            {%- endfor %}
+          </table>
+          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. * NXP's firmware reads wrong at that clock.</figcaption>
+        </figure>
+      </div>
+      <a class="more" href="#">All measurements, by wire and probe</a>
+    </div>
+  </div>
+</section>
+
+<section id="source">
+  <div class="wrap">
+    <div class="head"><h2>Source</h2><p class="kicker">Published with the first release</p></div>
+    <dl class="repos">
+      <div><dt><a href="#">mculink-verge</a></dt><dd>The firmware.</dd></div>
+      <div><dt><a href="#">mculink-bench</a></dt><dd>The measurements, and the tools that take them.</dd></div>
+      <div><dt><a href="#">verge</a></dt><dd>Install and update it; record energy captures.</dd></div>
+      <div><dt><a href="#">mculink-stock-notes</a></dt><dd>What NXP's firmware does, on USB and on the wire.</dd></div>
+      <div><dt><a href="#">verge-probe</a></dt><dd>The probe-rs library under verge.</dd></div>
+      <div><dt><a href="#">chrono</a></dt><dd>A logic and MSO capture viewer for the web. Coming.</dd></div>
+    </dl>
+  </div>
+</section>
+<script id="data" type="application/json">{{ d | json_encode() | safe }}</script>
+{% endblock content %}
+{% block scripts %}<script src="{{ get_url(path='js/landing.js') }}" defer></script>{% endblock scripts %}

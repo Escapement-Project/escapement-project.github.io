@@ -1,0 +1,92 @@
+{
+  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+  "date": "2026-11-04",
+  "clocks": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    30,
+    50
+  ],
+  "series": [
+    {
+      "id": "clang",
+      "name": "Clang build",
+      "role": "ours",
+      "kib": [
+        81.0,
+        162.8,
+        395.3,
+        744.8,
+        1238.6,
+        1779.8,
+        2257.8
+      ],
+      "table": [
+        "81.0",
+        "162.8",
+        "395.3",
+        "744.8",
+        "1,238.6",
+        "1,779.8",
+        "2,257.8"
+      ]
+    },
+    {
+      "id": "gcc",
+      "name": "GCC build",
+      "role": "ours",
+      "kib": [
+        81.3,
+        162.0,
+        394.9,
+        746.0,
+        1184.2,
+        1641.9,
+        2176.0
+      ],
+      "table": [
+        "81.3",
+        "162.0",
+        "394.9",
+        "746.0",
+        "1,184.2",
+        "1,641.9",
+        "2,176.0"
+      ]
+    },
+    {
+      "id": "stock",
+      "name": "Stock V3.174",
+      "role": "stock",
+      "kib": [
+        76.7,
+        148.1,
+        297.8,
+        524.9,
+        666.7,
+        null,
+        744.6
+      ],
+      "rightUpTo": 20,
+      "table": [
+        "76.7",
+        "148.1",
+        "297.8",
+        "524.9",
+        "666.7",
+        "failed",
+        "744.6"
+      ]
+    }
+  ],
+  "headline": {
+    "ratio": "3.39",
+    "ours": "2,258",
+    "oursAt": 50,
+    "stock": "667",
+    "stockAt": 20
+  }
+}

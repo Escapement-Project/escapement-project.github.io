@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ config.title }}{% endblock title %}</title>
+<meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+{# A face chosen on an earlier visit, applied before the first paint so a night page never flashes day. #}
+<script>try { const f = localStorage.getItem("face"); if (f === "day" || f === "night") document.documentElement.dataset.face = f; } catch { /* no choice kept */ }</script>
+<link rel="preload" href="{{ get_url(path='fonts/saira-expanded.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ get_url(path='fonts/hanken-grotesk.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ get_url(path='tokens.css') }}">
+<link rel="stylesheet" href="{{ get_url(path='site.css') }}">
+<link rel="icon" href="{{ get_url(path='icon.svg') }}" type="image/svg+xml">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    {# The project's mark: a rising edge across a dial. The edge is drawn to the dial's inner circle
+       rather than clipped to it: a clip's url(#id) breaks wherever a page sets another base URL. #}
+    <a class="brand" href="{{ config.base_url | safe }}/"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><path fill-rule="evenodd" d="M32,3 A29,29 0 1,0 32.01,3 Z M32,9 A23,23 0 1,0 32.01,9 Z"/><path d="M9.796,38 H29 V20 H51.621 A23,23 0 0,1 54.204,26 H35 V44 H12.379 A23,23 0 0,1 9.796,38 Z"/></g></svg>Escapement Project</a>
+    <nav aria-label="Sections"><a href="{{ config.base_url | safe }}/#verge">Verge</a><a href="{{ config.base_url | safe }}/#measurements">Measurements</a><a href="{{ config.base_url | safe }}/#source">Source</a></nav>
+    <button class="switch" id="faces" type="button" role="switch" aria-checked="false" aria-label="Night face"><span class="track"><span class="thumb"><svg class="wheel" viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(14 3) scale(.75)"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path d="M8 1.2v1.6M8 13.2v1.6M1.2 8h1.6M13.2 8h1.6M3.2 3.2l1.1 1.1M11.7 11.7l1.1 1.1M3.2 12.8l1.1-1.1M11.7 4.3l1.1-1.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g><g transform="rotate(180 20 20) translate(14 3) scale(.75)"><path d="M10.8 1.8a6.3 6.3 0 1 0 3.4 10.6A5.2 5.2 0 0 1 10.8 1.8z" fill="currentColor"/></g></svg></span></span></button>
+  </div>
+</header>
+{% block content %}{% endblock content %}
+<footer><div class="wrap"><span>Escapement Project</span><span>Open firmware for NXP's <span class="nb">MCU-Link</span></span></div></footer>
+<script src="{{ get_url(path='js/face.js') }}" defer></script>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>
