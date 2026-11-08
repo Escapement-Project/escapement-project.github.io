@@ -48,7 +48,8 @@ fails if a committed output differs from that build, if the build no longer make
 before (`design/out/outputs.txt` lists what the last build wrote), or if a copy differs from the
 output or mark of the same name. Copies are matched by name, so the build refuses two outputs or
 marks that share a name and differ. It always writes the same bytes for the same source, on any
-system, which is why it pins fontTools, Brotli, resvg and Pillow exactly.
+system, which is why it pins fontTools, Brotli, resvg and Pillow exactly. The publish workflow runs
+the check, and the measurements page's, before it builds the site.
 
 ## Colours
 

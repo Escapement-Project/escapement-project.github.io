@@ -17,7 +17,7 @@ zola build      # the site, into public/
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `data/landing.json` | the figures the landing page shows, and where they come from |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
-| `.github/workflows/publish.yml` | builds the site with the measurements page and publishes it to GitHub Pages |
+| `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and publishes it to GitHub Pages |
 
 `static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/apple-touch-icon.png`,
 `static/preview.png` and `design/out/` are generated: edit `design/tokens.toml`, the marks in
