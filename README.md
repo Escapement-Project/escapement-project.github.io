@@ -11,6 +11,7 @@ zola build      # the site, into public/
 | Path | What |
 |---|---|
 | `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page |
+| `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
 | `static/site.css` | the site's layout and components, naming colour roles, never values |
 | `static/js/face.js` | the day and night switch, on every page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |

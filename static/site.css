@@ -118,12 +118,19 @@ tr.on td { background: var(--wash); }
 td.sel { background: var(--ink); color: var(--page); }
 td.dim, th.dim { color: var(--ink-2); }
 .more { display: inline-block; margin-top: 24px; font-weight: 600; }
+/* The Source section's index: a row per repository, its name and language beside what it is. */
+.repos-cols, .repos > div { display: grid; grid-template-columns: 30% minmax(0, 1fr); }
+.repos-cols { font-size: 13px; font-weight: 500; color: var(--ink-2); padding-bottom: 8px; }
+.repos { margin: 0; }
+.repos > div { padding: 14px 0; border-top: 1px solid var(--hair); }
+.repos dt { padding-right: 16px; }
+.repos dt a { display: block; font-weight: 600; text-decoration: none; }
+.repos dt a:hover { text-decoration: underline; }
+.repos .lang { display: inline-block; margin-top: 2px; font-size: 13px; color: var(--ink-2); }
+.repos .lang.soon { background: var(--lume); color: var(--on-lume); padding: 1px 7px; border-radius: 4px; font-weight: 600; }
+.repos .licence { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-2); }
+.repos dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
 
-.repos { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gutter); }
-.repos > div { padding: 12px 0; border-top: 1px solid var(--hair); }
-.repos a { font-weight: 600; text-decoration: none; }
-.repos a:hover { text-decoration: underline; }
-.repos dd { margin: 0; color: var(--ink-2); font-size: 15px; }
 footer { border-top: 1px solid var(--hair); }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; padding-top: 28px; padding-bottom: 48px; color: var(--ink-2); font-size: 14px; }
 
@@ -137,7 +144,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; padding
 @media (max-width: 860px) {
   header .wrap { grid-template-columns: auto auto; grid-template-areas: "brand face" "nav nav"; justify-content: space-between; padding-top: 14px; padding-bottom: 10px; }
   header nav { justify-self: start; gap: 22px; }
-  .hero, .two, .repos { grid-template-columns: minmax(0, 1fr); }
+  .hero, .two { grid-template-columns: minmax(0, 1fr); }
+  .repos-cols { display: none; }
+  .repos > div { grid-template-columns: minmax(0, 1fr); }
+  .repos dd { margin-top: 4px; }
   .hero { gap: 28px; padding-top: 8px; }
 }
 @media (max-width: 520px) {
