@@ -23,3 +23,15 @@ run `uv run design/build.py` rather than editing them.
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
 text, the figure and the table. The page loads no fonts or scripts from anywhere else.
+
+## The measurements page
+
+The site serves mculink-bench's measurements page at `/measurements/`. To see it locally, link the
+page's folder from a mculink-bench checkout beside this one:
+
+```sh
+ln -s ../../mculink-bench/page/out static/measurements
+```
+
+Git ignores the link. `zola serve` follows it, so a rebuilt measurements page shows on the next
+reload.

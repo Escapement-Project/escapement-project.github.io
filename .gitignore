@@ -1,2 +1,4 @@
 design/fonts-source/
 public/
+# A link to the measurements page, mculink-bench/page/out: see README.md.
+static/measurements

@@ -24,10 +24,10 @@ A page or program outside this repository keeps its own copy of the files it use
 run this from this repository:
 
 ```sh
-uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/fonts/*.woff2
+uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/*
 ```
 
-Today's copies: the measurements page in mculink-bench (`page/tokens.css` and `page/fonts/`).
+Today's copies: the measurements page in mculink-bench (`page/tokens.css` and `page/out/fonts/`).
 verge-gui takes `tokens.rs` and the fixed fonts when it moves onto the tokens.
 
 It rebuilds everything from `tokens.toml`. It fails if the committed outputs differ from that
