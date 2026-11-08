@@ -37,7 +37,8 @@ ln -s ../../mculink-bench/page/out static/measurements
 Git ignores the link. `zola serve` follows it, so a rebuilt measurements page shows on the next
 reload.
 
-To publish, the workflow copies `page/out` from mculink-bench's default branch in place of the link.
-A new measurements page goes live on the workflow's next run: push here, or run it by hand. The
-workflow needs mculink-bench to be public, and this repository's Pages settings to deploy from
-GitHub Actions.
+To publish, the workflow copies `page/out` from mculink-bench's default branch in place of the link,
+with `.github/measurements.py`. The copy loads the site's fonts rather than its own, so a reader
+downloads each font once. A new measurements page goes live on the workflow's next run: push here,
+or run it by hand. The workflow needs mculink-bench to be public, and this repository's Pages
+settings to deploy from GitHub Actions.
