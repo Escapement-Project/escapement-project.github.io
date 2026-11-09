@@ -68,6 +68,8 @@ command updates its doc in the same commit. `content/verge/_index.md` lists them
 order, addresses under `/verge/docs/`, and the file each comes from. `.github/verge-docs.py` copies
 them into `content/verge/docs/`, which git ignores, from checkouts beside this one (or the ones
 `--repo NAME=PATH` names). Links between listed docs become page links, which `zola build` checks;
-other links go to the file on GitHub. A listed doc that does not exist yet shows as coming. Run it
-again after a doc changes. The workflow does the same from each repository's default branch, so
-those repositories must be public too.
+other links go to the file on GitHub. An SVG image from the doc's own repository, on a line of its
+own, is copied into the page as a figure, so the site's colours, fonts and day and night faces reach
+it; its alt text becomes the figure's accessible name. A listed doc that does not exist yet shows as
+coming. Run it again after a doc changes. The workflow does the same from each repository's default
+branch, so those repositories must be public too.

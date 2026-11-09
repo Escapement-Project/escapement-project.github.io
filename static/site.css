@@ -217,6 +217,10 @@
 .doc :not(pre) > code { overflow-wrap: anywhere; }
 /* A table keeps its columns and scrolls inside the column rather than the page sideways. */
 .doc table { display: block; width: max-content; max-width: 100%; overflow-x: auto; margin: 0 0 18px; }
+/* A doc's figure keeps its text legible: drawn for the reading column, it shrinks to four fifths at
+   most and then scrolls inside the column, as a table does. */
+.doc .diagram { margin: 24px 0 28px; overflow-x: auto; }
+.doc .diagram svg { display: block; width: 100%; min-width: 576px; max-width: 720px; height: auto; }
 .doc th, .doc td { text-align: left; vertical-align: top; white-space: normal; min-width: 6em; max-width: 28em; }
 .doc th { border-bottom-color: var(--rule); }
 .doc-source { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--hair); font-size: 14px; color: var(--ink-2); }

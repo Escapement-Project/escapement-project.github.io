@@ -15,8 +15,13 @@ a link to that file on GitHub. A file name that names a doc in the list, in a co
 it from a heading, and becomes the one Zola makes from the same heading: GitHub drops punctuation
 ("Past NXP's limits" is #past-nxps-limits), where Zola turns it into a dash (#past-nxp-s-limits).
 The doc's first heading is its title, which the page prints itself, so it is dropped.
+
+An SVG image from the doc's own repository, on a line of its own, is copied into the page as a
+figure rather than linked, so the site's colours, fonts and day and night faces reach it. Its alt
+text becomes the figure's accessible name.
 """
 import argparse
+import html
 import json
 import pathlib
 import re
@@ -120,11 +125,27 @@ def target(doc: dict, link: str) -> str:
     hash_ = f"#{anchor}" if anchor else ""
     return f"{GITHUB}/{doc['repo']}/blob/HEAD/{resolved}{hash_}"
 
+def figure(doc: dict, alt: str, link: str) -> str:
+    root = checkout(doc["repo"]).resolve()
+    file = (root / pathlib.PurePosixPath(doc["path"]).parent / link).resolve()
+    if not file.is_relative_to(root) or not file.is_file():
+        sys.exit(f"{doc['repo']}/{doc['path']}: no figure at {link}")
+    svg = re.sub(r"\A<\?xml[^>]*>\s*", "", file.read_text())
+    if not svg.startswith("<svg "):
+        sys.exit(f"{doc['repo']}/{doc['path']}: {link} does not start with <svg")
+    svg = svg.replace("<svg ", f'<svg role="img" aria-label="{html.escape(alt)}" ', 1)
+    # A blank line would end Markdown's HTML block.
+    body = "\n".join(line for line in svg.splitlines() if line.strip())
+    return f'<figure class="diagram">\n{body}\n</figure>'
+
 def rewrite(doc: dict, text: str) -> str:
     lines, fenced = [], False
     for line in text.splitlines():
+        image = re.fullmatch(r"!\[([^\]]*)\]\(([^)\s#:]+\.svg)\)\s*", line)
         if line.lstrip().startswith("```"):
             fenced = not fenced
+        elif not fenced and image and not image[2].startswith("/"):
+            line = figure(doc, image[1], image[2])
         elif not fenced:
             line = re.sub(r"(\]\()([^)\s]+)(\))", lambda m: m[1] + target(doc, m[2]) + m[3], line)
             line = re.sub(r"(?<!\[)`([A-Z][A-Z0-9-]*\.md)`(?!\])",
