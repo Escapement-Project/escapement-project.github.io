@@ -1,5 +1,5 @@
 {
-  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs (NXP's 50 MHz figure is one run's: the other failed); stock reads right up to 20 MHz",
   "date": "2026-11-04",
   "clocks": [
     1,
@@ -68,7 +68,20 @@
         524.9,
         666.7,
         null,
-        744.6
+        null
+      ],
+      "partial": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "failed": 1,
+          "of": 2,
+          "kib": 744.6
+        }
       ],
       "rightUpTo": 20,
       "table": [

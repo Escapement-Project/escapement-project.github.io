@@ -179,14 +179,14 @@ function highlight(next) {
 let geom = null;
 // The chart's sequence: the lines sweep in over LINES ms, eased; then the end labels show a whole
 // character at a time over LABELS ms. The 20 MHz line grows out of NXP's 20 MHz point as the sweep
-// goes from that point to NXP's last, so it lands with the sweep.
+// goes from that point to the last clock, so it lands with the sweep.
 const CHART = { lines: 750, labels: 200 };
 seq.chart.end = CHART.lines + CHART.labels;
 function chart() {
   const host = document.getElementById("chart");
   const series = [
     { id: "clang", name: "Verge, Clang build", short: "Verge", kib: DATA.series[0].kib, color: css("--series-verge") },
-    { id: "stock", name: "NXP's firmware V3.174", short: "NXP", kib: DATA.series[2].kib, color: css("--series-nxp"), rightUpTo: 20 },
+    { id: "stock", name: "NXP's firmware V3.174", short: "NXP", kib: DATA.series[2].kib, partial: DATA.series[2].partial, color: css("--series-nxp"), rightUpTo: 20 },
     { id: "gcc", name: "Verge, GCC build", short: "GCC", kib: DATA.series[1].kib, color: css("--series-verge"), onDemand: true },
   ];
   const W = Math.max(320, Math.min(620, host.clientWidth - 16 || 620)), H = 330, L = 52, R = 64, T = 28, B = 44;
@@ -199,15 +199,15 @@ function chart() {
   for (const k of [0, 500, 1000, 1500, 2000, 2500]) s.push(`<line x1="${L}" x2="${W - R}" y1="${Y(k)}" y2="${Y(k)}" stroke="currentColor" stroke-opacity=".2"/><text x="${L - 8}" y="${Y(k) + 4}" text-anchor="end" fill="currentColor" fill-opacity=".72">${k.toLocaleString("en")}</text>`);
   for (const m of xs) s.push(`<text x="${X(m)}" y="${H - B + 18}" text-anchor="middle" fill="currentColor" fill-opacity=".72">${m}</text>`);
   s.push(`<text x="${W - R}" y="${H - 6}" text-anchor="end" fill="currentColor" fill-opacity=".72">SWD clock asked for, MHz</text><text x="${L - 8}" y="${T - 14}" text-anchor="end" fill="currentColor" fill-opacity=".72">KiB/s</text>`);
-  const nxp = series.find((q) => q.rightUpTo), lastNxp = xs.filter((m, i) => nxp.kib[i] != null).at(-1);
-  s.push(`<clipPath id="limit-grow"><rect x="0" width="${W}" y="0" height="0" data-y="${f1(Y(nxp.kib[xs.indexOf(nxp.rightUpTo)]))}" data-top="${T}" data-bottom="${H - B}" data-from="${f1(X(nxp.rightUpTo))}" data-to="${f1(X(lastNxp))}"/></clipPath>`);
+  const nxp = series.find((q) => q.rightUpTo);
+  s.push(`<clipPath id="limit-grow"><rect x="0" width="${W}" y="0" height="0" data-y="${f1(Y(nxp.kib[xs.indexOf(nxp.rightUpTo)]))}" data-top="${T}" data-bottom="${H - B}" data-from="${f1(X(nxp.rightUpTo))}" data-to="${f1(X(xs.at(-1)))}"/></clipPath>`);
   s.push(`<line id="limit" data-clip="limit-grow" x1="${X(20)}" x2="${X(20)}" y1="${T}" y2="${H - B}" stroke="currentColor" stroke-opacity=".72" stroke-dasharray="3 4"/>`);
   // The sweep's clip, from just before the first clock's markers to just past the last's; the end
   // labels show whole once it lands.
   s.push(`<clipPath id="chart-sweep"><rect x="0" y="0" width="0" height="${H}" data-from="${f1(X(xs[0]) - 6)}" data-to="${f1(X(xs.at(-1)) + 6)}" data-all="${W}"/></clipPath><g class="sweep" data-clip="chart-sweep">`);
   for (const x of series) {
-    // A clock where the probe failed has no point, and the line breaks there: a segment across it
-    // would read as a value.
+    // A clock where the probe failed, in every run or in some, has no point, and the line breaks
+    // there: a segment across it would read as a value.
     const pts = xs.map((m, i) => [m, x.kib[i], i]).filter(([, k]) => k != null);
     const path = (p) => p.map(([m, k, i], j) => `${j && p[j - 1][2] === i - 1 ? "L" : "M"}${X(m).toFixed(1)},${Y(k).toFixed(1)}`).join("");
     const right = pts.filter(([m]) => !x.rightUpTo || m <= x.rightUpTo), wrong = x.rightUpTo ? pts.filter(([m]) => m >= x.rightUpTo) : [];
@@ -301,8 +301,10 @@ function chartHighlight() {
   const m = xs[hl.i];
   cross.setAttribute("x1", X(m)); cross.setAttribute("x2", X(m)); cross.setAttribute("visibility", "visible");
   tip.innerHTML = `<b>${m} MHz</b><br>` + series.filter((x) => !x.onDemand || x.id === named).map((x) => {
-    const v = x.kib[hl.i], bad = x.rightUpTo && m > x.rightUpTo;
-    return `<i style="background:${x.color}"></i>${x.short} ${v == null ? "failed" : `${fmt(v)} KiB/s`}${bad && v != null ? ", reads wrong" : ""}`;
+    const v = x.kib[hl.i], part = x.partial?.[hl.i], bad = x.rightUpTo && m > x.rightUpTo;
+    const text = v != null ? `${fmt(v)} KiB/s`
+      : part ? `failed in ${part.failed} of ${part.of} runs (${fmt(part.kib)} KiB/s in the ${part.of - part.failed > 1 ? "others" : "other"})` : "failed";
+    return `<i style="background:${x.color}"></i>${x.short} ${text}${bad && (v != null || part) ? ", reads wrong" : ""}`;
   }).join("<br>");
   tip.hidden = false;
   // Right of the crosshair, or left of it where the right would cover the lines' ends.

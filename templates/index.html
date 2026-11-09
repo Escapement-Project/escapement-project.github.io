@@ -64,7 +64,7 @@
       <div class="two">
         <figure>
           <div class="chart" id="chart"></div>
-          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. Past {{ h.stockAt }} MHz NXP's firmware reads wrong: its points are hollow, and its line breaks at the clock where it failed.</figcaption>
+          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. Past {{ h.stockAt }} MHz NXP's firmware reads wrong, and its runs failed: both at 30 MHz, one of two at 50 MHz. Its line ends at {{ h.stockAt }} MHz.</figcaption>
         </figure>
         <figure>
           {# The table is the page's own: a reader without scripts gets every figure. The script adds the
@@ -81,7 +81,7 @@
             </tr>
             {%- endfor %}
           </table>
-          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. * NXP's firmware reads wrong at that clock.</figcaption>
+          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. NXP's figure at 50 MHz is from one run: the other failed. * NXP's firmware reads wrong at that clock.</figcaption>
         </figure>
       </div>
     </div>
