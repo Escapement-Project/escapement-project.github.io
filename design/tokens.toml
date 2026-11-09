@@ -104,11 +104,13 @@ wash = 0.12
 
 # Line patterns, as stroke dash arrays at a 2 px line. A probe's headline build (Clang) is solid
 # and its other build (GCC) dashed; a figure measured where the firmware reads wrong is dotted, its
-# points hollow; a reference probe dash-dotted; a run under energy capture thinner and at 60 %.
+# points hollow; a reference probe dash-dotted; a run under energy capture thinner and at 60 %, and a
+# second capture run of the same build long-dashed.
 [pattern]
 second-build = [6, 3]
 misread = [2, 4]
 reference = [8, 3, 2, 3]
+capture-second = [12, 4]
 capture-opacity = 0.6
 capture-width = 1.5
 

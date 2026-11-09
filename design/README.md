@@ -135,6 +135,7 @@ Patterns, as stroke dash arrays at a 2 px line:
 | `--dash-misread` | `2 4` | figures from a clock where the firmware reads wrong; their points hollow |
 | `--dash-reference` | `8 3 2 3` | a reference probe |
 | `--capture-opacity`, `--capture-width` | 60 %, 1.5 px | a run under energy capture |
+| `--dash-capture-second` | `12 4` | a second run of one build under energy capture; the first keeps the build's pattern |
 
 ## Type
 
