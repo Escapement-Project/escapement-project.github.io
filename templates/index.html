@@ -63,8 +63,8 @@
       <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
       <div class="two">
         <figure>
-          <div class="chart" id="chart"></div>
-          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. Past {{ h.stockAt }} MHz NXP's firmware reads wrong, and its runs failed: both at 30 MHz, one of two at 50 MHz. Its line ends at {{ h.stockAt }} MHz.</figcaption>
+          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table" height="300"></tickwave-chart></div>
+          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ d.figureNote }}</figcaption>
         </figure>
         <figure>
           {# The table is the page's own: a reader without scripts gets every figure. The script adds the
@@ -81,7 +81,7 @@
             </tr>
             {%- endfor %}
           </table>
-          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. NXP's figure at 50 MHz is from one run: the other failed. * NXP's firmware reads wrong at that clock.</figcaption>
+          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. {% if d.tableNote %}{{ d.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
         </figure>
       </div>
     </div>
@@ -104,4 +104,4 @@
 {# Verge's mark in motion, built by design/build.py from the tokens and the mark; landing.js draws it. #}
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}

@@ -22,7 +22,7 @@ zola build                       # the site, into public/
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
-| `data/landing.json` | the figures the landing page shows, and where they come from |
+| `data/landing.json` | the figures the landing page shows, and where they come from, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
 | `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, and publishes it to GitHub Pages |
@@ -37,7 +37,9 @@ The measurements page keeps copies of `base.css`, the header, the footer, `face.
 
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
-text, the figure and the table. The page loads no fonts or scripts from anywhere else.
+text, the figure and the table. tickwave's `<tickwave-chart>` draws Figure 1, loaded from tickwave's
+own site on this origin at the version `config.toml` pins; the page loads no fonts or scripts from
+anywhere else.
 
 ## The measurements page
 

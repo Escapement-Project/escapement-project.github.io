@@ -1,5 +1,5 @@
 {
-  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs (NXP's 50 MHz figure is one run's: the other failed); stock reads right up to 20 MHz",
+  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
   "date": "2026-11-04",
   "clocks": [
     1,
@@ -15,15 +15,6 @@
       "id": "clang",
       "name": "Clang build",
       "role": "ours",
-      "kib": [
-        81.0,
-        162.8,
-        395.3,
-        744.8,
-        1238.6,
-        1779.8,
-        2257.8
-      ],
       "table": [
         "81.0",
         "162.8",
@@ -38,15 +29,6 @@
       "id": "gcc",
       "name": "GCC build",
       "role": "ours",
-      "kib": [
-        81.3,
-        162.0,
-        394.9,
-        746.0,
-        1184.2,
-        1641.9,
-        2176.0
-      ],
       "table": [
         "81.3",
         "162.0",
@@ -61,29 +43,6 @@
       "id": "stock",
       "name": "Stock V3.174",
       "role": "stock",
-      "kib": [
-        76.7,
-        148.1,
-        297.8,
-        524.9,
-        666.7,
-        null,
-        null
-      ],
-      "partial": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        {
-          "failed": 1,
-          "of": 2,
-          "kib": 744.6
-        }
-      ],
-      "rightUpTo": 20,
       "table": [
         "76.7",
         "148.1",
@@ -92,14 +51,153 @@
         "666.7",
         "failed",
         "744.6"
-      ]
+      ],
+      "rightUpTo": 20
     }
   ],
+  "tableNote": "NXP's figure at 50 MHz is from one run: the other failed.",
+  "figureNote": "Past 20 MHz NXP's firmware reads wrong, and its runs failed: both at 30 MHz, one of two at 50 MHz. Its line ends at 20 MHz.",
   "headline": {
     "ratio": "3.39",
     "ours": "2,258",
     "oursAt": 50,
+    "oursName": "Clang build",
     "stock": "667",
     "stockAt": 20
+  },
+  "figure1": {
+    "format": "tickwave-chart/1",
+    "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+    "x": {
+      "name": "SWD clock asked for",
+      "unit": "MHz",
+      "scale": "log",
+      "values": [
+        "1",
+        "2",
+        "5",
+        "10",
+        "20",
+        "30",
+        "50"
+      ]
+    },
+    "y": {
+      "name": "4 KiB writes",
+      "unit": "KiB/s",
+      "scale": "linear",
+      "max": "2500",
+      "step": "500"
+    },
+    "series": [
+      {
+        "id": "clang",
+        "name": "Verge, Clang build",
+        "short": "Verge",
+        "colour": "verge",
+        "pattern": "solid",
+        "marker": "circle",
+        "fails": "mark",
+        "points": [
+          {
+            "value": "81.0"
+          },
+          {
+            "value": "162.8"
+          },
+          {
+            "value": "395.3"
+          },
+          {
+            "value": "744.8"
+          },
+          {
+            "value": "1238.6"
+          },
+          {
+            "value": "1779.8"
+          },
+          {
+            "value": "2257.8"
+          }
+        ]
+      },
+      {
+        "id": "stock",
+        "name": "NXP's firmware V3.174",
+        "short": "NXP",
+        "colour": "nxp",
+        "pattern": "solid",
+        "marker": "circle",
+        "points": [
+          {
+            "value": "76.7"
+          },
+          {
+            "value": "148.1"
+          },
+          {
+            "value": "297.8"
+          },
+          {
+            "value": "524.9"
+          },
+          {
+            "value": "666.7"
+          },
+          {
+            "failed": true
+          },
+          {
+            "partial": {
+              "failed": 1,
+              "of": 2,
+              "value": "744.6"
+            },
+            "verdict": "wrong"
+          }
+        ]
+      },
+      {
+        "id": "gcc",
+        "name": "Verge, GCC build",
+        "short": "GCC",
+        "colour": "verge",
+        "pattern": "second-build",
+        "marker": "square",
+        "fails": "mark",
+        "hidden": true,
+        "points": [
+          {
+            "value": "81.3"
+          },
+          {
+            "value": "162.0"
+          },
+          {
+            "value": "394.9"
+          },
+          {
+            "value": "746.0"
+          },
+          {
+            "value": "1184.2"
+          },
+          {
+            "value": "1641.9"
+          },
+          {
+            "value": "2176.0"
+          }
+        ]
+      }
+    ],
+    "limits": [
+      {
+        "x": "20",
+        "series": "stock",
+        "label": "NXP's firmware reads right up to 20 MHz"
+      }
+    ]
   }
 }

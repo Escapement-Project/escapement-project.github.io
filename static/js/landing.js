@@ -1,17 +1,16 @@
-// The landing page: the hero dial and its one-time entry, Figure 1 and its sweep, the links between
-// the claim, the figure, the table and the dial, and the Verge section's traces and commands. The
-// figures come from data/landing.json through the page; colours and type from tokens.css.
+// The landing page: the hero dial and its one-time entry, the links between the claim, Figure 1, the
+// table and the dial, and the Verge section's traces and commands. tickwave's <tickwave-chart> draws
+// Figure 1. The figures come from data/landing.json (mculink-bench's extract.py writes it) through the
+// page; colours and type from tokens.css.
 const DATA = JSON.parse(document.getElementById("data").textContent);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const fmt = (v) => v.toLocaleString("en", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const f1 = (v) => v.toFixed(1);
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
-// Two sequences, each played once when it first comes into view, both smooth and timed in
-// milliseconds. Highlights snap. Reduced motion and printing show each sequence's end at once.
+// The hero's sequence, played once when it first comes into view, smooth and timed in milliseconds.
+// Reduced motion and printing show its end at once. Figure 1 sweeps in by itself.
 const seq = {
   hero: { pos: -1, end: 0, at: (ms) => ms, frame: () => heroFrame() },
-  chart: { pos: -1, end: 0, at: (ms) => ms, frame: () => chartFrame() },
 };
 function advance(s, p) { if (p > s.pos) { s.pos = Math.min(p, s.end); s.frame(); } }
 const finish = (s) => advance(s, s.end);
@@ -63,7 +62,7 @@ function dial() {
   const host = document.getElementById("dialface");
   const shown = host.clientWidth || 400, fs = (base) => Math.max(base, 11 * 400 / Math.min(shown, 480));
   const pt = (deg, r) => { const a = deg * Math.PI / 180; return [C + r * Math.sin(a), C - r * Math.cos(a)]; };
-  const ours = DATA.series[0], h = DATA.headline;
+  const h = DATA.headline;
   const s = [`<svg viewBox="0 0 400 400" role="group" aria-label="The headline as a dial"><g aria-hidden="true">`];
   s.push(`<circle cx="${C}" cy="${C}" r="198" fill="${ring}" stroke="${hair}"/><circle cx="${C}" cy="${C}" r="158" fill="${face}"/>`);
   // The outer scale, a tick every tenth, those up to the reading drawn in ink. It turns as one group;
@@ -101,8 +100,8 @@ function dial() {
     + `<text x="${f1(x)}" y="${f1(C + 6 + fs(17) * .72)}" text-anchor="${anchor}" fill="${ink}"><tspan ${figures} font-size="${fs(17)}">${value}</tspan><tspan font-family='${css("--font-text")}' font-size="${fs(12)}" font-weight="500" fill="${muted}" dx="4">KiB/s</tspan></text>`;
   reading("r-nxp", `NXP's firmware V3.174: ${h.stock} KiB/s at ${h.stockAt} MHz, the fastest clock it reads right at`,
     `<b>NXP's firmware V3.174</b><br>${h.stock} KiB/s at ${h.stockAt} MHz, the fastest<br>clock it reads right at`, lines(RISER - 16, "end", "NXP 3.174", h.stock));
-  reading("r-verge", `Verge, ${ours.name}: ${h.ours} KiB/s at ${h.oursAt} MHz`,
-    `<b>Verge, ${ours.name}</b><br>${h.ours} KiB/s at ${h.oursAt} MHz`, lines(RISER_RIGHT + 16, "start", "VERGE", h.ours));
+  reading("r-verge", `Verge, ${h.oursName}: ${h.ours} KiB/s at ${h.oursAt} MHz`,
+    `<b>Verge, ${h.oursName}</b><br>${h.ours} KiB/s at ${h.oursAt} MHz`, lines(RISER_RIGHT + 16, "start", "VERGE", h.ours));
   s.push(`<g class="reading" id="r-ratio" tabindex="0" role="img" aria-label="${h.ratio} times: Verge's ${h.ours} KiB/s over NXP's ${h.stock}" data-tip="<b>${h.ratio}×</b><br>Verge's ${h.ours} KiB/s over NXP's ${h.stock}">`
     + `<rect class="hit" fill="transparent" x="141" y="297" width="118" height="46" rx="6"/><rect class="focus" fill="none" stroke="${ink}" stroke-width="2" x="141" y="297" width="118" height="46" rx="6"/>`
     + `<text id="ratio" x="200" y="${300 + 20 + 22 * .36}" text-anchor="middle" ${figures} font-size="22" fill="${css("--on-lume")}">${h.ratio}×</text></g>`);
@@ -162,157 +161,34 @@ function dialTip(g) {
 }
 
 // What the pointer, a tap or the keyboard is on: a clock (i), a series (s), the values the text points
-// at (refs, as "series@MHz"), or the clock NXP's firmware reads right up to (limit). The figure and
-// the table both draw it.
+// at (refs, as "series@MHz"), or the clock NXP's firmware reads right up to (limit). Figure 1 and the
+// table both show it. Figure 1 rings the refs and thickens its limit through `highlight`, and picks
+// the clock and series as a reader would; a pick the reader made in the chart is not handed back.
+// The chart takes its data and these once it is defined: a property set before then would hide its own.
+const figure = document.getElementById("chart");
+const chartReady = customElements.whenDefined("tickwave-chart");
+chartReady.then(() => { figure.data = DATA.figure1; });
 let hl = {};
-function highlight(next) {
+function highlight(next, fromChart = false) {
   hl = next;
-  if (Object.keys(next).length) finish(seq.chart);
-  chartHighlight(); tableHighlight();
+  tableHighlight();
+  if (fromChart) return;
+  chartReady.then(() => {
+    const marks = [...(hl.refs || []), ...(hl.limit ? ["limits"] : [])];
+    if (marks.length) figure.setAttribute("highlight", marks.join(" "));
+    else figure.removeAttribute("highlight");
+    // A clock is named by its setting in the chart's data, "50" for 50 MHz.
+    if (hl.i != null || hl.s) figure.pick(hl.i != null ? String(DATA.clocks[hl.i]) : null, hl.s ?? null);
+    else figure.pick();
+  });
 }
-
-// Figure 1: two series, ours and stock, one axis. Lines 2 px, markers 8 px, the legend above and
-// each line labelled at its end; a crosshair and a tooltip at the nearest clock. The lines sweep in
-// with a cubic ease-out when the figure first comes into view: quick across the low clocks, slowing
-// over the high ones, where the lines part. The GCC build is drawn only while it is
-// pointed at in the table.
-let geom = null;
-// The chart's sequence: the lines sweep in over LINES ms, eased; then the end labels show a whole
-// character at a time over LABELS ms. The 20 MHz line grows out of NXP's 20 MHz point as the sweep
-// goes from that point to the last clock, so it lands with the sweep.
-const CHART = { lines: 750, labels: 200 };
-seq.chart.end = CHART.lines + CHART.labels;
-function chart() {
-  const host = document.getElementById("chart");
-  const series = [
-    { id: "clang", name: "Verge, Clang build", short: "Verge", kib: DATA.series[0].kib, color: css("--series-verge") },
-    { id: "stock", name: "NXP's firmware V3.174", short: "NXP", kib: DATA.series[2].kib, partial: DATA.series[2].partial, color: css("--series-nxp"), rightUpTo: 20 },
-    { id: "gcc", name: "Verge, GCC build", short: "GCC", kib: DATA.series[1].kib, color: css("--series-verge"), onDemand: true },
-  ];
-  const W = Math.max(320, Math.min(620, host.clientWidth - 16 || 620)), H = 330, L = 52, R = 64, T = 28, B = 44;
-  const xs = DATA.clocks, max = 2500;
-  const X = (m) => L + Math.log(m) / Math.log(50) * (W - L - R);
-  const Y = (k) => T + (1 - k / max) * (H - T - B);
-  geom = { W, X, Y, xs, series };
-  const s = [`<ul class="legend">${series.filter((x) => !x.onDemand).map((x) => `<li tabindex="0" data-s="${x.id}"><i style="background:${x.color}"></i>${x.name}</li>`).join("")}<li tabindex="0" data-limit><i class="limit"></i>NXP's firmware reads right up to 20 MHz</li></ul>`];
-  s.push(`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Write throughput against SWD clock, Verge and NXP's firmware; Table 1 has the same figures" aria-describedby="fig1" font-family='${css("--font-text")}' font-size="12">`);
-  for (const k of [0, 500, 1000, 1500, 2000, 2500]) s.push(`<line x1="${L}" x2="${W - R}" y1="${Y(k)}" y2="${Y(k)}" stroke="currentColor" stroke-opacity=".2"/><text x="${L - 8}" y="${Y(k) + 4}" text-anchor="end" fill="currentColor" fill-opacity=".72">${k.toLocaleString("en")}</text>`);
-  for (const m of xs) s.push(`<text x="${X(m)}" y="${H - B + 18}" text-anchor="middle" fill="currentColor" fill-opacity=".72">${m}</text>`);
-  s.push(`<text x="${W - R}" y="${H - 6}" text-anchor="end" fill="currentColor" fill-opacity=".72">SWD clock asked for, MHz</text><text x="${L - 8}" y="${T - 14}" text-anchor="end" fill="currentColor" fill-opacity=".72">KiB/s</text>`);
-  const nxp = series.find((q) => q.rightUpTo);
-  s.push(`<clipPath id="limit-grow"><rect x="0" width="${W}" y="0" height="0" data-y="${f1(Y(nxp.kib[xs.indexOf(nxp.rightUpTo)]))}" data-top="${T}" data-bottom="${H - B}" data-from="${f1(X(nxp.rightUpTo))}" data-to="${f1(X(xs.at(-1)))}"/></clipPath>`);
-  s.push(`<line id="limit" data-clip="limit-grow" x1="${X(20)}" x2="${X(20)}" y1="${T}" y2="${H - B}" stroke="currentColor" stroke-opacity=".72" stroke-dasharray="3 4"/>`);
-  // The sweep's clip, from just before the first clock's markers to just past the last's; the end
-  // labels show whole once it lands.
-  s.push(`<clipPath id="chart-sweep"><rect x="0" y="0" width="0" height="${H}" data-from="${f1(X(xs[0]) - 6)}" data-to="${f1(X(xs.at(-1)) + 6)}" data-all="${W}"/></clipPath><g class="sweep" data-clip="chart-sweep">`);
-  for (const x of series) {
-    // A clock where the probe failed, in every run or in some, has no point, and the line breaks
-    // there: a segment across it would read as a value.
-    const pts = xs.map((m, i) => [m, x.kib[i], i]).filter(([, k]) => k != null);
-    const path = (p) => p.map(([m, k, i], j) => `${j && p[j - 1][2] === i - 1 ? "L" : "M"}${X(m).toFixed(1)},${Y(k).toFixed(1)}`).join("");
-    const right = pts.filter(([m]) => !x.rightUpTo || m <= x.rightUpTo), wrong = x.rightUpTo ? pts.filter(([m]) => m >= x.rightUpTo) : [];
-    s.push(`<g data-s="${x.id}"${x.onDemand ? ' class="on-demand" display="none"' : ""}><path d="${path(right)}" fill="none" stroke="${x.color}" stroke-width="2"/>`);
-    if (wrong.length > 1) s.push(`<path d="${path(wrong)}" fill="none" stroke="${x.color}" stroke-width="2" stroke-dasharray="2 4"/>`);
-    for (const [m, k] of pts) {
-      const bad = x.rightUpTo && m > x.rightUpTo;
-      // The ring that parts a point from what it overlaps, and a hollow point's middle, are the
-      // surface's colour, set in CSS: without it they drop rather than take a stale colour.
-      s.push(`<circle class="${bad ? "hollow" : "pt"}" cx="${X(m)}" cy="${Y(k)}" r="4" fill="${bad ? "none" : x.color}" stroke="${bad ? x.color : "none"}" stroke-width="2"/>`);
-    }
-    const [lm, lk] = pts.at(-1);
-    // An end label shows a character at a time through its own clip; one drawn on demand shows whole.
-    if (!x.onDemand) s.push(`<clipPath id="end-${x.id}"><rect class="end-shown" x="0" y="0" width="0" height="${H}"/></clipPath>`);
-    s.push(`<text class="end"${x.onDemand ? "" : ` data-clip="end-${x.id}"`} x="${X(lm) + 14}" y="${Y(lk) + 4}" fill="currentColor" font-weight="600">${x.short}</text></g>`);
-  }
-  s.push(`</g><g id="rings" fill="none" stroke="currentColor" stroke-width="2"></g>`);
-  s.push(`<line id="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="currentColor" stroke-opacity=".35" visibility="hidden"/>`);
-  s.push(`<rect id="hit" x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/>`);
-  s.push("</svg><div class=\"tip\" id=\"tip\" aria-live=\"polite\" hidden></div>");
-  host.innerHTML = s.join("");
-  const svg = host.querySelector("svg"), hit = host.querySelector("#hit");
-  // The right edge of each character of an end label, for its reveal.
-  for (const t of svg.querySelectorAll("text.end[data-clip]")) {
-    svg.querySelector(`#${t.dataset.clip} rect`).dataset.edges =
-      [...Array(t.getNumberOfChars()).keys()].map((c) => { const e = t.getExtentOfChar(c); return f1(e.x + e.width); }).join(" ");
-  }
-  const nearest = (e) => {
-    const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W;
-    let best = 0; xs.forEach((m, i) => { if (Math.abs(X(m) - x) < Math.abs(X(xs[best]) - x)) best = i; });
-    return best;
-  };
-  // A mouse hovers; a finger taps, which fires no move.
-  hit.addEventListener("pointermove", (e) => highlight({ i: nearest(e) }));
-  hit.addEventListener("pointerdown", (e) => highlight({ i: nearest(e) }));
-  hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") highlight({}); });
-  // The end labels name their series, as the legend does.
-  for (const t of host.querySelectorAll("svg [data-s] .end")) linkOn(t, () => ({ s: t.parentNode.dataset.s }), false);
-  for (const el of host.querySelectorAll(".legend [data-s]")) linkOn(el, () => ({ s: el.dataset.s }));
-  linkOn(host.querySelector(".legend [data-limit]"), () => ({ limit: true }));
-  chartFrame(); chartHighlight();
-}
-function chartFrame() {
-  const svg = document.querySelector("#chart svg");
-  if (!svg) return;
-  const t = seq.chart.pos, clip = svg.querySelector("#chart-sweep rect"), landed = t >= CHART.lines;
-  const host = svg.parentNode, waiting = t < 0;
-  if (waiting) host.dataset.pending = ""; else delete host.dataset.pending;
-  // The clips apply only while the chart moves. At rest nothing refers to them: a reader view sets a
-  // base URL, against which Firefox resolves url(#id) to another document and draws nothing.
-  const moving = !waiting && t < seq.chart.end;
-  for (const el of svg.querySelectorAll("[data-clip]")) {
-    if (moving) el.setAttribute("clip-path", `url(#${el.dataset.clip})`); else el.removeAttribute("clip-path");
-  }
-  const eased = 1 - (1 - clamp01(t / CHART.lines)) ** 3;
-  const from = +clip.dataset.from, x = t < 0 ? -Infinity : from + (+clip.dataset.to - from) * eased;
-  clip.setAttribute("width", landed || waiting ? clip.dataset.all : f1(x));
-  // The 20 MHz line, grown from NXP's point in step with the sweep's position.
-  const grow = svg.querySelector("#limit-grow rect"), g = grow.dataset;
-  const k = landed || waiting ? 1 : clamp01((x - +g.from) / (+g.to - +g.from));
-  grow.setAttribute("y", f1(+g.y - k * (+g.y - +g.top)));
-  grow.setAttribute("height", f1(k * (+g.bottom - +g.top)));
-  // The end labels, after the lines land: a sweep of their own across them, each character shown
-  // once it is past.
-  const all = +clip.dataset.all, lx = landed ? +clip.dataset.to + (all - +clip.dataset.to) * clamp01((t - CHART.lines) / CHART.labels) : -Infinity;
-  for (const r of svg.querySelectorAll(".end-shown")) {
-    const edges = (r.dataset.edges || "").split(" ").map(Number).filter((e) => e <= lx);
-    r.setAttribute("width", t >= seq.chart.end || waiting ? all : edges.length ? f1(Math.max(...edges)) : 0);
-  }
-}
-function chartHighlight() {
-  const host = document.getElementById("chart"), svg = host.querySelector("svg");
-  if (!svg) return;
-  const { W, X, Y, xs, series } = geom, cross = svg.querySelector("#cross"), tip = host.querySelector("#tip");
-  // One series at a time: the others dim while a series is named, and one drawn on demand shows.
-  const named = hl.s && series.some((q) => q.id === hl.s) ? hl.s : null;
-  for (const g of svg.querySelectorAll("g[data-s]")) {
-    g.classList.toggle("dim", named != null && g.dataset.s !== named);
-    if (g.classList.contains("on-demand")) g.setAttribute("display", g.dataset.s === named ? "inline" : "none");
-  }
-  for (const el of host.querySelectorAll(".legend [data-s]")) el.classList.toggle("dim", named != null && el.dataset.s !== named);
-  // The values the text points at, ringed; the limit drawn in ink.
-  svg.querySelector("#rings").innerHTML = (hl.refs || []).map((r) => {
-    const [id, m] = r.split("@"), x = series.find((q) => q.id === id), k = x.kib[xs.indexOf(+m)];
-    return `<circle cx="${f1(X(+m))}" cy="${f1(Y(k))}" r="9"/>`;
-  }).join("");
-  const limit = svg.querySelector("#limit");
-  limit.setAttribute("stroke-opacity", hl.limit ? 1 : .72);
-  limit.setAttribute("stroke-width", hl.limit ? 2 : 1);
-  if (hl.i == null) { tip.hidden = true; cross.setAttribute("visibility", "hidden"); return; }
-  const m = xs[hl.i];
-  cross.setAttribute("x1", X(m)); cross.setAttribute("x2", X(m)); cross.setAttribute("visibility", "visible");
-  tip.innerHTML = `<b>${m} MHz</b><br>` + series.filter((x) => !x.onDemand || x.id === named).map((x) => {
-    const v = x.kib[hl.i], part = x.partial?.[hl.i], bad = x.rightUpTo && m > x.rightUpTo;
-    const text = v != null ? `${fmt(v)} KiB/s`
-      : part ? `failed in ${part.failed} of ${part.of} runs (${fmt(part.kib)} KiB/s in the ${part.of - part.failed > 1 ? "others" : "other"})` : "failed";
-    return `<i style="background:${x.color}"></i>${x.short} ${text}${bad && (v != null || part) ? ", reads wrong" : ""}`;
-  }).join("<br>");
-  tip.hidden = false;
-  // Right of the crosshair, or left of it where the right would cover the lines' ends.
-  const at = X(m) * svg.getBoundingClientRect().width / W + 8;
-  const right = at + 12, left = at - 12 - tip.offsetWidth;
-  tip.style.left = `${Math.max(4, right + tip.offsetWidth < host.clientWidth * 0.8 ? right : left)}px`;
-  tip.style.top = "40px";
-}
+figure.addEventListener("tickwave-pick", (e) => {
+  const { x, series } = e.detail;
+  highlight({ ...(x != null && { i: DATA.clocks.findIndex((m) => String(m) === x) }), ...(series && { s: series }) }, true);
+});
+// Focus shows the last clock, as before; the arrow keys then step through the clocks.
+figure.addEventListener("focus", () => { if (hl.i == null) highlight({ i: DATA.clocks.length - 1 }); });
+figure.addEventListener("blur", () => highlight({}));
 
 function tableHighlight() {
   const el = document.getElementById("table");
@@ -355,19 +231,6 @@ dialface.addEventListener("pointerover", (e) => { const g = e.target.closest(".r
 dialface.addEventListener("pointerout", (e) => { const g = e.target.closest(".reading"); if (g && e.pointerType === "mouse" && !g.contains(e.relatedTarget)) dialTip(null); });
 dialface.addEventListener("focusin", (e) => { const g = e.target.closest(".reading"); if (g) dialTip(g); });
 dialface.addEventListener("focusout", () => dialTip(null));
-// The chart: focus shows the clock last read, the arrow keys step through the clocks.
-const chartHost = document.getElementById("chart");
-chartHost.tabIndex = 0;
-chartHost.setAttribute("aria-label", "Figure 1. Use the arrow keys to read each clock");
-let current = DATA.clocks.length - 1;
-chartHost.addEventListener("focus", (e) => { if (e.target === chartHost) highlight({ i: current }); });
-chartHost.addEventListener("blur", (e) => { if (e.target === chartHost) highlight({}); });
-chartHost.addEventListener("keydown", (e) => {
-  if (e.target !== chartHost || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
-  e.preventDefault();
-  current = Math.max(0, Math.min(DATA.clocks.length - 1, (hl.i ?? current) + (e.key === "ArrowRight" ? 1 : -1)));
-  highlight({ i: current });
-});
 
 // The Verge section. A term names a wire, which opens that wire's trace under the Wires row, or a
 // feature; either way the verge command that drives it shows under the list, described in the
@@ -507,19 +370,19 @@ for (const ref of document.querySelectorAll("#verge .ref")) {
 document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref, #console")) unpin(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") unpin(); });
 
-// Redrawn for a change of face: the dial and the chart draw in the face's colours.
+// Redrawn for a change of face: the dial draws in the face's colours.
 function render() {
-  dial(); chart(); tableHighlight(); closeScope(); sizeConsole();
+  dial(); tableHighlight(); closeScope(); sizeConsole();
 }
 document.addEventListener("facechange", render);
-window.addEventListener("resize", () => { chart(); dial(); closeScope(); sizeConsole(); });
-if (reduced.matches) { finish(seq.hero); finish(seq.chart); }
-reduced.addEventListener("change", () => { if (reduced.matches) { finish(seq.hero); finish(seq.chart); } });
-window.addEventListener("beforeprint", () => { finish(seq.hero); finish(seq.chart); });
+window.addEventListener("resize", () => { dial(); closeScope(); sizeConsole(); });
+if (reduced.matches) finish(seq.hero);
+reduced.addEventListener("change", () => { if (reduced.matches) finish(seq.hero); });
+window.addEventListener("beforeprint", () => finish(seq.hero));
 render();
-// Each sequence starts when it is first mostly in view, once the type it draws in has loaded.
+// The hero's sequence starts when it is first mostly in view, once the type it draws in has loaded.
 const whenSeen = (el, s, threshold, delay) => {
   const io = new IntersectionObserver((seen) => { if (seen.some((x) => x.isIntersecting)) { io.disconnect(); start(s, delay); } }, { threshold });
   io.observe(el);
 };
-document.fonts.ready.then(() => { render(); whenSeen(dialface, seq.hero, 0.5, 250); whenSeen(chartHost, seq.chart, 0.6, 0); });
+document.fonts.ready.then(() => { render(); whenSeen(dialface, seq.hero, 0.5, 250); });
