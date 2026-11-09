@@ -43,5 +43,7 @@ reload.
 To publish, the workflow copies `page/out` from mculink-bench's default branch in place of the link,
 with `.github/measurements.py`. The copy loads the site's fonts rather than its own, so a reader
 downloads each font once. A new measurements page goes live on the workflow's next run: push here,
-or run it by hand. The workflow needs mculink-bench to be public, and this repository's Pages
-settings to deploy from GitHub Actions.
+or run it by hand. The page's wire section cites annotations in the recordings, so the workflow
+also checks out their sidecars from mculink-recordings (the recordings themselves load from that
+repository's own site). The workflow needs mculink-bench and mculink-recordings to be public, and
+this repository's Pages settings to deploy from GitHub Actions.

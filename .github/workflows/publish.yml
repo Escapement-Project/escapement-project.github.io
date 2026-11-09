@@ -35,10 +35,22 @@ jobs:
             page
             results
           persist-credentials: false
+      # The recordings' annotations, which the measurements page's wire section cites; the
+      # recordings themselves stay on that repository's own site.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Escapement-Project/mculink-recordings
+          path: mculink-recordings
+          sparse-checkout: |
+            /*/*.annotations.toml
+            /*/*.jsonl
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       # Nothing publishes stale: the generated files must match their sources (a changed headline
       # changes the link preview), the measurements page's copies of the tokens must be current,
-      # and the page itself must match a fresh build of its results.
+      # and the page itself must match a fresh build of its results, every annotation its wire
+      # section cites present in the recordings.
       - name: Check
         run: |
           cd site && uv run design/build.py --check ../mculink-bench/page/tokens.css \
