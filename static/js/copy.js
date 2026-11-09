@@ -28,8 +28,12 @@
       getSelection().addRange(range);
       said = "Selected";
     }
+    // The button answers the click: a press and settle, an ink fill, a tick drawn in front of the
+    // word (site.css). Taking the class off and putting it back replays it for a second click.
+    box.classList.remove("copied");
+    void box.offsetWidth;
     box.classList.add("copied");
-    if (button) button.textContent = said;
+    if (button) button.innerHTML = `<svg class="tick" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.2 6.4 4.9 9.1 9.8 3.2"/></svg>${said}`;
     status.textContent = `${said}: ${text}`;
     clearTimeout(box.copyTimer);
     box.copyTimer = setTimeout(() => { box.classList.remove("copied"); if (button) button.textContent = "Copy"; }, 1600);
