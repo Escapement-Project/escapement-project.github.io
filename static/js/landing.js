@@ -206,8 +206,10 @@ function chart() {
   // labels show whole once it lands.
   s.push(`<clipPath id="chart-sweep"><rect x="0" y="0" width="0" height="${H}" data-from="${f1(X(xs[0]) - 6)}" data-to="${f1(X(xs.at(-1)) + 6)}" data-all="${W}"/></clipPath><g class="sweep" data-clip="chart-sweep">`);
   for (const x of series) {
-    const pts = xs.map((m, i) => [m, x.kib[i]]).filter(([, k]) => k != null);
-    const path = (p) => p.map(([m, k], i) => `${i ? "L" : "M"}${X(m).toFixed(1)},${Y(k).toFixed(1)}`).join("");
+    // A clock where the probe failed has no point, and the line breaks there: a segment across it
+    // would read as a value.
+    const pts = xs.map((m, i) => [m, x.kib[i], i]).filter(([, k]) => k != null);
+    const path = (p) => p.map(([m, k, i], j) => `${j && p[j - 1][2] === i - 1 ? "L" : "M"}${X(m).toFixed(1)},${Y(k).toFixed(1)}`).join("");
     const right = pts.filter(([m]) => !x.rightUpTo || m <= x.rightUpTo), wrong = x.rightUpTo ? pts.filter(([m]) => m >= x.rightUpTo) : [];
     s.push(`<g data-s="${x.id}"${x.onDemand ? ' class="on-demand" display="none"' : ""}><path d="${path(right)}" fill="none" stroke="${x.color}" stroke-width="2"/>`);
     if (wrong.length > 1) s.push(`<path d="${path(wrong)}" fill="none" stroke="${x.color}" stroke-width="2" stroke-dasharray="2 4"/>`);
