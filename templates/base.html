@@ -27,6 +27,7 @@
 {{ load_data(path="design/footer.html", format="plain") | trim | safe }}
 <script src="{{ get_url(path='js/face.js', cachebust=true) }}" defer></script>
 <script src="{{ get_url(path='js/header.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/copy.js', cachebust=true) }}" defer></script>
 {% block scripts %}{% endblock scripts %}
 </body>
 </html>

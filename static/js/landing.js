@@ -480,16 +480,30 @@ function closeScope() {
   scopeToken++;
   box.hidden = true;
 }
-const vergeOff = () => { showCommand("list"); closeScope(); };
+// Pointing at a term previews its command. A click, or Enter, pins it, so the command stays to be
+// selected or copied, and copies it (static/js/copy.js); leaving a term goes back to the pinned one,
+// or to verge list. Escape, or a click anywhere but a term or the console, unpins.
+let pinned = null;
+const show = (ref) => { showCommand(ref?.dataset.cmd ?? "list"); if (ref?.dataset.wire) openScope(ref.dataset.wire); else closeScope(); };
+const vergeOff = () => show(pinned);
+const unpin = () => { pinned?.classList.remove("pinned"); pinned = null; vergeOff(); };
+const pin = (ref) => {
+  pinned?.classList.remove("pinned");
+  pinned = ref;
+  ref.classList.add("pinned");
+  show(ref);
+  window.copyCommand?.(document.getElementById("console"));
+};
 for (const ref of document.querySelectorAll("#verge .ref")) {
-  const on = () => { showCommand(ref.dataset.cmd); if (ref.dataset.wire) openScope(ref.dataset.wire); else closeScope(); };
-  ref.addEventListener("pointerenter", on);
-  ref.addEventListener("focus", on);
+  ref.addEventListener("pointerenter", () => show(ref));
+  ref.addEventListener("focus", () => show(ref));
   ref.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") vergeOff(); });
   ref.addEventListener("blur", vergeOff);
+  ref.addEventListener("click", () => pin(ref));
+  ref.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pin(ref); } });
 }
-document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref")) vergeOff(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") vergeOff(); });
+document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref, #console")) unpin(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") unpin(); });
 
 // Redrawn for a change of face: the dial and the chart draw in the face's colours.
 function render() {

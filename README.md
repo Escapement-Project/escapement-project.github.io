@@ -21,6 +21,7 @@ zola build                       # the site, into public/
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the menu of places on phones, on every page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
+| `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the figures the landing page shows, and where they come from |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
