@@ -43,7 +43,7 @@ language = "Notes"
 about = "What NXP's firmware does, observed on running units: how it identifies itself, how it updates, and the clocks it puts on the wire. Each note says how it was observed."
 
 [[extra.repos]]
-name = "chrono"
+name = "tickwave"
 licence = "MIT or Apache License 2.0"
 about = "A logic and MSO capture viewer for the web, to show wire recordings inside a page."
 +++
