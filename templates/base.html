@@ -10,9 +10,11 @@
 <script>document.documentElement.classList.add("js"); try { const f = localStorage.getItem("face"); if (f === "day" || f === "night") document.documentElement.dataset.face = f; } catch { /* no choice kept */ }</script>
 <link rel="preload" href="{{ get_url(path='fonts/saira-expanded.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ get_url(path='fonts/hanken-grotesk.woff2') }}" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{{ get_url(path='tokens.css') }}">
-<link rel="stylesheet" href="{{ get_url(path='base.css') }}">
-<link rel="stylesheet" href="{{ get_url(path='site.css') }}">
+{# Each sheet and script carries its content's hash, so a browser never pairs a new page with a
+   stale copy. #}
+<link rel="stylesheet" href="{{ get_url(path='tokens.css', cachebust=true) }}">
+<link rel="stylesheet" href="{{ get_url(path='base.css', cachebust=true) }}">
+<link rel="stylesheet" href="{{ get_url(path='site.css', cachebust=true) }}">
 <link rel="icon" href="{{ get_url(path='favicon.ico') }}">
 <link rel="apple-touch-icon" href="{{ get_url(path='apple-touch-icon.png') }}">
 {% block head %}{% endblock head %}
@@ -23,8 +25,8 @@
 {% block content %}{% endblock content %}
 </main>
 {{ load_data(path="design/footer.html", format="plain") | trim | safe }}
-<script src="{{ get_url(path='js/face.js') }}" defer></script>
-<script src="{{ get_url(path='js/header.js') }}" defer></script>
+<script src="{{ get_url(path='js/face.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/header.js', cachebust=true) }}" defer></script>
 {% block scripts %}{% endblock scripts %}
 </body>
 </html>
