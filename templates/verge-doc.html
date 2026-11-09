@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} – Verge – {{ config.title }}{% endblock title %}
+{% block description %}{{ page.description }}{% endblock description %}
+{% block header %}{% set current = "docs" %}{% include "partials/header.html" %}{% endblock header %}
+{% block content %}
+{%- set verge = get_section(path="verge/_index.md", metadata_only=true) %}
+{%- set docs_pages = get_section(path="verge/docs/_index.md") %}
+{%- set_global written = "," %}
+{%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
+<div class="wrap doc-wrap">
+  <article class="doc">
+    <p class="crumbs"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a> <span aria-hidden="true">/</span> <a href="{{ get_url(path='@/verge/docs/_index.md') }}">Docs</a> <span aria-hidden="true">/</span> <a href="{{ get_url(path='@/verge/docs/_index.md') }}#{{ page.extra.group | slugify }}">{{ page.extra.group }}</a></p>
+    <h1>{{ page.title }}</h1>
+    <p class="to-docs"><a href="#all-docs">All docs</a></p>
+    {{ page.content | safe }}
+    <p class="doc-source">From <a href="{{ page.extra.source | safe }}">{{ page.extra.repo }}</a>, where changes to this page go.</p>
+  </article>
+  <nav class="doc-nav" id="all-docs" aria-label="Verge's docs">
+    {%- for g in verge.extra.groups %}
+    <p class="group">{{ g.title }}</p>
+    <ul>
+      {%- for d in g.docs %}
+      <li>{% if d.name == page.slug %}<a href="{{ page.permalink | safe }}" aria-current="page">{{ d.title }}</a>{% elif "," ~ d.name ~ "," in written %}<a href="{{ get_url(path='@/verge/docs/' ~ d.name ~ '.md') }}">{{ d.title }}</a>{% else %}<span class="coming">{{ d.title }}</span>{% endif %}</li>
+      {%- endfor %}
+    </ul>
+    {%- endfor %}
+  </nav>
+</div>
+{% endblock content %}

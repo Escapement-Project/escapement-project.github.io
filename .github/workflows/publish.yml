@@ -1,5 +1,6 @@
-# Builds the site with the measurements page from mculink-bench's default branch, and publishes it
-# to GitHub Pages. A new measurements page publishes on the next run: push here, or run it by hand.
+# Builds the site with the measurements page from mculink-bench's default branch and Verge's docs
+# from mculink-verge's and verge's, and publishes it to GitHub Pages. A new measurements page or doc
+# publishes on the next run: push here, or run it by hand.
 name: Publish
 
 on:
@@ -46,6 +47,26 @@ jobs:
             /*/*.jsonl
           sparse-checkout-cone-mode: false
           persist-credentials: false
+      # Verge's docs, which live beside the code they describe: each repository's Markdown at its
+      # root and in docs/.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Escapement-Project/mculink-verge
+          path: mculink-verge
+          sparse-checkout: |
+            /*.md
+            /docs/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Escapement-Project/verge
+          path: verge
+          sparse-checkout: |
+            /*.md
+            /docs/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       # Nothing publishes stale: the generated files must match their sources (a changed headline
       # changes the link preview), the measurements page's copies of the tokens and of the shared
@@ -68,6 +89,7 @@ jobs:
       - name: Build
         run: |
           python3 site/.github/measurements.py mculink-bench/page/out site
+          python3 site/.github/verge-docs.py site
           cd site && "$RUNNER_TEMP/zola" build
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

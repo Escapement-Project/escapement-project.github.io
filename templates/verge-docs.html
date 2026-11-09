@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Docs – Verge – {{ config.title }}{% endblock title %}
+{% block description %}Verge's docs: using the firmware and verge, the host interface, building it, and how it works inside.{% endblock description %}
+{% block header %}{% set current = "docs" %}{% include "partials/header.html" %}{% endblock header %}
+{% block content %}
+{%- set verge = get_section(path="verge/_index.md", metadata_only=true) %}
+{%- set_global written = "," %}
+{%- for p in section.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
+<div class="wrap docs-index">
+  <p class="crumbs"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a> <span aria-hidden="true">/</span> Docs</p>
+  <h1>Verge's docs</h1>
+  <p class="intro">Each doc is written beside the code it describes, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a> and <a href="{{ config.extra.github | safe }}/verge">verge</a>.</p>
+  {%- set groups = verge.extra.groups %}{% set level = 2 %}
+  {% include "partials/verge-docs.html" %}
+</div>
+{% endblock content %}

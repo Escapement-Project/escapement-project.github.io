@@ -1,6 +1,6 @@
-/* The site's own pages, the landing page and the not-found page, after base.css: the parts no other
-   page of the project shares. Colours, type and line patterns come from tokens.css: this file names
-   roles, never values. */
+/* The site's own pages (the landing page, Verge's page and docs, and the not-found page), after
+   base.css: the parts no other page of the project shares. Colours, type and line patterns come
+   from tokens.css: this file names roles, never values. */
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gutter); align-items: center; padding: 24px 0 64px; }
 .status { color: var(--ink-2); font-size: 15px; margin: 0; }
 .dialface { position: relative; }
@@ -68,4 +68,140 @@
 @media (max-width: 640px) {
   .notfound { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 48px 0 72px; }
   .notfound svg { width: 96px; height: 96px; }
+}
+
+/* Verge's page: its mark on a large plate beside its name, then sections as the landing page's. */
+.verge-head { padding: 32px var(--gutter) 56px; }
+.verge-id { display: flex; gap: 22px; align-items: center; margin-bottom: 32px; }
+.verge-id .plate { width: 96px; height: 96px; border-radius: 21px; background: var(--plate); color: var(--lume); box-shadow: inset 0 0 0 1px var(--hair); display: grid; place-items: center; flex: none; }
+.verge-id .plate svg { width: 66px; height: 66px; }
+.verge-id h1 { margin: 0; }
+.verge-id .sub { color: var(--ink-2); margin: 2px 0 0; }
+.verge-head .ways { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 22px 0 0; font-weight: 600; }
+.measured { border-left: 1px solid var(--hair); padding-left: var(--gutter); }
+.measured .window { display: inline-block; background: var(--lume); color: var(--on-lume); box-shadow: inset 0 0 0 1px var(--window-edge); border-radius: 5px; padding: 6px 14px 7px; margin-bottom: 12px;
+  font: var(--figures-weight) 30px/1.2 var(--font-figures); font-stretch: var(--figures-stretch); font-variant-numeric: tabular-nums; }
+.measured p { font-size: 15px; color: var(--ink-2); text-wrap: pretty; }
+.measured p:last-child { color: var(--ink); font-weight: 600; margin: 0; }
+/* The install steps are a sequence, so they are numbered. */
+.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+.steps li { counter-increment: step; border-top: 1px solid var(--ink); padding-top: 12px; }
+.steps h3 { font-size: 17px; font-weight: 600; margin: 0 0 8px; }
+.steps h3::before { content: counter(step); font: var(--figures-weight) 15px/1 var(--font-figures); margin-right: 10px; color: var(--ink-2); }
+.steps p { font-size: 15px; }
+.steps .console { margin-top: 0; }
+.after { margin-top: 28px; font-size: 15px; color: var(--ink-2); }
+.after code, .doc code { font: 500 .88em var(--font-code); font-stretch: var(--code-stretch); }
+.after a { color: var(--ink); }
+/* What each probe has: features down the side, the two probes across, read from the left. */
+.probes th, .probes td { text-align: left; white-space: normal; vertical-align: top; padding: 9px 12px 9px 0; }
+.probes thead th { font: 600 15px/1.3 var(--font-text); }
+.probes tbody th { font-weight: 400; font-size: 15px; color: var(--ink-2); width: 22%; border-bottom-color: var(--hair); }
+.probes td { width: 39%; }
+.probes td.no { color: var(--ink-2); }
+/* How it works: the chip as a schematic draws it, a ruled package with pin ticks on its edges, the
+   host's USB line coming in from the left and the target's wires leaving to the right. */
+.arch { display: grid; grid-template-columns: auto minmax(24px, 64px) minmax(0, 1fr) minmax(48px, 120px) auto; align-items: center; }
+.arch-end { display: grid; gap: 2px; font-size: 15px; }
+.arch-end span { color: var(--ink-2); font-size: 14px; }
+.arch-line { height: 1.5px; background: var(--ink); }
+.arch-line.wire { height: 24px; background: none; color: var(--series-verge); }
+.arch-line.wire svg { width: 100%; height: 100%; display: block; }
+.arch-line.wire .down { display: none; }
+.chip { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); border: 1.5px solid var(--ink); border-radius: 4px; padding: 30px 22px 20px; }
+.chip::before, .chip::after { content: ""; position: absolute; top: 14px; bottom: 14px; width: 6px; background: repeating-linear-gradient(var(--ink) 0 1.5px, transparent 1.5px 14px); }
+.chip::before { left: -7.5px; }
+.chip::after { right: -7.5px; }
+.chip-name { position: absolute; top: 8px; left: 22px; font: 500 12px/1 var(--font-code); color: var(--ink-2); letter-spacing: .04em; }
+.core h3 { font: var(--display-weight) 17px/1.2 var(--font-display); font-stretch: var(--display-stretch); margin: 0; }
+.core-job { color: var(--ink-2); font-size: 14px; margin: 2px 0 10px; }
+.core ul { margin: 0; padding: 0; list-style: none; font-size: 15px; }
+.core li { padding: 4px 0; border-top: 1px solid var(--hair); }
+.mailbox { position: relative; width: 1px; margin: 0 22px; border-left: 1.5px dashed var(--rule); }
+.mailbox span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); background: var(--page); padding: 0 6px; font: 500 12px/1 var(--font-code); color: var(--ink-2); white-space: nowrap; }
+.arch figcaption { grid-column: 1 / -1; margin-top: 18px; }
+/* The overview's docs: a row a group, what it is for beside it, leading to the group on the docs'
+   index, as the landing page's Source rows lead to each repository. */
+.doc-rows { margin: 0; }
+.doc-rows > div { display: grid; grid-template-columns: 30% minmax(0, 1fr); padding: 14px 0; border-top: 1px solid var(--hair); }
+.doc-rows > div:last-child { border-bottom: 1px solid var(--hair); }
+.doc-rows dt a { font-weight: 600; }
+.doc-rows dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
+/* The docs' index: four groups, each a list of links with what each covers. */
+/* Two columns the groups flow down, so a long group does not leave a hole beside a short one. */
+.doc-groups { columns: 2; column-gap: var(--gutter); }
+.doc-groups > div { break-inside: avoid; margin-bottom: 32px; }
+.doc-groups .group { font: 600 15px/1.4 var(--font-text); font-stretch: normal; letter-spacing: 0; color: var(--ink-2); margin: 0 0 6px; }
+.doc-groups ul { list-style: none; margin: 0; padding: 0; }
+.doc-groups li { padding: 9px 0; border-top: 1px solid var(--hair); }
+.doc-groups li > a { font-weight: 600; }
+.doc-groups li p { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); }
+.coming { font-weight: 600; color: var(--ink-2); }
+.coming small { font-weight: 500; font-size: 12px; margin-left: 6px; padding: 1px 6px; border: 1px solid var(--rule); border-radius: 4px; }
+@media (max-width: 860px) {
+  .measured { border-left: 0; padding-left: 0; border-top: 1px solid var(--hair); padding-top: 20px; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .doc-groups { columns: 1; }
+  .doc-rows > div { grid-template-columns: minmax(0, 1fr); }
+  .doc-rows dd { margin-top: 4px; }
+  /* The schematic runs top to bottom: the host above, the cores stacked, the target below. */
+  .arch { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .arch-line { width: 1.5px; height: 28px; }
+  .arch-line.wire { width: 24px; height: 64px; }
+  .arch-line.wire .across { display: none; }
+  .arch-line.wire .down { display: block; }
+  .arch-end { justify-items: center; text-align: center; }
+  .chip { justify-self: stretch; grid-template-columns: minmax(0, 1fr); padding: 30px 18px 16px; }
+  .chip::before, .chip::after { top: auto; bottom: auto; left: 14px; right: 14px; width: auto; height: 6px; background: repeating-linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px 14px); }
+  .chip::before { top: -7.5px; }
+  .chip::after { bottom: -7.5px; }
+  .mailbox { width: auto; height: 1px; margin: 20px 0; border-left: 0; border-top: 1.5px dashed var(--rule); }
+  .mailbox span { transform: translate(-50%, -50%); }
+  .arch figcaption { justify-self: stretch; }
+}
+@media (max-width: 520px) {
+  .verge-id .plate { width: 72px; height: 72px; border-radius: 16px; }
+  .verge-id .plate svg { width: 50px; height: 50px; }
+  .probes tbody th { width: 30%; }
+}
+
+/* The docs' own index: the groups under a title, as the overview lists them. */
+.docs-index { padding-top: 32px; padding-bottom: 64px; }
+.docs-index .intro { color: var(--ink-2); margin-bottom: 40px; }
+.docs-index .doc-groups > div { scroll-margin-top: calc(var(--header) + 16px); }
+
+/* A doc: the text in a reading column, the docs listed beside it; on phones, the list after it. */
+.doc-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 15em; gap: 56px; padding-top: 32px; padding-bottom: 64px; align-items: start; }
+.doc { min-width: 0; max-width: 46em; }
+.crumbs { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
+.crumbs a { color: var(--ink); }
+.to-docs { display: none; }
+.doc h2 { font: var(--display-weight) 22px/1.3 var(--font-display); font-stretch: var(--display-stretch); margin: 44px 0 12px; padding-top: 20px; border-top: 1px solid var(--hair); }
+.doc h3 { font-size: 18px; font-weight: 600; margin: 30px 0 8px; }
+.doc h4 { font-size: 16px; font-weight: 600; margin: 24px 0 6px; }
+.doc p, .doc li { max-width: 40em; }
+.doc li { margin: 4px 0; }
+.doc .zola-anchor { margin-left: .35em; color: var(--ink-2); text-decoration: none; font-weight: 400; opacity: 0; }
+.doc :is(h2, h3, h4):hover .zola-anchor, .doc .zola-anchor:focus-visible { opacity: 1; }
+.doc pre { background: var(--surface); border-radius: 8px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; font-size: 14px; }
+.doc pre code { font-size: 1em; }
+.doc :not(pre) > code { overflow-wrap: anywhere; }
+/* A table keeps its columns and scrolls inside the column rather than the page sideways. */
+.doc table { display: block; width: max-content; max-width: 100%; overflow-x: auto; margin: 0 0 18px; }
+.doc th, .doc td { text-align: left; vertical-align: top; white-space: normal; min-width: 6em; max-width: 28em; }
+.doc th { border-bottom-color: var(--rule); }
+.doc-source { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--hair); font-size: 14px; color: var(--ink-2); }
+.doc-nav { position: sticky; top: calc(var(--header) + 24px); max-height: calc(100vh - var(--header) - 48px); overflow-y: auto; font-size: 14px; padding-top: 40px; }
+.doc-nav .group { font-weight: 600; color: var(--ink-2); margin: 18px 0 4px; }
+.doc-nav .group:first-child { margin-top: 0; }
+.doc-nav ul { list-style: none; margin: 0; padding: 0; }
+.doc-nav li { margin: 0; }
+.doc-nav a, .doc-nav .coming { display: block; padding: 3px 0 3px 10px; border-left: 2px solid var(--hair); text-decoration: none; font-weight: 400; }
+.doc-nav a:hover { border-left-color: var(--ink-2); }
+.doc-nav a[aria-current="page"] { border-left-color: var(--ink); font-weight: 600; }
+.doc-nav .coming { color: var(--ink-2); opacity: .7; }
+@media (max-width: 1000px) {
+  .doc-wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .to-docs { display: block; font-size: 14px; }
+  .doc-nav { position: static; max-height: none; padding-top: 24px; border-top: 1px solid var(--ink); }
 }

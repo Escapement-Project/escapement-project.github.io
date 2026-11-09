@@ -37,7 +37,7 @@
     <div class="two">
       <div>
         {# Verge's mark, design/marks/verge.svg: a V traced by samples, in lume on the plate. #}
-        <div class="app"><div class="plate" id="app" data-mark>{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name">Verge</h2><p>for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
+        <div class="app"><div class="plate" id="app" data-mark>{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a></h2><p>for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
         <p>A probe's firmware decides how fast it talks to a target, which protocols it speaks, and how reliably it reads what comes back.</p>
         <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
       </div>

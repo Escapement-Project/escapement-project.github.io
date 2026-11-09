@@ -1,0 +1,15 @@
+{#- Verge's docs, grouped as content/verge/_index.md lists them, each with what it covers; a doc not
+    written yet shows as coming. The page sets `groups`, `written` (each written doc's name, between
+    commas) and `level`, its group headings' level, before it includes this. -#}
+<div class="doc-groups">
+  {%- for g in groups %}
+  <div id="{{ g.title | slugify }}">
+    <h{{ level }} class="group">{{ g.title }}</h{{ level }}>
+    <ul>
+      {%- for d in g.docs %}
+      <li>{% if "," ~ d.name ~ "," in written %}<a href="{{ get_url(path='@/verge/docs/' ~ d.name ~ '.md') }}">{{ d.title }}</a>{% else %}<span class="coming">{{ d.title }} <small>coming</small></span>{% endif %}<p>{{ d.about }}</p></li>
+      {%- endfor %}
+    </ul>
+  </div>
+  {%- endfor %}
+</div>

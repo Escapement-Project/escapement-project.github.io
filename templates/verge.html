@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Verge – {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description }}{% endblock description %}
+{% block header %}{% set current = "verge" %}{% include "partials/header.html" %}{% endblock header %}
+{% block content %}
+{%- set landing = load_data(path="data/landing.json") %}{% set h = landing.headline %}
+{%- set docs = get_section(path="verge/docs/_index.md", metadata_only=true) %}
+{%- set docs_pages = get_section(path="verge/docs/_index.md") %}
+{%- set_global written = "," %}
+{%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
+<div class="wrap verge-head">
+  <div class="verge-id">
+    {# Verge's mark, design/marks/verge.svg, on its plate; static/js/mark.js plays it. #}
+    <div class="plate" data-mark>{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="66" height="66" aria-hidden="true" fill="currentColor" ') | safe }}</div>
+    <div>
+      <h1>Verge</h1>
+      <p class="sub">Open CMSIS-DAP firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p>
+    </div>
+  </div>
+  <div class="two">
+    <div>
+      <p class="lede">A probe's firmware decides how fast it talks to a target, which protocols it speaks, and how reliably it reads what comes back.</p>
+      <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
+      <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a></p>
+    </div>
+    <div class="measured">
+      <div class="window">{{ h.ratio }}×</div>
+      <p>the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
+      <p><a href="{{ config.base_url | safe }}/measurements/">All measurements</a></p>
+    </div>
+  </div>
+</div>
+
+{#- A section heading leads to its doc once the doc is written, as the landing page's Measured leads
+    to its page. #}
+<section id="install">
+  <div class="wrap">
+    <div class="head"><h2>{% if ",getting-started," in written %}<a href="{{ get_url(path='@/verge/docs/getting-started.md') }}">Install and update</a>{% else %}Install and update{% endif %}</h2><p class="kicker">With verge, a command line and a desktop app for Linux, Windows and macOS</p></div>
+    <div>
+    <ol class="steps">
+      <li><h3>Get verge</h3><p>Download the archive for your system from <a href="{{ config.extra.github | safe }}/verge/releases">verge's releases</a>. Each holds the command line and the desktop app, with a checksum and a signature.</p></li>
+      <li><h3>See what is attached</h3><div class="console"><code><span aria-hidden="true">$</span>verge</code><p>Each MCU-Link, the firmware it runs, and how it can update.</p></div></li>
+      <li><h3>Update</h3><div class="console"><code><span aria-hidden="true">$</span>verge update</code><p>The latest release, its signature checked first. A probe running NXP's firmware from V3.122 needs no jumper.</p></div></li>
+    </ol>
+    <p class="after">To put NXP's firmware back, <code>verge update --stock</code> installs it from your LinkServer installation. {% if ",getting-started," in written %}<a href="{{ get_url(path='@/verge/docs/getting-started.md') }}">Getting started</a>{% else %}Getting started{% endif %} has the details.</p>
+    </div>
+  </div>
+</section>
+
+<section id="probes">
+  <div class="wrap">
+    <div class="head"><h2>{% if ",probes," in written %}<a href="{{ get_url(path='@/verge/docs/probes.md') }}">On each probe</a>{% else %}On each probe{% endif %}</h2><p class="kicker">The standalone boards; not the MCU-Links built into evaluation boards</p></div>
+    <table class="probes">
+      <thead><tr><th scope="col"></th><th scope="col">MCU-Link</th><th scope="col">MCU-Link Pro</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Wires</th><td colspan="2">SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td></tr>
+        <tr><th scope="row">SWO</th><td colspan="2">UART encoding, up to 30 Mbaud</td></tr>
+        <tr><th scope="row">Serial ports</th><td>One</td><td>Two; the second is 3.3 V only</td></tr>
+        <tr><th scope="row">DIO pins</th><td class="no">No</td><td>Four, on J19</td></tr>
+        <tr><th scope="row">SPI and I2C</th><td class="no">No</td><td>Bridges through vendor commands</td></tr>
+        <tr><th scope="row">Target supply</th><td class="no">No</td><td>1.8 or 3.3 V, up to 400 mA</td></tr>
+        <tr><th scope="row">Energy capture</th><td class="no">No</td><td>Voltage, current and energy, on two current ranges</td></tr>
+        <tr><th scope="row">Verge Aux</th><td class="no">No</td><td>A second interface, for tools to use while a debugger holds the probe</td></tr>
+        <tr><th scope="row">Updates</th><td colspan="2">With verge, without the ISP jumper</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="inside">
+  <div class="wrap">
+    <div class="head"><h2>{% if ",architecture," in written %}<a href="{{ get_url(path='@/verge/docs/architecture.md') }}">How it works</a>{% else %}How it works{% endif %}</h2><p class="kicker">Two cores: one for the host, one for the target</p></div>
+    <figure class="arch">
+      {# A schematic of the probe's chip: the host's USB line on its left, the target's wires on its
+         right, and the two cores inside. On phones it turns to run top to bottom. #}
+      <div class="arch-end"><b>Host</b><span>USB</span></div>
+      <div class="arch-line" aria-hidden="true"></div>
+      <div class="chip">
+        <span class="chip-name">LPC55S69</span>
+        <div class="core">
+          <h3>CPU 0</h3>
+          <p class="core-job">Answers the host</p>
+          <ul><li>USB and every endpoint</li><li>The serial consoles</li><li>The energy stream</li><li>LEDs, reboots</li></ul>
+        </div>
+        <div class="mailbox"><span>mailbox</span></div>
+        <div class="core">
+          <h3>CPU 1</h3>
+          <p class="core-job">Drives the target</p>
+          <ul><li>CMSIS-DAP and vendor commands</li><li>Wire code, generated for the clock asked for</li><li>SWO, energy capture, the Pro's pins</li></ul>
+        </div>
+      </div>
+      {# The target's wires as a trace: across on a wide screen, down on a phone. #}
+      <div class="arch-line wire" aria-hidden="true"><svg class="across" viewBox="0 0 120 24" preserveAspectRatio="none"><path d="M0,18 H14 V6 H34 V18 H44 V6 H74 V18 H84 V6 H96 V18 H120" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg><svg class="down" viewBox="0 0 24 64"><path d="M6,0 V8 H18 V20 H6 V28 H18 V44 H6 V52 H18 V58 H6 V64" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      <div class="arch-end"><b>Target</b><span>SWD, JTAG, cJTAG</span></div>
+      <figcaption>CPU 1 takes no interrupts: it waits for work by polling a mailbox that CPU 0 raises, so nothing on its own core lands in the middle of a transfer. Every pin change of a transfer sits on one of the 150 MHz core's cycles. <a href="{{ get_url(path='@/verge/docs/architecture.md') }}">Architecture</a> and <a href="{{ get_url(path='@/verge/docs/code-generation.md') }}">Code generation</a> have the detail.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="docs">
+  <div class="wrap">
+    <div class="head"><h2><a href="{{ get_url(path='@/verge/docs/_index.md') }}">Docs</a></h2><p class="kicker">Written beside the code, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a> and <a href="{{ config.extra.github | safe }}/verge">verge</a></p></div>
+    <dl class="doc-rows">
+      {%- for g in section.extra.groups %}
+      <div><dt><a href="{{ get_url(path='@/verge/docs/_index.md') }}#{{ g.title | slugify }}">{{ g.title }}</a></dt><dd>{{ g.about }}</dd></div>
+      {%- endfor %}
+    </dl>
+  </div>
+</section>
+<script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
+{% endblock content %}
+{% block scripts %}<script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
