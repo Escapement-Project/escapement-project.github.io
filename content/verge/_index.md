@@ -34,7 +34,7 @@ title = "Building it yourself"
 about = "Building, checking and releasing the firmware and verge."
 docs = [
   { name = "building-the-firmware", title = "Building the firmware", repo = "mculink-verge", path = "README.md", about = "Building, checking and releasing mculink-verge." },
-  { name = "building-verge", title = "Building verge", repo = "verge", path = "CONTRIBUTING.md", about = "Building and testing the tools." },
+  { name = "building-verge", title = "Building verge", repo = "verge", path = "README.md", about = "Building verge and making its releases." },
 ]
 
 [[extra.groups]]
