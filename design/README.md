@@ -24,6 +24,20 @@ The source fonts download once, from google/fonts at the commit `tokens.toml` pi
 come from the marks in `marks/`. The link previews also read the headline from `data/landing.json`
 and the repositories from `content/_index.md`.
 
+## Shared files
+
+Besides what the build generates, five hand-written files are shared by every page of the project:
+
+| File | What |
+|---|---|
+| `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
+| `design/header.html` | the header every page shows: the mark, the places, the menu of places on phones and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with; each page marks its own place with `aria-current="page"` (the site's `templates/partials/header.html` fills it for Zola) |
+| `design/footer.html` | the footer every page shows |
+| `static/js/face.js` | the day and night switch |
+| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the menu of places on phones, and the published address for a page opened from disk |
+
+Edit them here; the copies follow.
+
 ## Keeping copies current
 
 A page or program outside this repository keeps its own copy of the files it uses. To check them,
@@ -32,15 +46,19 @@ run this from this repository:
 ```sh
 uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/* \
     ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
+    ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
+    ../mculink-bench/page/face.js ../mculink-bench/page/header.js \
     ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
     ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/favicon.ico
 ```
 
 Today's copies:
 
-- the measurements page in mculink-bench: `page/tokens.css`, `page/out/fonts/`, `page/dial.svg`
-  and `page/favicon.ico`. The page inlines all but the fonts, so after updating a copy, rebuild the
-  page; `page/build.py --check` fails while the page still carries the old one.
+- the measurements page in mculink-bench: `page/tokens.css`, `page/out/fonts/`, `page/dial.svg`,
+  `page/favicon.ico`, and the shared files `page/base.css`, `page/header.html`,
+  `page/footer.html`, `page/face.js` and `page/header.js`. The page inlines all but the fonts, so
+  after updating a copy, rebuild the page; `page/build.py --check` fails while the page still
+  carries the old one.
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`, and
@@ -49,10 +67,10 @@ Today's copies:
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
 before (`design/out/outputs.txt` lists what the last build wrote), or if a copy differs from the
-output or mark of the same name. Copies are matched by name, so the build refuses two outputs or
-marks that share a name and differ. It always writes the same bytes for the same source, on any
-system, which is why it pins fontTools, Brotli, resvg and Pillow exactly. The publish workflow runs
-the check, and the measurements page's, before it builds the site.
+output, mark or shared file of the same name. Copies are matched by name, so the build refuses two
+outputs, marks or shared files that share a name and differ. It always writes the same bytes for
+the same source, on any system, which is why it pins fontTools, Brotli, resvg and Pillow exactly.
+The publish workflow runs the check, and the measurements page's, before it builds the site.
 
 ## Colours
 
@@ -149,12 +167,12 @@ The plate's corners round by 14/64 of its side, and a 64-unit master sits an eig
 from each edge. iOS and GitHub round an icon's corners themselves, so the iOS icon and the avatar
 are square. The macOS icon follows Apple's grid: an 824 plate on a 1024 canvas.
 
-The site's header and the landing page's Verge plate inline the 64-unit masters. Those two masters
-must not refer to anything by `url(#id)`: a page that sets another base URL breaks the reference.
-The fitted masters are only ever drawn into images, so their clips are fine. Two drawings carry
-their own copy of the dial's geometry, which nothing checks: the hero's larger step in
-`static/js/landing.js`, and the not-found page's dial with its edge left flat in
-`templates/404.html`.
+The shared header (`design/header.html`, through `{{mark}}`) and the landing page's Verge plate
+inline the 64-unit masters. Those two masters must not refer to anything by `url(#id)`: a page that
+sets another base URL breaks the reference. The fitted masters are only ever drawn into images, so
+their clips are fine. Two drawings carry their own copy of the dial's geometry, which nothing
+checks: the hero's larger step in `static/js/landing.js`, and the not-found page's dial with its
+edge left flat in `templates/404.html`.
 
 Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name.
 

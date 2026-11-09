@@ -16,7 +16,8 @@ data/landing.json and the repositories from content/_index.md.
 
     uv run design/build.py                   # write every output
     uv run design/build.py --check FILE...   # are the outputs current, and is each FILE, a
-                                             # vendored copy, the same as the output of its name?
+                                             # vendored copy, the same as the output, mark or
+                                             # shared file of its name?
 """
 import argparse
 import filecmp
@@ -49,6 +50,11 @@ OUT_FILES = tuple(map(pathlib.Path, ("static/tokens.css", "static/favicon.ico", 
 OUT_DIRS = (pathlib.Path("static/fonts"), pathlib.Path("design/out"))
 # What the last build wrote. A loose file it no longer makes is found here, as an orphan.
 MANIFEST = pathlib.Path("design/out/outputs.txt")
+# Written by hand, not built, and copied by the project's other pages: the shared base sheet, the
+# header and footer every page shows, and the scripts behind the header. --check compares copies of
+# these too, by name.
+SHARED = tuple(map(pathlib.Path, ("static/base.css", "static/js/face.js", "static/js/header.js",
+                                  "design/header.html", "design/footer.html")))
 # Apple's grid: a 1024 canvas holds an 824 plate, with room for the shadow macOS draws.
 MACOS_PLATE = 824 / 1024
 
@@ -536,14 +542,14 @@ def main():
         build(tokens, fresh)
         write_text(fresh / MANIFEST, "".join(f"{rel.as_posix()}\n" for rel in outputs(fresh)))
         made = outputs(fresh)
-        # Copies are checked by file name, so two outputs or marks may share one only with the same
-        # bytes (the fonts' licence texts do).
+        # Copies are checked by file name, so two outputs, marks or shared files may share one only
+        # with the same bytes (the fonts' licence texts do).
         contents = {}
-        for path in [fresh / rel for rel in made] + sorted(MARKS.glob("*.svg")):
+        for path in [fresh / rel for rel in made] + sorted(MARKS.glob("*.svg")) + [ROOT / rel for rel in SHARED]:
             contents.setdefault(path.name, set()).add(path.read_bytes())
         clash = sorted(name for name, seen in contents.items() if len(seen) > 1)
         if clash:
-            raise SystemExit(f"outputs or marks named {', '.join(clash)} differ: a copy of one could not be checked")
+            raise SystemExit(f"outputs, marks or shared files named {', '.join(clash)} differ: a copy of one could not be checked")
         if args.check is None:
             # Written afresh: the folders are the build's alone, and a loose file the last build made
             # and this one does not goes too.
@@ -561,8 +567,8 @@ def main():
         here = outputs(ROOT)
         stale = [rel for rel in made if rel not in here or not filecmp.cmp(fresh / rel, ROOT / rel, shallow=False)]
         orphans = [rel for rel in here if rel not in made]
-        # A copy may be of an output or of a mark.
-        by_name = {p.name: p for p in MARKS.glob("*.svg")} | {rel.name: fresh / rel for rel in made}
+        # A copy may be of an output, a mark or a shared file.
+        by_name = {p.name: p for p in MARKS.glob("*.svg")} | {rel.name: ROOT / rel for rel in SHARED} | {rel.name: fresh / rel for rel in made}
         drift = [f for f in map(pathlib.Path, args.check)
                  if f.name not in by_name or not f.exists() or not filecmp.cmp(f, by_name[f.name], shallow=False)]
         for rel in stale:

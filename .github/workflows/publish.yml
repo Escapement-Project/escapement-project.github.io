@@ -48,13 +48,16 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       # Nothing publishes stale: the generated files must match their sources (a changed headline
-      # changes the link preview), the measurements page's copies of the tokens must be current,
-      # and the page itself must match a fresh build of its results, every annotation its wire
-      # section cites present in the recordings.
+      # changes the link preview), the measurements page's copies of the tokens and of the shared
+      # base sheet, header, footer and header scripts must be current, and the page itself must
+      # match a fresh build of its results and copies, every annotation its wire section cites
+      # present in the recordings.
       - name: Check
         run: |
           cd site && uv run design/build.py --check ../mculink-bench/page/tokens.css \
-            ../mculink-bench/page/out/fonts/* ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico
+            ../mculink-bench/page/out/fonts/* ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
+            ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
+            ../mculink-bench/page/face.js ../mculink-bench/page/header.js
           cd .. && python3 mculink-bench/page/build.py --check
       - name: Install Zola
         run: |

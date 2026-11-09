@@ -12,8 +12,11 @@ zola build      # the site, into public/
 |---|---|
 | `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `404.html` for any address without a page |
 | `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
-| `static/site.css` | the site's layout and components, naming colour roles, never values |
+| `static/base.css` | the base every page of the project shares: header, sections, type, figures, tables and footer, naming colour roles, never values |
+| `static/site.css` | the landing and not-found pages' own parts, after `base.css` |
+| `design/header.html`, `design/footer.html` | the header and footer every page of the project shows; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
+| `static/js/header.js` | the header's hairline, the mark on the section in view, and the menu of places on phones, on every page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `data/landing.json` | the figures the landing page shows, and where they come from |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
@@ -23,6 +26,9 @@ zola build      # the site, into public/
 `static/preview.png` and `design/out/` are generated: edit `design/tokens.toml`, the marks in
 `design/marks/` or the content the previews show, and run `uv run design/build.py` rather than
 editing them.
+
+The measurements page keeps copies of `base.css`, the header, the footer, `face.js` and
+`header.js`, as it does of the tokens; `design/README.md` says how they are checked.
 
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
