@@ -101,5 +101,7 @@
   </div>
 </section>
 <script id="data" type="application/json">{{ d | json_encode() | safe }}</script>
+{# Verge's mark in motion, built by design/build.py from the tokens and the mark; landing.js draws it. #}
+<script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 {% endblock content %}
 {% block scripts %}<script src="{{ get_url(path='js/landing.js') }}" defer></script>{% endblock scripts %}

@@ -489,21 +489,68 @@ for (const ref of document.querySelectorAll("#verge .ref")) {
 document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref")) vergeOff(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") vergeOff(); });
 
-// Verge's mark traces its samples in, a whole sample at a time, when the pointer comes to it.
-function traceMark() {
-  const plate = document.getElementById("app"), dots = [...plate.querySelectorAll("circle")];
-  if (reduced.matches || plate.dataset.tracing) return;
-  plate.dataset.tracing = "1";
+// Verge's mark, played once when its section arrives and again when the pointer or a tap reaches
+// it: a beam sweeps the plate and each sample moves from the V to the project's step as the beam
+// passes it, grey stems rising from the floor; a hold on the step; the next sweep wipes back to the
+// V. Every number comes from the design tokens (design/tokens.toml's [motion.mark] and
+// design/marks/verge.svg, built into design/out/mark.json and embedded by the template), as
+// verge-gui's does: this is only how to draw it, into the plate's own 64-unit box. The stems, the
+// step's trace and the beam live in groups of their own, removed at the end, so at rest the plate
+// holds the mark and nothing else.
+const MARK = JSON.parse(document.getElementById("mark").textContent);
+function markAt(t) {
+  const m = MARK, g = m.geometry, ease = (x) => 1 - (1 - clamp01(x)) ** m.ease;
+  const wipe = (t0, a, b) => m.grid_x.map((x, i) => a[i] + (b[i] - a[i]) * ease((t - t0 - x / 64 * m.sweep) / m.move));
+  const y = t < m.back ? wipe(0, g.v, g.step) : wipe(m.back, g.step, g.v);
+  const across = (t0) => (t - t0) / m.sweep * 64;
+  const beam = t < m.sweep ? across(0) : t >= m.back && t < m.back + m.sweep ? across(m.back) : null;
+  // The step's edge, drawn behind the first beam and wiped by the second.
+  const [start, finish] = m.floor_run;
+  const from = t < m.back ? start : Math.max(start, beam ?? finish), to = t < m.sweep ? Math.max(start, beam) : t < m.back + m.sweep ? finish : start;
+  const lines = clamp01(Math.min(t / m.grow, (m.end - t) / m.grow));
+  return { y, beam, trace: to > from ? [from, to] : null, lines };
+}
+function playMark() {
+  const plate = document.getElementById("app"), svg = plate.querySelector("svg"), dots = [...svg.querySelectorAll("circle")];
+  if (reduced.matches || plate.dataset.playing) return;
+  plate.dataset.playing = "1";
+  const NS = "http://www.w3.org/2000/svg", m = MARK, g = m.geometry, x = (grid) => g.x0 + g.k * grid;
+  // The trace, floor and stems under the samples, the beam over them.
+  const group = (where) => {
+    const el = document.createElementNS(NS, "g");
+    el.setAttribute("fill", "none"); el.setAttribute("stroke", css("--plate-line"));
+    return where(el);
+  };
+  const under = group((el) => svg.insertBefore(el, dots[0])), over = group((el) => svg.appendChild(el));
+  const line = (x1, y1, x2, y2, w, o) => `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke-width="${w}" stroke-opacity="${o}"/>`;
+  const draw = (t) => {
+    const { y, beam, trace, lines } = markAt(t), parts = [];
+    if (trace) {
+      const [a, b] = trace, level = a < m.riser ? g.floor : g.top;
+      const rises = a < m.riser && b > m.riser ? `H${f1(x(m.riser))}V${f1(g.top)}` : "";
+      parts.push(`<path d="M${f1(x(a))},${f1(level)}${rises}H${f1(x(b))}" stroke-width="${g.line}" stroke-opacity="${m.line_opacity}"/>`);
+    }
+    if (lines > 0) {
+      const [start, finish] = m.floor_run;
+      parts.push(line(x(start), g.floor, x(start + (finish - start) * lines), g.floor, g.line, m.line_opacity));
+      g.x.forEach((cx, i) => parts.push(line(cx, g.floor, cx, g.floor + (y[i] - g.floor) * lines, g.stem, m.line_opacity)));
+    }
+    under.innerHTML = parts.join("");
+    over.innerHTML = beam != null ? line(x(beam), g.beam[0], x(beam), g.beam[1], g.beam_width, m.beam_opacity) : "";
+    dots.forEach((d, i) => d.setAttribute("cy", f1(y[i])));
+  };
   const t0 = performance.now();
   const step = (now) => {
-    // A frame's time can fall just before the hover's own.
-    const shown = Math.max(1, Math.floor((now - t0) / 55) + 1);
-    dots.forEach((d, i) => { d.style.visibility = i < shown ? "" : "hidden"; });
-    if (shown <= dots.length) requestAnimationFrame(step); else delete plate.dataset.tracing;
+    const t = Math.max(0, now - t0) / 1000;
+    if (t < m.end) { draw(t); requestAnimationFrame(step); return; }
+    under.remove(); over.remove();
+    // Back to the mark's own markup, as design/marks/verge.svg writes it.
+    dots.forEach((d, i) => d.setAttribute("cy", String(g.v[i])));
+    delete plate.dataset.playing;
   };
   step(t0);
 }
-document.getElementById("app").addEventListener("pointerenter", traceMark);
+document.getElementById("app").addEventListener("pointerenter", playMark);
 
 // Redrawn for a change of face: the dial and the chart draw in the face's colours.
 function render() {
@@ -521,3 +568,7 @@ const whenSeen = (el, s, threshold, delay) => {
   io.observe(el);
 };
 document.fonts.ready.then(() => { render(); whenSeen(dialface, seq.hero, 0.5, 250); whenSeen(chartHost, seq.chart, 0.6, 0); });
+// The mark plays when its plate is first wholly in view below the header, which can cover it.
+new IntersectionObserver((seen, io) => { if (seen.some((x) => x.isIntersecting)) { io.disconnect(); setTimeout(playMark, 200); } },
+  { threshold: 1, rootMargin: `-${document.querySelector("header")?.offsetHeight ?? 0}px 0px 0px 0px` })
+  .observe(document.getElementById("app"));
