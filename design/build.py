@@ -208,6 +208,7 @@ def rust(tokens, fixed):
             out.append(f"pub const DASH_{const}: &[f32] = &[{', '.join(f'{float(x)}' for x in v)}];")
         else:
             out.append(f"pub const {const}: f32 = {float(v)};")
+    out += mark_rust(mark_motion(tokens))
     out += ["",
             "/// The fixed font instances under fonts/, each with the axis values it was cut at.",
             "pub const FONTS: &[(&str, &str)] = &["]
@@ -263,6 +264,79 @@ def descriptor(axes, axis, unit=""):
     return fmt(s[0]) if s[0] == s[1] else f"{fmt(s[0])} {fmt(s[1])}"
 
 
+def mark_rust(mk):
+    """The `mark` module of tokens.rs, in rustfmt's own layout."""
+    f = lambda v: f"{float(v)!r}"
+    arr = lambda vs: "[" + ", ".join(f(v) for v in vs) + "]"
+    def field(name, vs):
+        # rustfmt puts an array wider than 60 characters on lines of its own.
+        inner = ", ".join(f(v) for v in vs)
+        if len(inner) + 2 <= 60:
+            return [f"        {name}: [{inner}],"]
+        return [f"        {name}: [", f"            {inner},", "        ],"]
+
+    def geometry(name, doc, g):
+        return [f"    /// {doc}",
+                f"    pub const {name}: Geometry = Geometry {{",
+                f"        side: {f(g['side'])},", f"        x0: {f(g['x0'])},", f"        k: {f(g['k'])},",
+                *field("x", g["x"]), *field("v", g["v"]), *field("step", g["step"]),
+                f"        floor: {f(g['floor'])},", f"        top: {f(g['top'])},", f"        radius: {f(g['radius'])},",
+                f"        beam: ({f(g['beam'][0])}, {f(g['beam'][1])}),",
+                f"        stem: {f(g['stem'])},", f"        line: {f(g['line'])},", f"        beam_width: {f(g['beam_width'])},",
+                "    };"]
+    return ["",
+            "/// Verge's mark in motion (design/README.md, \"The mark in motion\"): the samples' places from",
+            "/// design/marks, everything else from design/tokens.toml's `[motion.mark]`. Times in seconds,",
+            "/// places on the 64-unit grid unless a geometry gives them in its own units.",
+            "pub mod mark {",
+            "    /// One drawing of the mark, in its own units across a plate `side` wide.",
+            "    #[derive(Clone, Copy, Debug, PartialEq)]",
+            "    pub struct Geometry {",
+            "        pub side: f32,",
+            "        /// A place across the 64-unit grid, in these units: `x0 + k * grid_x`.",
+            "        pub x0: f32,",
+            "        pub k: f32,",
+            "        /// Each sample's centre across, its height at rest (the V) and on the step.",
+            "        pub x: [f32; 7],",
+            "        pub v: [f32; 7],",
+            "        pub step: [f32; 7],",
+            "        /// The lowest and highest samples' heights: the floor and the step's top.",
+            "        pub floor: f32,",
+            "        pub top: f32,",
+            "        pub radius: f32,",
+            "        /// The beam's run, top to bottom.",
+            "        pub beam: (f32, f32),",
+            "        pub stem: f32,",
+            "        pub line: f32,",
+            "        pub beam_width: f32,",
+            "    }",
+            "",
+            f"    pub const SWEEP: f32 = {f(mk['sweep'])};",
+            f"    pub const MOVE: f32 = {f(mk['move'])};",
+            "    /// The second sweep starts.",
+            f"    pub const BACK: f32 = {f(mk['back'])};",
+            "    /// At rest again.",
+            f"    pub const END: f32 = {f(mk['end'])};",
+            f"    pub const GROW: f32 = {f(mk['grow'])};",
+            "    /// A loop's length, where it loops: the sequence, then a rest on the V.",
+            f"    pub const LOOP: f32 = {f(mk['loop'])};",
+            "    /// A sample's move eases out at this power.",
+            f"    pub const EASE: i32 = {mk['ease']};",
+            "    /// The samples across the 64-unit grid, which time each one's move.",
+            f"    pub const GRID_X: [f32; 7] = {arr(mk['grid_x'])};",
+            f"    pub const RISER: f32 = {f(mk['riser'])};",
+            f"    pub const FLOOR_RUN: (f32, f32) = ({f(mk['floor_run'][0])}, {f(mk['floor_run'][1])});",
+            "    /// The stems, floor and trace in plate-line at this opacity, under the samples.",
+            f"    pub const LINE_OPACITY: f32 = {f(mk['line_opacity'])};",
+            "    /// The beam at this, over them.",
+            f"    pub const BEAM_OPACITY: f32 = {f(mk['beam_opacity'])};",
+            "",
+            *geometry("MASTER", "The 64-unit master, design/marks/verge.svg, on its plate.", mk["master"]),
+            "",
+            *geometry("FITTED_24", "The 24 px master fitted to whole pixels, design/marks/verge-24.svg, which fills its plate.", mk["fitted_24"]),
+            "}"]
+
+
 def master(name, size):
     """The mark's master for a size: the one fitted to that size's pixel grid where it exists, else
     the 64-unit master. Returns its grid, its shapes, and whether it is fitted."""
@@ -272,6 +346,63 @@ def master(name, size):
     if not m:
         raise SystemExit(f"{path.relative_to(ROOT)}: give one <svg> with a square viewBox from 0 0")
     return int(m.group(1)), m.group(2), path == fitted
+
+
+def mark_motion(tokens):
+    """Verge's mark in motion, as both its drawings need it: the times, and for the 64-unit master
+    and the 24 px fitted one, each sample's place at rest and on the step, with the lines' places and
+    widths, in the drawing's own units. The samples are read from the marks themselves."""
+    m = tokens["motion"]["mark"]
+
+    def samples(size):
+        grid, body, fitted = master("verge", size)
+        dots = [tuple(map(float, c)) for c in re.findall(r'<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([-\d.]+)"', body)]
+        if len(dots) != len(m["step"]) or len({r for _, _, r in dots}) != 1:
+            fail(f"verge{'-' + str(size) if size else ''}.svg: give {len(m['step'])} circles of one radius, one for each level in motion.mark.step")
+        return grid, dots, fitted
+
+    _, grid_dots, _ = samples(None)
+    grid_x = [x for x, _, _ in grid_dots]
+    grid_floor, grid_top = max(y for _, y, _ in grid_dots), min(y for _, y, _ in grid_dots)
+
+    def geometry(dots, side, inset, widths):
+        xs, ys = [x + inset for x, _, _ in dots], [y + inset for _, y, _ in dots]
+        floor, top = max(ys), min(ys)
+        k = (xs[-1] - xs[0]) / (grid_x[-1] - grid_x[0])
+        yk = (top - floor) / (grid_top - grid_floor)
+        y_of = lambda gy: floor + yk * (gy - grid_floor)
+        return {"side": side, "x0": xs[0] - k * grid_x[0], "k": k, "x": xs, "v": ys,
+                "step": [floor + (top - floor) * level for level in m["step"]],
+                "floor": floor, "top": top, "radius": dots[0][2],
+                "beam": [y_of(m["beam"][0]), y_of(m["beam"][1])],
+                "stem": widths[0], "line": widths[1], "beam_width": widths[2]}
+
+    _, fitted_dots, fitted = samples(24)
+    if not fitted:
+        fail("design/marks/verge-24.svg: the strip's 24 px drawing needs the fitted master")
+    back = m["sweep"] + m["move"] + m["hold"]
+    end = back + m["sweep"] + m["move"]
+    # Four decimals: a ten-thousandth of a grid unit is far below a pixel, and short enough that
+    # each line of tokens.rs stays as rustfmt writes it.
+    def tidy(v):
+        if isinstance(v, float):
+            return round(v, 4)
+        if isinstance(v, (list, tuple)):
+            return [tidy(x) for x in v]
+        if isinstance(v, dict):
+            return {k: tidy(x) for k, x in v.items()}
+        return v
+    return tidy({
+        "sweep": m["sweep"], "move": m["move"], "back": back, "end": end, "grow": m["grow"],
+        "loop": end + m["rest"], "ease": m["ease"], "grid_x": grid_x, "riser": m["riser"],
+        "floor_run": m["floor"], "line_opacity": m["line-opacity"], "beam_opacity": m["beam-opacity"],
+        # The 64-unit master on its plate, an eighth of the plate in from each edge; the fitted
+        # master fills its plate.
+        "master": geometry(grid_dots, 64 / 0.75, 64 / 6, (m["stem"], m["line"], m["beam-width"])),
+        "fitted_24": geometry(fitted_dots, 24, 0, (m["fitted-line"],) * 3),
+        # The landing page draws into the master's own 64-unit box, no plate around it.
+        "grid": geometry(grid_dots, 64, 0, (m["stem"], m["line"], m["beam-width"])),
+    })
 
 
 def icon_svg(tokens, key, size=None, corners=True, plate=1.0):
@@ -516,6 +647,9 @@ def build(tokens, out_root):
         shutil.copyfile(licence, fixed_dir / f"{key}-OFL.txt")
     write_text(out_root / "static" / "tokens.css", css(tokens, web))
     write_text(out_root / "design" / "out" / "tokens.rs", rust(tokens, fixed))
+    motion = mark_motion(tokens)
+    page = {k: v for k, v in motion.items() if k not in ("master", "fitted_24", "grid")} | {"geometry": motion["grid"]}
+    write_text(out_root / "design" / "out" / "mark.json", json.dumps(page, separators=(",", ":")) + "\n")
     icons(tokens, out_root)
     previews(tokens, out_root)
 

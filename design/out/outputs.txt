@@ -20,6 +20,7 @@ design/out/icons/verge-64.png
 design/out/icons/verge-icon.svg
 design/out/icons/verge.icns
 design/out/icons/verge.ico
+design/out/mark.json
 design/out/previews/mculink-bench.png
 design/out/previews/mculink-stock-notes.png
 design/out/previews/mculink-verge.png
