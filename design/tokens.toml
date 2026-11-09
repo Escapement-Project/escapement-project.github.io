@@ -42,6 +42,11 @@ night = "#11171d"
 [color.plate]
 day = "#11171d"
 night = "#11171d"
+# Lines drawn on the plate, such as the mark's stems, trace and beam, drawn at partial opacity. The
+# plate is the same in both faces, so they are too.
+[color.plate-line]
+day = "#aab5be"
+night = "#aab5be"
 
 # The landing page's hero dial alone: its hand, ring and face. The window's edge outlines a window
 # of lume by day: the dial's, and the measurements page's headline.

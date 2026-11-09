@@ -92,6 +92,7 @@ sets `data-face="night"` on `<html>`, or when the system prefers dark and the pa
 | `lume` | `#c4f03c` | `#c4f03c` | the identity: a fill only, never a line or text |
 | `on-lume` | `#11171d` | `#11171d` | text and marks on lume |
 | `plate` | `#11171d` | `#11171d` | the plate under the marks and app icons |
+| `plate-line` | `#aab5be` | `#aab5be` | lines drawn on the plate, such as the mark's stems, trace and beam, at partial opacity |
 | `hand`, `ring`, `face` | | | the landing page's dial only |
 | `window-edge` | `#11171d` | transparent | the edge of a window of lume: the dial's, the measurements headline's |
 | `fault-ink`, `fault-fill` | `#b81c20`, `#ef4b4b` | `#f24e4d`, `#ef4b4b` | something failed |
