@@ -28,27 +28,34 @@ function start(s, delay = 0) {
 
 // The hero: the headline as a dial. The project's step is printed across the face, its top edge
 // traced as a capture would be: NXP's firmware on the low run, Verge on the high one. The readings
-// sit on the face's centre line, mirrored about the riser as the step is about the centre. The red
-// hand reads the ratio on the outer scale, and the window prints it.
+// sit on the face's centre line, mirrored about the riser as the step is about the centre. The outer
+// scale turns until the ratio sits at a red index at six, under the window that prints it, so the
+// centre carries nothing but the step and the readings.
 const C = 200, K = 158 / 23, lv = (u) => C + (u - 32) * K;
 const LOW = lv(38), RISER = lv(29), RISER_RIGHT = lv(35), HIGH = lv(20);
 const chord = (y) => Math.sqrt(158 ** 2 - (y - C) ** 2);
-// 0x at half past seven to 5x at half past four: a ratio below 1 has its place too.
+// The scale's own layout: 0x to 5x over 270 degrees, a ratio below 1 having its place too. It turns
+// as a whole, so the value v sits at the index once the scale is turned by INDEX - scaleAt(v).
 const SCALE = { max: 5, from: 225, span: 270 };
 const scaleAt = (v) => SCALE.from + v / SCALE.max * SCALE.span;
+const INDEX = 180;
+// A number within this many degrees of six would crowd the window: it passes behind it, hidden.
+// The window's corners sit 21.8 degrees either side of six at the numbers' radius, and a number
+// is about 4 degrees wide there.
+const UNDER_WINDOW = 28;
 const RATIO = parseFloat(DATA.headline.ratio);
 // The sequence in milliseconds. The sweep crosses the face at a steady rate, as a scope's time base
-// does: it draws the trace, and each reading's characters show once it is past them. The hand
-// leaves 0x as the edge rises and slows into the ratio, out-cubic and no overshoot, since every
-// angle it passes is a reading; the window and the scale's ink follow its value. Each part follows
-// the sweep's position or the hand's value, never a timer of its own, so none can lead or lag.
+// does: it draws the trace, and each reading's characters show once it is past them. The scale
+// leaves 0x at the index as the edge rises and slows into the ratio, out-cubic and no overshoot,
+// since every value it passes is a reading; the window and the scale's ink follow its value. Each
+// part follows the sweep's position or the reading, never a timer of its own, so none can lead or lag.
 const SWEEP = { from: C - chord(LOW), to: 360, ms: 560 };
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const sweepX = (t) => t < 0 ? -Infinity : SWEEP.from + (SWEEP.to - SWEEP.from) * clamp01(t / SWEEP.ms);
 const passes = (x) => Math.round((x - SWEEP.from) / (SWEEP.to - SWEEP.from) * SWEEP.ms);
-const HAND = { from: passes(RISER), ms: 1000 };
-const handAt = (t) => RATIO * (1 - (1 - clamp01((t - HAND.from) / HAND.ms)) ** 3);
-seq.hero.end = HAND.from + HAND.ms;
+const TURN = { from: passes(RISER), ms: 1000 };
+const readingAt = (t) => RATIO * (1 - (1 - clamp01((t - TURN.from) / TURN.ms)) ** 3);
+seq.hero.end = TURN.from + TURN.ms;
 
 function dial() {
   const ink = css("--ink"), muted = css("--ink-2"), ring = css("--ring"), face = css("--face"), hair = css("--hair");
@@ -59,13 +66,16 @@ function dial() {
   const ours = DATA.series[0], h = DATA.headline;
   const s = [`<svg viewBox="0 0 400 400" role="group" aria-label="The headline as a dial"><g aria-hidden="true">`];
   s.push(`<circle cx="${C}" cy="${C}" r="198" fill="${ring}" stroke="${hair}"/><circle cx="${C}" cy="${C}" r="158" fill="${face}"/>`);
-  // The outer scale, a tick every tenth; those the hand has passed are drawn in ink.
+  // The outer scale, a tick every tenth, those up to the reading drawn in ink. It turns as one group;
+  // each number turns back about its own place, so it stays upright wherever the scale stops.
+  s.push(`<g id="scale">`);
   for (let i = 0; i <= SCALE.max * 10; i++) {
     const v = i / 10, major = i % 10 === 0, half = i % 5 === 0;
     const [x1, y1] = pt(scaleAt(v), 194), [x2, y2] = pt(scaleAt(v), major ? 172 : half ? 180 : 186);
     s.push(`<line class="tick" data-v="${v}" x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke-width="${major ? 2.4 : 1}"/>`);
-    if (major) { const [tx, ty] = pt(scaleAt(v), 150); s.push(`<text x="${f1(tx)}" y="${f1(ty + 5)}" text-anchor="middle" font-family='${css("--font-display")}' font-weight="${css("--display-weight")}" font-stretch="${css("--display-stretch")}" font-size="${fs(13)}" fill="${ink}">${v}×</text>`); }
+    if (major) { const [tx, ty] = pt(scaleAt(v), 150); s.push(`<text class="number" data-at="${scaleAt(v)}" data-x="${f1(tx)}" data-y="${f1(ty)}" x="${f1(tx)}" y="${f1(ty + 5)}" text-anchor="middle" font-family='${css("--font-display")}' font-weight="${css("--display-weight")}" font-stretch="${css("--display-stretch")}" font-size="${fs(13)}" fill="${ink}">${v}×</text>`); }
   }
+  s.push(`</g>`);
   // The logo's step itself, scaled so the logo's inner circle (r 23 of its 64) is the face (r 158).
   // The clip goes on a group: on the scaled path it would scale with it.
   s.push(`<clipPath id="face"><circle cx="${C}" cy="${C}" r="158"/></clipPath><clipPath id="dial-sweep"><rect x="0" y="0" width="0" height="400"/></clipPath>`);
@@ -96,9 +106,8 @@ function dial() {
   s.push(`<g class="reading" id="r-ratio" tabindex="0" role="img" aria-label="${h.ratio} times: Verge's ${h.ours} KiB/s over NXP's ${h.stock}" data-tip="<b>${h.ratio}×</b><br>Verge's ${h.ours} KiB/s over NXP's ${h.stock}">`
     + `<rect class="hit" fill="transparent" x="141" y="297" width="118" height="46" rx="6"/><rect class="focus" fill="none" stroke="${ink}" stroke-width="2" x="141" y="297" width="118" height="46" rx="6"/>`
     + `<text id="ratio" x="200" y="${300 + 20 + 22 * .36}" text-anchor="middle" ${figures} font-size="22" fill="${css("--on-lume")}">${h.ratio}×</text></g>`);
-  // The red hand, drawn at twelve and turned to its reading, with its counterweight.
-  s.push(`<g aria-hidden="true"><g id="hand"><line x1="${C}" y1="${C + 34}" x2="${C}" y2="${C - 176}" stroke="${css("--hand")}" stroke-width="3" stroke-linecap="round"/></g>`);
-  s.push(`<circle cx="${C}" cy="${C}" r="8" fill="${css("--hand")}"/><circle cx="${C}" cy="${C}" r="2.6" fill="${face}"/></g>`);
+  // The red index at six, in the ring's band inside the ticks, pointing out at the reading.
+  s.push(`<path aria-hidden="true" transform="rotate(${INDEX} ${C} ${C})" d="M${C - 7},${C - 159} L${C + 7},${C - 159} L${C},${C - 171} Z" fill="${css("--hand")}"/>`);
   s.push(`</svg><div class="tip" id="dialtip" hidden></div>`);
   host.innerHTML = s.join("");
   for (const id of ["r-nxp", "r-verge"]) {
@@ -123,7 +132,7 @@ function dial() {
 function heroFrame() {
   const svg = document.querySelector("#dialface svg");
   if (!svg) return;
-  const t = seq.hero.pos, x = sweepX(t), v = handAt(t), done = t >= SWEEP.ms;
+  const t = seq.hero.pos, x = sweepX(t), v = readingAt(t), done = t >= SWEEP.ms;
   svg.querySelector("#dial-sweep rect").setAttribute("width", t < 0 ? 0 : f1(x));
   for (const band of svg.querySelectorAll("[data-edges]")) {
     const edges = band.dataset.edges.split(" ").map(Number).filter((e) => e <= x);
@@ -131,7 +140,13 @@ function heroFrame() {
   }
   for (const g of svg.querySelectorAll(".reading[data-at]")) g.style.visibility = t >= +g.dataset.at ? "" : "hidden";
   for (const tick of svg.querySelectorAll(".tick")) tick.classList.toggle("on", +tick.dataset.v <= v + 1e-9);
-  svg.querySelector("#hand").setAttribute("transform", `rotate(${scaleAt(v).toFixed(2)} ${C} ${C})`);
+  const turn = INDEX - scaleAt(v);
+  svg.querySelector("#scale").setAttribute("transform", `rotate(${turn.toFixed(2)} ${C} ${C})`);
+  for (const n of svg.querySelectorAll("#scale .number")) {
+    n.setAttribute("transform", `rotate(${(-turn).toFixed(2)} ${n.dataset.x} ${n.dataset.y})`);
+    const off = Math.abs((((+n.dataset.at + turn - INDEX) % 360) + 540) % 360 - 180);
+    n.style.visibility = off < UNDER_WINDOW ? "hidden" : "";
+  }
   svg.querySelector("#ratio").textContent = `${v.toFixed(DATA.headline.ratio.split(".")[1]?.length ?? 0)}×`;
 }
 // A reading's tip sits under it, or over it where under would leave the dial.
