@@ -36,7 +36,7 @@ jobs:
             page
             results
           persist-credentials: false
-      # The recordings' annotations, which the measurements page's wire section cites; the
+      # The recordings' annotations and charts, which the measurements page cites; the
       # recordings themselves stay on that repository's own site.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,6 +45,7 @@ jobs:
           sparse-checkout: |
             /*/*.annotations.toml
             /*/*.jsonl
+            /*/*.chart.json
           sparse-checkout-cone-mode: false
           persist-credentials: false
       # Verge's docs, which live beside the code they describe: each repository's Markdown at its
