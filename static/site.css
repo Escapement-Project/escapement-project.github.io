@@ -201,11 +201,14 @@
 .doc .zola-anchor { margin-left: .35em; color: var(--ink-2); text-decoration: none; font-weight: 400; opacity: 0; }
 .doc :is(h2, h3, h4):hover .zola-anchor, .doc .zola-anchor:focus-visible { opacity: 1; }
 .doc pre { background: var(--surface); border-radius: 8px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; font-size: 14px; }
-/* A code block's Copy button sits in a strip above the code, so a line scrolled sideways never
-   runs under it. */
-.doc .codeblock { background: var(--surface); border-radius: 8px; padding-top: 34px; margin: 0 0 16px; }
-.doc .codeblock pre { background: none; border-radius: 0; padding-top: 0; margin: 0; }
-.doc .codeblock .copy { top: 7px; right: 10px; }
+/* A code block's Copy button shows over the code's corner while the block is pointed at, while the
+   button has the keyboard's focus, or once it has copied, so the code needs no room kept for it.
+   Without hover, as on a touch screen, it stays. */
+.doc .codeblock { margin: 0 0 16px; }
+.doc .codeblock pre { margin: 0; }
+.doc .codeblock .copy { top: 8px; right: 10px; opacity: 0; transition: opacity .15s, color .18s, background-color .18s, border-color .18s; }
+.doc .codeblock:hover .copy, .doc .codeblock .copy:focus-visible, .doc .codeblock.copied .copy { opacity: 1; }
+@media (hover: none) { .doc .codeblock .copy { opacity: 1; } }
 .doc pre code { font-size: 1em; }
 .doc :not(pre) > code { overflow-wrap: anywhere; }
 /* A table keeps its columns and scrolls inside the column rather than the page sideways. */
