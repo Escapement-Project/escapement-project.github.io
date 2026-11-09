@@ -50,7 +50,9 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
     ../mculink-bench/page/face.js ../mculink-bench/page/header.js \
     ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
-    ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/favicon.ico
+    ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/favicon.ico \
+    ../tickwave/site/dial.svg ../tickwave/site/base.css ../tickwave/site/header.html \
+    ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js
 ```
 
 Today's copies:
@@ -62,8 +64,9 @@ Today's copies:
   carries the old one.
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
-- tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`, and
-  `site/favicon.ico`.
+- tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
+  `site/favicon.ico`, `site/dial.svg`, and the shared files `site/base.css`, `site/header.html`,
+  `site/footer.html`, `site/face.js` and `site/header.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
