@@ -38,6 +38,10 @@
 .copy:hover { color: var(--ink); background: var(--wash); }
 .copy { display: inline-flex; align-items: center; gap: 5px; transition: color .18s, background-color .18s, border-color .18s; }
 .copied > .copy { color: var(--page); background: var(--ink); border-color: var(--ink); animation: copy-press .32s cubic-bezier(.3, 0, .2, 1); }
+/* The button's word is never part of a selection, and the button hides while the reader selects text
+   in its box. */
+.copy { user-select: none; -webkit-user-select: none; }
+.selecting > .copy, .doc .codeblock.selecting .copy { visibility: hidden; opacity: 0; }
 .copy .tick { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 12; animation: copy-tick .26s .06s ease-out backwards; }
 @keyframes copy-press { 0% { transform: scale(.9); } 55% { transform: scale(1.05); } 100% { transform: scale(1); } }
 @keyframes copy-tick { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }

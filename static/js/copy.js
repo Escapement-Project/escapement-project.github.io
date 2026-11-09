@@ -48,6 +48,12 @@
     wrap.append(pre);
     boxes.push(wrap);
   }
+    // While the reader selects text in a box, its button steps aside, so it neither covers the text
+  // nor looks part of what they are selecting.
+  document.addEventListener("selectionchange", () => {
+    const sel = getSelection(), range = sel.rangeCount && !sel.isCollapsed ? sel.getRangeAt(0) : null;
+    for (const box of boxes) box.classList.toggle("selecting", !!range && range.intersectsNode(box));
+  });
   for (const box of boxes) {
     const button = Object.assign(document.createElement("button"), { type: "button", className: "copy", textContent: "Copy" });
     box.append(button);
