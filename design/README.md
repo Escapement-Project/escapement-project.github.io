@@ -32,7 +32,8 @@ run this from this repository:
 ```sh
 uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/* \
     ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
-    ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png
+    ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
+    ../chrono/site/tokens.css ../chrono/site/fonts/* ../chrono/site/favicon.ico
 ```
 
 Today's copies:
@@ -42,6 +43,8 @@ Today's copies:
   page; `page/build.py --check` fails while the page still carries the old one.
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
+- chrono's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`, and
+  `site/favicon.ico`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
