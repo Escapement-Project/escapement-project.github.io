@@ -9,10 +9,10 @@
 Writes static/tokens.css, the web fonts under static/fonts/, the favicon, the iOS icon and the
 site's link preview for the site and any page that vendors them; design/out/tokens.rs with the
 fixed font instances under design/out/fonts/ for verge-gui; the icons under design/out/icons/:
-Verge's app icon for each platform and the org's avatar; and each published repository's social
-preview under design/out/previews/. The source fonts download once from google/fonts at the commit
-tokens.toml pins; the marks are design/marks/. The previews also read the headline from
-data/landing.json and the repositories from content/_index.md.
+Verge's app icon for each platform, tickwave's icon and the org's avatar; and each published
+repository's social preview under design/out/previews/. The source fonts download once from
+google/fonts at the commit tokens.toml pins; the marks are design/marks/. The previews also read the
+headline from data/landing.json and the repositories from content/_index.md.
 
     uv run design/build.py                   # write every output
     uv run design/build.py --check FILE...   # are the outputs current, and is each FILE, a
@@ -414,6 +414,11 @@ def icon_svg(tokens, key, size=None, corners=True, plate=1.0):
     g, body, fitted = master(spec["mark"], size if plate == 1.0 else None)
     side, at = g * plate, g * (1 - plate) / 2
     rx = f"{ic['corner'] * side:g}" if corners else "0"
+    # A mark's secondary parts (class "line") take the icon's line colour; a mark that has them needs one.
+    if 'class="line"' in body:
+        if "line" not in spec:
+            fail(f"icon.{key}: its mark has parts of class line, so it needs a line colour")
+        body = body.replace('class="line"', f'fill="{fill(spec["line"])}" fill-opacity="{spec.get("line-opacity", 1):g}"')
     if not fitted:
         k = side * (1 - 2 * ic["inset"]) / g
         body = f'<g transform="translate({at + side * ic["inset"]:g} {at + side * ic["inset"]:g}) scale({k:g})">{body}</g>'
@@ -431,11 +436,13 @@ def image(svg_text, px):
 
 
 def icons(tokens, out_root):
-    for key in ("project", "verge"):
+    for key in ("project", "verge", "tickwave"):
         if key not in tokens["icon"]:
             fail(f"icon.{key} is missing")
-        for field in ("mark", "ground", "ink"):
+        for field in ("mark", "ground", "ink", "line"):
             v = tokens["icon"][key].get(field)
+            if field == "line" and v is None:
+                continue
             if field == "mark" and not (MARKS / f"{v}.svg").exists():
                 fail(f"icon.{key}.mark is {v!r}, which design/marks/ does not have")
             if field != "mark" and v not in tokens["color"]:
@@ -456,6 +463,10 @@ def icons(tokens, out_root):
     win[-1].save(out / "verge.ico", format="ICO", sizes=[i.size for i in win], append_images=win[:-1])
     mac = {px: png(icon_svg(tokens, "verge", plate=MACOS_PLATE), px) for px in (16, 32, 64, 128, 256, 512, 1024)}
     (out / "verge.icns").write_bytes(icns(mac))
+    # tickwave's icon: SVG and PNGs. Not tickwave.svg, the mark's name.
+    write_text(out / "tickwave-icon.svg", icon_svg(tokens, "tickwave") + "\n")
+    for px in (16, 24, 32, 48, 64, 128, 256, 512):
+        (out / f"tickwave-{px}.png").write_bytes(png(icon_svg(tokens, "tickwave", px), px))
 
 
 # Each ICNS entry by its size in pixels, every one PNG-coded. Pillow's writer leaves out the 16 and

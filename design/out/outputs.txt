@@ -9,6 +9,15 @@ design/out/fonts/hanken-grotesk-OFL.txt
 design/out/fonts/martian-mono-OFL.txt
 design/out/fonts/saira-OFL.txt
 design/out/icons/escapement-project-avatar.png
+design/out/icons/tickwave-128.png
+design/out/icons/tickwave-16.png
+design/out/icons/tickwave-24.png
+design/out/icons/tickwave-256.png
+design/out/icons/tickwave-32.png
+design/out/icons/tickwave-48.png
+design/out/icons/tickwave-512.png
+design/out/icons/tickwave-64.png
+design/out/icons/tickwave-icon.svg
 design/out/icons/verge-128.png
 design/out/icons/verge-16.png
 design/out/icons/verge-24.png

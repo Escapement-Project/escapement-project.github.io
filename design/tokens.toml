@@ -218,3 +218,12 @@ ink = "on-lume"
 mark = "verge"
 ground = "plate"
 ink = "lume"
+
+# tickwave's: a wave on its ticks, lume on the plate. The ticks between the edges' (class "line" in
+# the mark) are `line` at `line-opacity`. Its icon files, and its repository's preview.
+[icon.tickwave]
+mark = "tickwave"
+ground = "plate"
+ink = "lume"
+line = "plate-line"
+line-opacity = 0.75

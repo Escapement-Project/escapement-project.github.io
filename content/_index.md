@@ -44,6 +44,7 @@ about = "What NXP's firmware does, observed on running units: how it identifies 
 
 [[extra.repos]]
 name = "tickwave"
+icon = "tickwave"
 licence = "MIT or Apache License 2.0"
 about = "A logic and MSO capture viewer for the web, to show wire recordings inside a page."
 +++

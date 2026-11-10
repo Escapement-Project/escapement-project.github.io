@@ -11,7 +11,7 @@ source, `tokens.toml`, generates everything else:
 | `design/out/mark.json` | Verge's mark in motion, which the landing page embeds |
 | `design/out/fonts/` | the fixed font files verge-gui embeds |
 | `static/favicon.ico`, `static/apple-touch-icon.png` | the sites' favicon and iOS icon |
-| `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS), and the org's avatar |
+| `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS); tickwave's icon (SVG and PNGs); and the org's avatar |
 | `static/preview.png` | the site's link preview |
 | `design/out/previews/` | each published repository's social preview, to upload on GitHub |
 
@@ -195,7 +195,8 @@ licence sits beside its files.
 
 ## Icons
 
-There are two marks in `marks/`: the project's dial with one rising edge, and Verge's V of samples.
+There are three marks in `marks/`: the project's dial with one rising edge, Verge's V of samples,
+and tickwave's wave on its ticks.
 Each has a master on a 64-unit grid. At 16, 24 and 32 px, a master fitted to the pixel grid takes
 over (`dial-16.svg`, `verge-24.svg` and so on). Its straight edges sit on whole pixels, so the mark
 stays sharp where the scaled master would blur. A fitted master fills its plate at the size it
@@ -207,6 +208,12 @@ An icon is a mark on a plate, both set in `tokens.toml` by colour role:
 |---|---|---|---|
 | `project` | the dial in `on-lume` | `lume` | the sites' favicon, the iOS icon, the org's avatar |
 | `verge` | the V in `lume` | `plate` | verge-gui's app icon |
+| `tickwave` | the wave in `lume`, its other ticks in `plate-line` | `plate` | tickwave's icon, its repository's preview |
+
+A mark's parts with `class="line"` take the icon's `line` colour at its `line-opacity`; the rest take
+its `ink`. tickwave's mark is the one that has them: the ticks under the wave's edges are lume, the
+ticks between them grey. Its fitted masters keep two pulses at every size, with fewer, thinner
+ticks than the scaled master would draw.
 
 The plate's corners round by 14/64 of its side, and a 64-unit master sits an eighth of the side in
 from each edge. iOS and GitHub round an icon's corners themselves, so the iOS icon and the avatar
@@ -219,7 +226,8 @@ their clips are fine. Two drawings carry their own copy of the dial's geometry, 
 checks: the hero's larger step in `static/js/landing.js`, and the not-found page's dial with its
 edge left flat in `templates/404.html`.
 
-Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name.
+Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name. tickwave's is
+`tickwave-icon.svg`, for the same reason.
 
 The org's avatar is uploaded by hand, in the org's settings on GitHub:
 `design/out/icons/escapement-project-avatar.png`.
