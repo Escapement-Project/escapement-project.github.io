@@ -70,6 +70,38 @@
   </div>
 </section>
 
+<section id="measurements">
+  <div class="wrap">
+    <div class="head"><h2><a href="{{ config.base_url | safe }}/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
+    <div>
+      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
+      <div class="two">
+        <figure>
+          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table" height="300"></tickwave-chart></div>
+          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ landing.figureNote }}</figcaption>
+        </figure>
+        <figure>
+          {# The table is the page's own: a reader without scripts gets every figure. The script adds the
+             highlights, by these rows' clocks, cells' series and "series@MHz" references. #}
+          <table id="table">
+            <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP</th></tr>
+            <tr><th data-s="clang">Clang</th><th data-s="gcc">GCC</th><th data-s="stock">V3.174</th></tr>
+            {%- for m in landing.clocks %}{% set i = loop.index0 %}
+            <tr data-i="{{ i }}"><td class="clock">{{ m }}</td>
+              {%- for id in ["clang", "gcc", "stock"] %}{% for s in landing.series %}{% if s.id == id %}
+              {%- set limit = s.rightUpTo | default(value=1000000) %}
+              <td data-s="{{ id }}" data-ref="{{ id }}@{{ m }}" class="{% if m > limit %}wrong{% endif %}">{{ s.table[i] }}{% if m > limit %}<span class="mark"> *</span>{% endif %}</td>
+              {%- endif %}{% endfor %}{% endfor %}
+            </tr>
+            {%- endfor %}
+          </table>
+          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. {% if landing.tableNote %}{{ landing.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="inside">
   <div class="wrap">
     <div class="head"><h2>{% if ",architecture," in written %}<a href="{{ get_url(path='@/verge/docs/architecture.md') }}">How it works</a>{% else %}How it works{% endif %}</h2><p class="kicker">Two cores: one for the host, one for the target</p></div>
@@ -111,5 +143,6 @@
   </div>
 </section>
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
+<script id="data" type="application/json">{{ landing | json_encode() | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/measured.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}

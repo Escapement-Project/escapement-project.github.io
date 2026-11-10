@@ -25,10 +25,11 @@ the index, and serve `public/` to try the search.
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
 | `static/doc.css`, `static/js/doc.js` | a doc page's frame, shared with tickwave's docs: the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page |
-| `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
+| `static/js/landing.js` | the landing page's dial and Verge section |
+| `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
-| `data/landing.json` | the figures the landing page shows, and where they come from, written by mculink-bench's `page/extract.py --landing` |
+| `data/landing.json` | the headline the landing page and Verge's page show, and Figure 1 and Table 1 on Verge's page, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
 | `.github/search-index.py` | writes the docs' search index, `verge/docs/search.json`, from the built site: each doc's sections as plain text |
@@ -44,11 +45,11 @@ The measurements page keeps copies of `base.css`, the header, the footer, `face.
 `doc.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the copies are
 checked.
 
-The landing page works without scripts: its figures are in the text and in Table 1, which Zola
-renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
-text, the figure and the table. tickwave's `<tickwave-chart>` draws Figure 1, loaded from tickwave's
-own site on this origin at the version `config.toml` pins; the page loads no fonts or scripts from
-anywhere else.
+The landing page and Verge's page work without scripts: their figures are in the text, and Verge's
+page has Table 1, which Zola renders from `data/landing.json`. Scripts add the landing's dial, and
+on Verge's page Figure 1 and the highlights that link the claim, the figure and the table.
+tickwave's `<tickwave-chart>` draws Figure 1, loaded from tickwave's own site on this origin at the
+version `config.toml` pins; the pages load no fonts or scripts from anywhere else.
 
 ## The measurements page
 

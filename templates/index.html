@@ -57,43 +57,11 @@
   </div>
 </section>
 
-<section id="measurements">
-  <div class="wrap">
-    <div class="head"><h2><a href="{{ config.base_url | safe }}/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ d.date }}</span></p></div>
-    <div>
-      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
-      <div class="two">
-        <figure>
-          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table" height="300"></tickwave-chart></div>
-          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ d.figureNote }}</figcaption>
-        </figure>
-        <figure>
-          {# The table is the page's own: a reader without scripts gets every figure. The script adds the
-             highlights, by these rows' clocks, cells' series and "series@MHz" references. #}
-          <table id="table">
-            <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP</th></tr>
-            <tr><th data-s="clang">Clang</th><th data-s="gcc">GCC</th><th data-s="stock">V3.174</th></tr>
-            {%- for m in d.clocks %}{% set i = loop.index0 %}
-            <tr data-i="{{ i }}"><td class="clock">{{ m }}</td>
-              {%- for id in ["clang", "gcc", "stock"] %}{% for s in d.series %}{% if s.id == id %}
-              {%- set limit = s.rightUpTo | default(value=1000000) %}
-              <td data-s="{{ id }}" data-ref="{{ id }}@{{ m }}" class="{% if m > limit %}wrong{% endif %}">{{ s.table[i] }}{% if m > limit %}<span class="mark"> *</span>{% endif %}</td>
-              {%- endif %}{% endfor %}{% endfor %}
-            </tr>
-            {%- endfor %}
-          </table>
-          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. {% if d.tableNote %}{{ d.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="tickwave">
   <div class="wrap">
     <div class="head"><h2><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p class="kicker">Logic and mixed-signal captures, in a web page</p></div>
     <div>
-      <p>tickwave draws Figure 1 above. On <a href="{{ config.base_url | safe }}/measurements/">the measurements page</a> it opens the recordings the wire figures come from: every clock edge of a flash read, at each clock asked for.</p>
+      <p>tickwave draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/measurements/">the measurements page</a>. On the measurements page it also opens the recordings the wire figures come from: every clock edge of a flash read, at each clock asked for.</p>
       <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/convert.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
       <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/demo.html">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/">Open a recording</a></p>
     </div>
@@ -116,4 +84,4 @@
 {# Verge's mark in motion, built by design/build.py from the tokens and the mark; landing.js draws it. #}
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
