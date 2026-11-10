@@ -38,7 +38,7 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
-| `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`.doc pre`), except a block marked as text, which is output |
+| `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
 | `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |
 
