@@ -234,10 +234,10 @@ dialface.addEventListener("focusout", () => dialTip(null));
 
 // The Verge section. A term names a wire, which opens that wire's trace under the Wires row, or a
 // feature; either way the verge command that drives it shows under the list, described in the
-// tool's own help text.
+// tool's own help text. The page itself shows verge list, for a reader without scripts.
 const READS = "Read target memory over SWD, JTAG or cJTAG, as probe-rs's read does.";
 const COMMANDS = {
-  list: ["verge list", "Say what every attached MCU-Link runs, and how each can be updated."],
+  list: [document.getElementById("cmd").textContent, document.getElementById("cmd-what").textContent],
   swd: ["verge read --chip <chip> --protocol swd b32 0x20000000 4", READS],
   jtag: ["verge read --chip <chip> --protocol jtag b32 0x20000000 4", READS],
   cjtag: ["verge read --chip <chip> --protocol cjtag b32 0x20000000 4", READS],

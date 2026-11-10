@@ -33,7 +33,7 @@
 /* Click-to-copy (static/js/copy.js): a Copy button in the corner, the command itself a copy target.
    Copied, the button fills with ink for a moment, as a selected thing does. */
 .console { position: relative; }
-.console code { padding-right: 4.6em; cursor: copy; }
+.js .console code { padding-right: 4.6em; cursor: copy; }
 .copy { position: absolute; top: 9px; right: 10px; font: 500 13px/1 var(--font-text); color: var(--ink-2); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
 .copy:hover { color: var(--ink); background: var(--wash); }
 .copy { display: inline-flex; align-items: center; gap: 5px; transition: color .18s, background-color .18s, border-color .18s; }

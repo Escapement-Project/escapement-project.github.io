@@ -49,7 +49,8 @@
           <div><dt>Hosts</dt><dd>Any CMSIS-DAP host; probe-rs for cJTAG</dd></div>
           <div><dt>Update</dt><dd>verge, <span class="ref" tabindex="0" data-cmd="update">a command line</span> and a desktop app</dd></div>
         </dl>
-        <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"></b></code><p id="cmd-what"></p></div>
+        {# The console shows verge list until a term is pointed at; landing.js takes this one from here. #}
+        <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"><i>verge</i> <i>list</i></b></code><p id="cmd-what">Say what every attached MCU-Link runs, and how each can be updated.</p></div>
         <div class="scope" id="scope" hidden></div>
       </div>
     </div>
