@@ -19,14 +19,14 @@ docs = [
   { name = "probes", title = "Probes and jumpers", repo = "mculink-verge", path = "docs/probes.md", about = "What each probe has, and what each jumper turns off." },
   { name = "pro", title = "The Pro", repo = "mculink-verge", path = "docs/pro.md", about = "Target supply, DIO pins, the SPI and I2C bridges, and Verge Aux." },
   { name = "energy", title = "Energy capture", repo = "verge", path = "docs/energy.md", about = "Measuring a target's current and energy on the Pro, live or to a file." },
-  { name = "verge-command", title = "The verge command", repo = "verge", path = "docs/command.md", about = "Every command and its options." },
+  { name = "verge-command", title = "The verge command", repo = "verge", path = "docs/command.md", about = "Every command, and the doc for each." },
 ]
 
 [[extra.groups]]
 title = "For host authors"
 about = "For a tool that drives the probe: how it identifies itself, its vendor commands, Verge Aux and the energy stream."
 docs = [
-  { name = "host-interface", title = "Host interface", repo = "mculink-verge", path = "HOST-INTERFACE.md", about = "How the probe identifies itself, its vendor commands, Verge Aux and the energy stream." },
+  { name = "host-interface", title = "Host interface", repo = "mculink-verge", path = "docs/host-interface.md", about = "How the probe identifies itself, its vendor commands, Verge Aux and the energy stream." },
 ]
 
 [[extra.groups]]
