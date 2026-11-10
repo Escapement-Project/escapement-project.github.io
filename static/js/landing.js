@@ -4,6 +4,17 @@ const f1 = (v) => v.toFixed(1);
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
+// The hero's mark plays Lock once, as the hero comes into view and its type has loaded: header.js's
+// ProjectMark, which holds the chirp's first frame until then.
+const heroMark = document.querySelector(".hero-mark svg"), hero = heroMark && window.ProjectMark?.mount(heroMark);
+if (hero) {
+  hero.ready();
+  const io = new IntersectionObserver((seen) => {
+    if (seen.some((x) => x.isIntersecting)) { io.disconnect(); document.fonts.ready.then(() => setTimeout(() => hero.arrive(), 250)); }
+  }, { threshold: 0.4 });
+  io.observe(heroMark);
+}
+
 // The Verge section. A term names a wire, which opens that wire's trace under the Wires row, or a
 // feature; either way the verge command that drives it shows under the list, described in the
 // tool's own help text. The page itself shows verge list, for a reader without scripts.

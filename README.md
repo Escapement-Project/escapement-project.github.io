@@ -25,7 +25,7 @@ the index, and serve `public/` to try the search.
 | `static/js/header.js` | the header's hairline, the mark on the section in view, the header brought back on the way up where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
-| `static/js/landing.js` | the landing page's Verge section: its wire traces and commands |
+| `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives, and its Verge section: its wire traces and commands |
 | `static/js/dial.js` | Verge's headline as a dial, at the head of Verge's page |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
 | `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page and tickwave's page, shared with tickwave's site |

@@ -21,15 +21,16 @@
 {%- set_global written = "," %}
 {%- set docs_pages = get_section(path="verge/docs/_index.md") %}
 {%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
-<div class="wrap">
+<div class="hero-band"><div class="wrap">
   <div class="hero">
-    <div>
-      <h1>Open debug tools that are correct, fast and easy to use</h1>
-      <p class="lede">We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them.</p>
-      <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
-    </div>
+    {# The project's mark (design/marks/dial.svg), large and faint behind the statement's right side
+       and off the hero's edge. landing.js has header.js's ProjectMark play it once as it arrives. #}
+    <div class="hero-mark" aria-hidden="true">{{ load_data(path="design/marks/dial.svg", format="plain") | trim | replace(from="<svg ", to='<svg fill="currentColor" ') | safe }}</div>
+    <h1>Open debug tools that are correct, fast and easy to use</h1>
+    <p class="lede">We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them.</p>
+    <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
   </div>
-</div>
+</div></div>
 
 <section id="verge">
   <div class="wrap">
