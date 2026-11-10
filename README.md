@@ -4,10 +4,14 @@ The Escapement Project's site, built with [Zola](https://www.getzola.org/), and 
 its pages and verge-gui share.
 
 ```sh
-uv run .github/verge-docs.py .   # Verge's docs, from the checkouts beside this one
-zola serve                       # a local copy that rebuilds on every change
-zola build                       # the site, into public/
+uv run .github/verge-docs.py .        # Verge's docs, from the checkouts beside this one
+zola serve                            # a local copy that rebuilds on every change
+zola build                            # the site, into public/
+uv run .github/search-index.py public # the docs' search index, from the built site
 ```
+
+`zola serve` has no search index, so its docs' search says the index didn't load. Build, write
+the index, and serve `public/` to try the search.
 
 | Path | What |
 |---|---|
@@ -19,13 +23,16 @@ zola build                       # the site, into public/
 | `design/header.html`, `design/footer.html` | the header and footer every page of the project shows; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
+| `static/js/doc.js` | a doc page's contents: the section the reader is in, and the sheet narrow screens open from the bar |
+| `static/js/search.js` | the docs' search, on the docs' index and every doc page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the figures the landing page shows, and where they come from, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
-| `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, and publishes it to GitHub Pages |
+| `.github/search-index.py` | writes the docs' search index, `verge/docs/search.json`, from the built site: each doc's sections as plain text |
+| `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, writes the search index, and publishes it to GitHub Pages |
 
 `static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/apple-touch-icon.png`,
 `static/preview.png` and `design/out/` are generated: edit `design/tokens.toml`, the marks in

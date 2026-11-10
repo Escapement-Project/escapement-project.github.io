@@ -225,18 +225,21 @@
 .doc th { border-bottom-color: var(--rule); }
 .doc-source { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--hair); font-size: 14px; color: var(--ink-2); }
 .doc-bar { display: none; }
-/* Every doc, by group, the reader's group open; under the doc shown, its sections, and a section's
-   subsections while the reader is in it (doc.js marks where). */
-.doc-nav { position: sticky; top: calc(var(--header) + 24px); max-height: calc(100vh - var(--header) - 48px); overflow-y: auto; overscroll-behavior: contain; padding: 0 4px 8px 0; font-size: 14px; }
+/* The rail: the search at its top, and under it the contents, or the results while there is a
+   query. Every doc, by group, the reader's group open; under the doc shown, its sections, and a
+   section's subsections while the reader is in it (doc.js marks where). */
+.doc-rail { position: sticky; top: calc(var(--header) + 24px); max-height: calc(100vh - var(--header) - 48px); display: flex; flex-direction: column; font-size: 14px; }
+.doc-list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 4px 8px 0; scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+.doc-rail.searching .doc-nav { display: none; }
 /* A rail taller than the window scrolls on its own, its scrollbar thin and on the left, in the gutter
-   beside the page, so the contents keep their place. An edge with more past it fades out (doc.js
-   says which). */
+   beside the page, so the field and the list keep their place. An edge with more past it fades out
+   (doc.js says which). */
 @media (min-width: 1000px) {
-  .doc-nav { direction: rtl; margin-left: -18px; padding-left: 18px; }
-  .doc-nav > * { direction: ltr; }
-  .doc-nav.more-below { mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); }
-  .doc-nav.more-above { mask-image: linear-gradient(to bottom, transparent, #000 32px); }
-  .doc-nav.more-above.more-below { mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 40px), transparent); }
+  .doc-list { direction: rtl; margin-left: -18px; padding-left: 18px; }
+  .doc-list > * { direction: ltr; }
+  .doc-list.more-below { mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); }
+  .doc-list.more-above { mask-image: linear-gradient(to bottom, transparent, #000 32px); }
+  .doc-list.more-above.more-below { mask-image: linear-gradient(to bottom, transparent, #000 32px, #000 calc(100% - 40px), transparent); }
 }
 .doc-nav details + details { margin-top: 12px; }
 .doc-nav summary { list-style: none; cursor: pointer; padding: 2px 0; font-weight: 600; color: var(--ink-2); }
@@ -258,13 +261,60 @@
 .doc-nav .toc ul a { padding-left: 36px; }
 .doc-nav .toc a[aria-current="location"] { color: var(--ink); }
 /* The line beside the sections is a trace, and where the reader is, a pulse on it: the line steps
-   out beside the section and back. doc.js moves the one pulse along the trace as the reader goes. */
-.doc-nav .pulse { position: absolute; left: 0; width: 8px; border: 2px solid var(--ink); border-left: 0; pointer-events: none; visibility: hidden; }
-.doc-nav .pulse::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--page); }
-.doc-nav .pulse.on { visibility: visible; }
+   out beside the section and back, or beside the doc itself above its first section. doc.js moves
+   the one pulse along the trace as the reader goes;
+   in the search's results, search.js puts it on the result chosen, or the one the page shows. */
+.pulse { position: absolute; left: 0; width: 8px; border: 2px solid var(--ink); border-left: 0; pointer-events: none; visibility: hidden; }
+.pulse::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--page); }
+.pulse.on { visibility: visible; }
+
+/* The docs' search: a field, a count, and the sections found, grouped by doc, each on the same trace
+   as the contents. A word found is marked in lume, the site's colour for what to look at, in the
+   results and, after following one, in the text. Without the script there is no field. */
+.find { display: none; position: relative; margin: 0 0 14px; }
+.js .find { display: block; }
+.find input { width: 100%; appearance: none; margin: 0; padding: 7px 32px 7px 10px; font: 400 14px/1.3 var(--font-text); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
+.find input::placeholder { color: var(--ink-2); opacity: 1; }
+.find input::-webkit-search-cancel-button { display: none; }
+.find input:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 2px; }
+/* The key that reaches the field, in it while it is empty and unfocused, for a keyboard and mouse. */
+.find .key { display: none; position: absolute; top: 7px; right: 8px; min-width: 18px; padding: 0 4px; font: 500 12px/18px var(--font-text); text-align: center; color: var(--ink-2); border: 1px solid var(--rule); border-radius: 4px; pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .find:not(.typed):not(:focus-within) .key { display: block; } }
+.find .clear { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; padding: 0; background: none; border: 0; border-radius: 4px; color: var(--ink-2); cursor: pointer; }
+.find .clear::before, .find .clear::after { content: ""; position: absolute; left: 7px; top: 12px; width: 12px; height: 1.5px; background: currentColor; transform: rotate(45deg); }
+.find .clear::after { transform: rotate(-45deg); }
+.find .clear:hover { color: var(--ink); }
+.find .count { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+.find .count:empty { display: none; }
+.found { position: relative; }
+.found .doc-name { margin: 14px 0 4px; padding: 2px 0; font-weight: 600; color: var(--ink-2); }
+.found [role="group"]:first-child .doc-name { margin-top: 0; }
+.found a[role="option"], .found .more { display: block; padding: 4px 0 6px 14px; border-left: 2px solid var(--hair); text-decoration: none; color: var(--ink); cursor: pointer; }
+.found .h { display: block; font-size: 13px; font-weight: 600; line-height: 1.4; }
+.found .snip { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; margin-top: 1px; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+.found a[role="option"]:hover .h, .found a[role="option"]:hover .snip:first-child, .found .more:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.found .more { padding-top: 2px; font-size: 13px; color: var(--ink-2); }
+.found mark, .doc mark.hit { padding: 0 1px; margin: 0 -1px; border-radius: 2px; background: var(--lume); color: var(--on-lume); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+/* On the docs' index: the field beside the title, its count under it, and the results in the
+   groups' place, wider. Where the two do not fit on a line, the field goes under the title. */
+.docs-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 32px; margin: 0 0 34px; }
+.docs-head h1 { margin: 0; }
+.docs-index .find { flex: 0 1 22rem; margin: 0; }
+.docs-index .find .count { position: absolute; top: 100%; left: 0; margin-top: 6px; white-space: nowrap; }
+.docs-index .found { max-width: 46em; }
+.docs-index .found .h { font-size: 15px; }
+.docs-index .found .snip { font-size: 14px; }
+@media (min-width: 861px) { .docs-index .found .snip { -webkit-line-clamp: 2; } }
+@media (max-width: 760px) {
+  .docs-head { margin-bottom: 22px; }
+  .docs-index .find .count { position: static; }
+}
+.docs-index .found .doc-name { margin-top: 22px; font-size: 15px; }
+.docs-index.searching .doc-groups { display: none; }
 @media (prefers-reduced-motion: no-preference) {
   .doc-nav summary::before { transition: transform .15s; }
   .doc-nav.moving .pulse { transition: top .22s ease-out, height .22s ease-out; }
+  .found .pulse { transition: top .15s ease-out, height .15s ease-out; }
   .header-moves .doc-bar { transition: top .2s ease-out; }
 }
 @media (max-width: 999px) {
@@ -277,7 +327,8 @@
   .doc-wrap { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; }
   .doc { padding-top: 24px; }
   /* Without the script, the contents above the text. */
-  .doc-nav { position: static; max-height: none; padding: 20px 0 22px; border-bottom: 1px solid var(--hair); }
+  .doc-rail { position: static; display: block; max-height: none; padding: 20px 0 22px; border-bottom: 1px solid var(--hair); }
+  .doc-list { overflow: visible; }
   /* With it, a bar that stays at the top and names the section the reader is in. It opens the
      contents as a sheet over the text. */
   .js .doc-bar { display: flex; align-items: baseline; gap: 14px; position: sticky; top: 0; z-index: 9; margin: 0 calc(-1 * var(--gutter)); padding: 13px var(--gutter) 12px; background: var(--page); border: 0; border-bottom: 1px solid var(--hair); font: 500 14px/1.3 var(--font-text); color: var(--ink); text-align: left; cursor: pointer; }
@@ -285,8 +336,9 @@
   .js .doc-bar .label::after { content: ""; width: 6px; height: 6px; margin-bottom: 3px; border-right: 1.5px solid var(--ink-2); border-bottom: 1.5px solid var(--ink-2); transform: rotate(45deg); }
   .js .doc-bar[aria-expanded="true"] .label::after { transform: rotate(-135deg); margin: 3px 0 0; }
   .js .doc-bar .where { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); }
-  .js .doc-nav { display: none; }
-  .js .doc-wrap.open .doc-nav { display: block; position: fixed; z-index: 9; top: var(--bar-bottom, 48px); left: 0; right: 0; max-height: calc(100dvh - var(--bar-bottom, 48px) - 24px); margin: 0; padding: 14px var(--gutter) 20px; background: var(--page); border-bottom: 1px solid var(--hair); box-shadow: 0 10px 18px rgba(0, 0, 0, .12); }
+  .js .doc-rail { display: none; }
+  .js .doc-wrap.open .doc-rail { display: flex; position: fixed; z-index: 9; top: var(--bar-bottom, 48px); left: 0; right: 0; max-height: calc(100dvh - var(--bar-bottom, 48px) - 24px); margin: 0; padding: 14px var(--gutter) 20px; background: var(--page); border-bottom: 1px solid var(--hair); box-shadow: 0 10px 18px rgba(0, 0, 0, .12); }
+  .js .doc-wrap.open .doc-list { overflow-y: auto; }
   .js .doc-wrap.open::before { content: ""; position: fixed; inset: 0; z-index: 8; background: rgba(0, 0, 0, .2); }
 }
 

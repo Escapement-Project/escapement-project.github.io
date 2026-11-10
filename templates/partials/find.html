@@ -1,0 +1,8 @@
+{#- The docs' search field (static/js/search.js), shown only where the script runs. Its results go
+    in the page's #found, which takes the place of the contents beside it while there is a query. -#}
+<search class="find" data-index="{{ get_url(path='verge/docs/search.json') }}">
+  <input id="find" type="search" role="combobox" aria-label="Search Verge's docs" aria-autocomplete="list" aria-expanded="false" aria-controls="found" placeholder="Search the docs" autocomplete="off" spellcheck="false" enterkeyhint="search">
+  <kbd class="key" aria-hidden="true">/</kbd>
+  <button class="clear" type="button" aria-label="Clear the search" hidden></button>
+  <p class="count" role="status"></p>
+</search>
