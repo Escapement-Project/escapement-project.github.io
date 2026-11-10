@@ -78,9 +78,9 @@ jobs:
         run: |
           python3 mculink-bench/page/extract.py --landing site/data/landing.json --check
           cd site && uv run design/build.py --check ../mculink-bench/page/tokens.css \
-            ../mculink-bench/page/out/fonts/* ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
-            ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
-            ../mculink-bench/page/face.js ../mculink-bench/page/header.js
+            ../mculink-bench/page/out/fonts/* ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon-verge.ico \
+            ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/header-verge.html \
+            ../mculink-bench/page/footer.html ../mculink-bench/page/face.js ../mculink-bench/page/header.js
           cd .. && python3 mculink-bench/page/build.py --check
       - name: Install Zola
         run: |

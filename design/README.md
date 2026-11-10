@@ -33,7 +33,8 @@ Besides what the build generates, these hand-written files are shared by the pro
 | File | What |
 |---|---|
 | `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references, the Copy buttons and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
-| `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with; each page marks its own place with `aria-current="page"` (the site's `templates/partials/header.html` fills it for Zola) |
+| `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with. On a product's pages the product's link gives way to its group, below (the site's `templates/partials/header.html` fills the header in for Zola) |
+| `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
@@ -41,6 +42,22 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `static/doc.css`, `static/js/doc.js` | a doc page's frame: the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet. The markup is below |
 
 Edit them here; the copies follow.
+
+### A product's group in the header
+
+On a product's own pages the header shows the product's pages beside its name, on one rule, the
+page shown on a heavier stretch of it (base.css). A page's build puts the group in place of the
+product's link, which `design/header.html` has once:
+
+```html
+<span class="product"><a href="{{base}}/verge/" data-page="verge">Verge</a><a href="{{base}}/verge/docs/" data-page="verge/docs">Docs</a><a href="{{base}}/verge/measurements/" data-page="verge/measurements">Measurements</a></span>
+```
+
+The product's link comes first, then its pages. The build marks where the reader is with
+`aria-current`: the page's own entry `"page"`; the entry a page sits inside, as Docs is for a doc,
+`"true"`; and the product's link `"true"`, or `"page"` on the product's main page. Verge's group is
+`design/header-verge.html`, which the site and the measurements page both use; tickwave's site
+writes its own.
 
 ### A doc page's markup
 
@@ -84,9 +101,9 @@ run this from this repository:
 
 ```sh
 uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench/page/out/fonts/* \
-    ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon.ico \
-    ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
-    ../mculink-bench/page/face.js ../mculink-bench/page/header.js \
+    ../mculink-bench/page/dial.svg ../mculink-bench/page/favicon-verge.ico \
+    ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/header-verge.html \
+    ../mculink-bench/page/footer.html ../mculink-bench/page/face.js ../mculink-bench/page/header.js \
     ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
     ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/dial.svg \
     ../tickwave/site/base.css ../tickwave/site/header.html \
@@ -98,8 +115,9 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
 Today's copies:
 
 - the measurements page in mculink-bench: `page/tokens.css`, `page/out/fonts/`, `page/dial.svg`,
-  `page/favicon.ico`, and the shared files `page/base.css`, `page/header.html`,
-  `page/footer.html`, `page/face.js` and `page/header.js`. The page inlines all but the fonts, so
+  Verge's favicon `page/favicon-verge.ico`, and the shared files `page/base.css`,
+  `page/header.html`, `page/header-verge.html`, `page/footer.html`, `page/face.js` and
+  `page/header.js`. The page inlines all but the fonts, so
   after updating a copy, rebuild the page; `page/build.py --check` fails while the page still
   carries the old one.
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and

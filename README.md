@@ -20,7 +20,7 @@ the index, and serve `public/` to try the search.
 | `content/verge/_index.md` | Verge's page, and its docs: their groups, order, addresses and where each lives |
 | `static/base.css` | the base every page of the project shares: header, sections, type, figures, tables, Copy buttons and footer, naming colour roles, never values |
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
-| `design/header.html`, `design/footer.html` | the header and footer every page of the project shows; `templates/partials/header.html` fills the header in for Zola |
+| `design/header.html`, `design/header-verge.html`, `design/footer.html` | the header and footer every page of the project shows, and Verge's group in the header on Verge's pages; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
 | `static/doc.css`, `static/js/doc.js` | a doc page's frame, shared with tickwave's docs: the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
@@ -40,8 +40,8 @@ the index, and serve `public/` to try the search.
 `design/tokens.toml`, the marks in `design/marks/` or the content the previews show, and run
 `uv run design/build.py` rather than editing them.
 
-The measurements page keeps copies of `base.css`, the header, the footer, `face.js` and
-`header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css` and
+The measurements page keeps copies of `base.css`, the header, Verge's group, the footer, `face.js`
+and `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css` and
 `doc.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the copies are
 checked.
 

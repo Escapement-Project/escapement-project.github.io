@@ -3,7 +3,7 @@
 {% block description %}{{ page.description }}{% endblock description %}
 {% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">{% endblock head %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
-{% block header %}{% set current = "docs" %}{% include "partials/header.html" %}{% endblock header %}
+{% block header %}{% set current = "verge/docs" %}{% set inside = true %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}
 {%- set verge = get_section(path="verge/_index.md", metadata_only=true) %}
 {%- set docs_pages = get_section(path="verge/docs/_index.md") %}
