@@ -99,6 +99,9 @@
 .verge-id h1 { margin: 0; }
 .verge-id .sub { color: var(--ink-2); margin: 2px 0 0; }
 .verge-head .ways { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 22px 0 0; font-weight: 600; }
+/* Until the first release, a line under the ways in and another over the install steps says so. */
+.verge-head .status { margin-top: 14px; }
+#install .status { margin-bottom: 24px; }
 .measured { border-left: 1px solid var(--hair); padding-left: var(--gutter); }
 .measured .window { display: inline-block; background: var(--lume); color: var(--on-lume); box-shadow: inset 0 0 0 1px var(--window-edge); border-radius: 5px; padding: 6px 14px 7px; margin-bottom: 12px;
   font: var(--figures-weight) 30px/1.2 var(--font-figures); font-stretch: var(--figures-stretch); font-variant-numeric: tabular-nums; }
