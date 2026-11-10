@@ -22,7 +22,7 @@ the index, and serve `public/` to try the search.
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
 | `design/header.html`, `design/header-verge.html`, `design/footer.html` | the header and footer every page of the project shows, and Verge's group in the header on Verge's pages; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
-| `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
+| `static/js/header.js` | the header's hairline, the mark on the section in view, the header brought back on the way up where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
 | `static/js/landing.js` | the landing page's Verge section: its wire traces and commands |

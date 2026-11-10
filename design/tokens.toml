@@ -148,6 +148,36 @@ edge = 38                       # the rising edge it zooms to, which glides to t
 scale = 3                       # how far it zooms: far enough that every other edge leaves the wave's run
 thirds = [1.6, 2.4]             # the zoom over which a tick at each third fades in, so the ruler stays as dense as at rest
 
+# The project's mark in motion (marks/dial.svg): its edge as a signal through the ring. Lock, as the
+# landing's hero arrives: a chirp passes through the ring at one speed, its pulses widening, and
+# slows to rest as one rising edge reaches the centre, which is the mark. Again, on the header's logo
+# on hover or tap: from the mark the signal moves on through a new chirp and locks again, gathering
+# speed as Lock sheds it. tickwave's ruler runs under the signal while it moves, in [icon.tickwave]'s
+# colours, and fades once it stops. Below a pixel's worth the pulses and ticks keep their floors, so a
+# 24 px logo still reads. Lengths in the mark's 64 units, speeds in units a second, times in seconds;
+# the build writes them into tokens.css as --project-mark-*, which header.js reads.
+[motion.project-mark]
+speed = 180                     # Lock's speed
+again = 240                     # Again's speed
+ramp = 20                       # the units each slows over to rest, and Again gathers speed over
+densest = 7                     # the chirp's densest half-period,
+dense = 6                       # how many of it open the chirp,
+growth = 1.12                   # each half-period after them this much longer,
+fill = 26                       # until a low reaches this: then only the mark's one edge shows in the ring
+tick = 1.5                      # the ruler: a tick's width,
+spacing = 3                     # about this far apart,
+raised = 4                      # the raised ticks' height, on the edges,
+lower = 2.3                     # the lower ticks', between them,
+line = 50                       # all standing on this line,
+clear = 1.5                     # the raised ticks' tops at least this far under the low run,
+cut = 28                        # cut inside the ring's outside, so a tick's width never shows past it
+fade = [0.18, 0.36]             # the ruler's fade in and out
+gap-px = 1.6                    # floors at small sizes, in pixels: the gap between two pulses,
+tick-px = 1                     # a tick's width,
+spacing-px = 3                  # their spacing,
+raised-px = 2.5                 # the raised ticks' height,
+lower-px = 1.4                  # the lower ticks'
+
 # Type: Saira's wide cut for display, Hanken Grotesk for text, Martian Mono for figures that change
 # in place (wide) and for code (normal width).
 [type.display]

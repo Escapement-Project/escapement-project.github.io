@@ -37,7 +37,7 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch, and the turn between faces: the page dips to the new face's background and comes back up in it (base.css's `.face-cover`) |
-| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
+| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
 | `static/js/mark.js` | the marks in motion on their plates, below |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
@@ -376,6 +376,38 @@ together. The zoom's own tokens are in `[motion.tickwave-mark]`:
 The wave and ruler come from `marks/tickwave.svg`. The build writes them with the times to
 `out/tickwave-mark.json`, which the landing page and tickwave's page embed for `static/js/mark.js`. A plate names its
 mark with `data-mark="verge"` or `data-mark="tickwave"`.
+
+The project's mark moves in the header, as the logo on every page of the project, and in the
+landing page's hero. Its edge is a signal through the ring. In Lock, which the hero plays as it
+comes into view, a chirp passes through the ring at one speed, its pulses widening. It slows to rest
+as one rising edge reaches the centre, which is the mark. In Again, which the logo plays when a
+mouse or pen reaches it, the signal moves on from the mark through a new chirp and locks again. It
+gathers speed as Lock sheds it. A tap follows the logo's link and plays nothing. tickwave's ruler
+runs under the signal while it moves and fades once it stops: a raised tick on every edge, lower
+ones between, in `[icon.tickwave]`'s colours, so a change to tickwave's icon carries into it. The
+ruler passes behind the ring, so a page that shows the mark faint mixes the ring's colour opaque
+rather than lowering its opacity, as the hero does.
+
+Its tokens are in `[motion.project-mark]`:
+
+- **Speeds:** Lock's and Again's, and the distance each takes to slow to rest, which Again also
+  takes to gather speed.
+- **The chirp:** its densest half-period, how many of those open it, how much longer each later
+  one is, and the low it ends on. The build fails unless that low fills the ring's left half, so
+  only the mark's one edge shows at rest.
+- **The ruler:** the ticks' width, spacing and heights, the line they stand on, how far under the
+  low run the raised ones stop, and the circle inside the ring's outside they are cut to.
+- **Floors in pixels:** the least gap between two pulses and the least tick width, spacing and
+  heights. Below a pixel's worth each keeps its floor, so the 24 px logo still reads.
+- **Fades:** the ruler's, in and out.
+
+The build reads the mark's geometry from `marks/dial.svg` (the ring's radii, the edge's width, its
+runs and riser) and writes it with the tokens into `tokens.css` as `--project-mark-*` properties.
+`static/js/header.js` reads them there, so every page that has the shared header and tokens has the
+logo's motion without embedding anything; a page whose `tokens.css` lacks them keeps the mark still.
+The two routes are the rule: a mark that belongs to the header takes its motion from `tokens.css`, a
+mark on a plate from the JSON its page embeds. At rest the mark is the page's own markup and refers
+to nothing by id. Its clips exist only while it moves, as Firefox's reader view breaks such references.
 
 ## Link previews
 

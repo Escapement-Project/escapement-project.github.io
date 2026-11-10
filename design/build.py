@@ -170,6 +170,8 @@ def css(tokens, web):
             *patterns,
             "  /* Type */",
             *types,
+            "  /* The project's mark in motion: header.js plays it, from [motion.project-mark] */",
+            *project_motion(tokens),
             "  color-scheme: light;", "}",
             "/* A face on any element that carries one: the face chosen on <html>, and the faces the",
             "   switch's turn shows over the page (face.js). The wash follows the element's own ink. */",
@@ -353,6 +355,37 @@ def master(name, size):
     if not m:
         raise SystemExit(f"{path.relative_to(ROOT)}: give one <svg> with a square viewBox from 0 0")
     return int(m.group(1)), m.group(2), path == fitted
+
+
+def project_motion(tokens):
+    """The project's mark in motion, as tokens.css custom properties: [motion.project-mark], the
+    mark's geometry read from marks/dial.svg, and the ruler's colours from [icon.tickwave]. Refuses
+    tokens the mark cannot honour."""
+    t, tw = tokens["motion"]["project-mark"], tokens["icon"]["tickwave"]
+    _, body, _ = master("dial", None)
+    radii = sorted({float(r) for r in re.findall(r"A([\d.]+),\1 0 1,0", body)})
+    edge = re.search(r'<path d="M[\d.]+,([\d.]+) H([\d.]+) V([\d.]+) H[\d.]+ A[\d.,]+ 0 0,1 [\d.]+,([\d.]+) H([\d.]+) V([\d.]+)', body)
+    if len(radii) != 2 or not edge:
+        fail("marks/dial.svg: give the ring as two circles and the edge as one path from its low run up its riser")
+    inner, outer = radii
+    low_top, riser_left, high_top, high_bottom, riser_right, low_bottom = map(float, edge.groups())
+    width = high_bottom - high_top
+    if abs((riser_right - riser_left) - width) > 1e-6 or abs((low_bottom - low_top) - width) > 1e-6:
+        fail("marks/dial.svg: the edge's runs and riser should be one width")
+    if t["fill"] < inner + width / 2:
+        fail(f"motion.project-mark.fill: {t['fill']} leaves another edge in the ring; give at least {inner + width / 2:g}")
+    if t["densest"] <= width:
+        fail(f"motion.project-mark.densest: {t['densest']} runs the edges into each other; give more than the edge's {width:g}")
+    if t["line"] - t["raised"] < low_bottom + t["clear"]:
+        fail(f"motion.project-mark: the raised ticks reach {t['line'] - t['raised']:g}, into the low run; keep them under {low_bottom + t['clear']:g}")
+    if not inner < t["cut"] < outer:
+        fail(f"motion.project-mark.cut: {t['cut']} is not inside the ring's band, {inner:g} to {outer:g}")
+    values = {"inner": inner, "outer": outer, "width": width, "riser": (riser_left + riser_right) / 2,
+              "low": (low_top + low_bottom) / 2, "high": (high_top + high_bottom) / 2,
+              "low-bottom": low_bottom} | {k: v for k, v in t.items() if k != "fade"} \
+             | {"fade-in": t["fade"][0], "fade-out": t["fade"][1], "lower-opacity": tw["line-opacity"]}
+    lines = [f"  --project-mark-{k}: {v:g};" for k, v in values.items()]
+    return lines + [f"  --project-mark-raised-colour: var(--{tw['ink']});", f"  --project-mark-lower-colour: var(--{tw['line']});"]
 
 
 def tickwave_motion(tokens):
