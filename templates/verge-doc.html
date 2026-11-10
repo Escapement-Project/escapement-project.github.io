@@ -7,23 +7,44 @@
 {%- set docs_pages = get_section(path="verge/docs/_index.md") %}
 {%- set_global written = "," %}
 {%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
+{#- The contents: every doc, by group, with this doc's own sections under it. Wide, a rail beside
+    the text; narrow, a sheet the bar opens, and without the script a list above the text. #}
 <div class="wrap doc-wrap">
+  <button class="doc-bar" type="button" aria-expanded="false" aria-controls="doc-nav"><span class="label">Contents</span><span class="where">{{ page.title }}</span></button>
+  <nav class="doc-nav" id="doc-nav" aria-label="Verge's docs">
+    {%- for g in verge.extra.groups %}
+    <details class="group"{% if g.title == page.extra.group %} open{% endif %}>
+      <summary>{{ g.title }}</summary>
+      <ul>
+        {%- for d in g.docs %}
+        <li>{% if d.name == page.slug %}<a href="{{ page.permalink | safe }}" aria-current="page">{{ d.title }}</a>
+          {%- if page.toc %}
+          <ul class="toc">
+            {%- for h in page.toc %}
+            <li><a href="#{{ h.id }}">{{ h.title | safe }}</a>
+              {%- if h.children %}
+              <ul>
+                {%- for c in h.children %}
+                <li><a href="#{{ c.id }}">{{ c.title | safe }}</a></li>
+                {%- endfor %}
+              </ul>
+              {%- endif %}
+            </li>
+            {%- endfor %}
+          </ul>
+          {%- endif %}
+        {%- elif "," ~ d.name ~ "," in written %}<a href="{{ get_url(path='@/verge/docs/' ~ d.name ~ '.md') }}">{{ d.title }}</a>{% else %}<span class="coming">{{ d.title }}</span>{% endif %}</li>
+        {%- endfor %}
+      </ul>
+    </details>
+    {%- endfor %}
+  </nav>
   <article class="doc">
     <p class="crumbs"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a> <span aria-hidden="true">/</span> <a href="{{ get_url(path='@/verge/docs/_index.md') }}">Docs</a> <span aria-hidden="true">/</span> <a href="{{ get_url(path='@/verge/docs/_index.md') }}#{{ page.extra.group | slugify }}">{{ page.extra.group }}</a></p>
     <h1>{{ page.title }}</h1>
-    <p class="to-docs"><a href="#all-docs">All docs</a></p>
     {{ page.content | safe }}
     <p class="doc-source">From <a href="{{ page.extra.source | safe }}">{{ page.extra.repo }}</a>, where changes to this page go.</p>
   </article>
-  <nav class="doc-nav" id="all-docs" aria-label="Verge's docs">
-    {%- for g in verge.extra.groups %}
-    <p class="group">{{ g.title }}</p>
-    <ul>
-      {%- for d in g.docs %}
-      <li>{% if d.name == page.slug %}<a href="{{ page.permalink | safe }}" aria-current="page">{{ d.title }}</a>{% elif "," ~ d.name ~ "," in written %}<a href="{{ get_url(path='@/verge/docs/' ~ d.name ~ '.md') }}">{{ d.title }}</a>{% else %}<span class="coming">{{ d.title }}</span>{% endif %}</li>
-      {%- endfor %}
-    </ul>
-    {%- endfor %}
-  </nav>
 </div>
 {% endblock content %}
+{% block scripts %}<script src="{{ get_url(path='js/doc.js', cachebust=true) }}" defer></script>{% endblock scripts %}

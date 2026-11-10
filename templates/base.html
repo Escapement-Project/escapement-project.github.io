@@ -6,7 +6,7 @@
 <title>{% block title %}{{ config.title }}{% endblock title %}</title>
 <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
 {# A face chosen on an earlier visit, applied before the first paint so a night page never flashes day;
-   and .js, which tells base.css the header's script will run (the phone menu needs it). #}
+   and .js, which tells the sheets a script will run (a doc's bar of contents needs it). #}
 <script>document.documentElement.classList.add("js"); try { const f = localStorage.getItem("face"); if (f === "day" || f === "night") document.documentElement.dataset.face = f; } catch { /* no choice kept */ }</script>
 <link rel="preload" href="{{ get_url(path='fonts/saira-expanded.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ get_url(path='fonts/hanken-grotesk.woff2') }}" as="font" type="font/woff2" crossorigin>
