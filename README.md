@@ -25,7 +25,8 @@ the index, and serve `public/` to try the search.
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
-| `static/js/landing.js` | the landing page's dial and Verge section |
+| `static/js/landing.js` | the landing page's Verge section: its wire traces and commands |
+| `static/js/dial.js` | Verge's headline as a dial, at the head of Verge's page |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
 | `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page and tickwave's page, shared with tickwave's site |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
@@ -47,8 +48,8 @@ and the mark's motion from `design/out/`. `design/README.md` says how the
 copies are checked.
 
 The landing page and Verge's page work without scripts: their figures are in the text, and Verge's
-page has Table 1, which Zola renders from `data/landing.json`. Scripts add the landing's dial, and
-on Verge's page Figure 1 and the highlights that link the claim, the figure and the table.
+page has Table 1, which Zola renders from `data/landing.json`. Scripts add Verge's dial, Figure 1 and
+the highlights that link the claim, the figure and the table, all on Verge's page.
 tickwave's `<tickwave-chart>` draws Figure 1, loaded from tickwave's own site on this origin at the
 version `config.toml` pins; the pages load no fonts or scripts from anywhere else.
 

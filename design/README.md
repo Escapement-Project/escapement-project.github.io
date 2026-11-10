@@ -241,7 +241,7 @@ does to show the new face over the old.
 | `on-lume` | `#11171d` | `#11171d` | text and marks on lume |
 | `plate` | `#11171d` | `#11171d` | the plate under the marks and app icons |
 | `plate-line` | `#aab5be` | `#aab5be` | lines drawn on the plate, such as the mark's stems, trace and beam, at partial opacity |
-| `hand`, `ring`, `face` | | | the landing page's dial only |
+| `hand`, `ring`, `face` | | | Verge's dial only |
 | `window-edge` | `#11171d` | transparent | the edge of a window of lume: the dial's, the measurements headline's |
 | `fault-ink`, `fault-fill` | `#b81c20`, `#ef4b4b` | `#f24e4d`, `#ef4b4b` | something failed |
 | `attention-ink`, `attention-fill` | `#924a03`, `#f1710d` | `#f1710d` | something needs a look |
@@ -328,7 +328,7 @@ The shared header (`design/header.html`, through `{{mark}}`) and the landing pag
 inline the 64-unit masters. Those two masters must not refer to anything by `url(#id)`: a page that
 sets another base URL breaks the reference. The fitted masters are only ever drawn into images, so
 their clips are fine. Two drawings carry their own copy of the dial's geometry, which nothing
-checks: the hero's larger step in `static/js/landing.js`, and the not-found page's dial with its
+checks: the dial's larger step in `static/js/dial.js`, and the not-found page's dial with its
 edge left flat in `templates/404.html`.
 
 Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name. tickwave's is

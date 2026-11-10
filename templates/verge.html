@@ -26,10 +26,11 @@
       <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a></p>
       <p class="status">In development. The firmware and verge publish with the first release.</p>
     </div>
-    <div class="product-figure measured">
-      <div class="window">{{ h.ratio }}×</div>
-      <p>the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
-      <p><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
+    <div class="product-figure dial-figure">
+      {# Verge's headline as a dial, drawn by static/js/dial.js; without scripts the caption carries it. #}
+      <div class="dialface" id="dialface"></div>
+      <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
+      <p class="reading"><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
     </div>
   </div>
 </div>
@@ -146,4 +147,4 @@
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 <script id="data" type="application/json">{{ landing | json_encode() | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/measured.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/measured.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/dial.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}

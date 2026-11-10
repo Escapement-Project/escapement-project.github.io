@@ -28,11 +28,6 @@
       <p class="lede">We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them.</p>
       <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
     </div>
-    <div>
-      <div class="dialface" id="dialface"></div>
-      <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
-      <p class="reading"><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
-    </div>
   </div>
 </div>
 
@@ -93,7 +88,6 @@
     </div>
   </div>
 </section>
-<script id="data" type="application/json">{{ d | json_encode() | safe }}</script>
 {# The marks in motion, built by design/build.py from the tokens and the marks; mark.js draws them. #}
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 <script id="tickwave-mark" type="application/json">{{ load_data(path="design/out/tickwave-mark.json", format="plain") | trim | safe }}</script>
