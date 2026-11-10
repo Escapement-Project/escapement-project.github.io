@@ -18,7 +18,7 @@ the index, and serve `public/` to try the search.
 | `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `verge.html` for Verge's page, `verge-docs.html` and `verge-doc.html` for its docs, `404.html` for any address without a page |
 | `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
 | `content/verge/_index.md` | Verge's page, and its docs: their groups, order, addresses and where each lives |
-| `static/base.css` | the base every page of the project shares: header, sections, type, figures, tables, Copy buttons and footer, naming colour roles, never values |
+| `static/base.css` | the base every page of the project shares: header, sections, type, a product's main page, figures, tables, Copy buttons and footer, naming colour roles, never values |
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
 | `design/header.html`, `design/header-verge.html`, `design/footer.html` | the header and footer every page of the project shows, and Verge's group in the header on Verge's pages; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
@@ -27,7 +27,7 @@ the index, and serve `public/` to try the search.
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
 | `static/js/landing.js` | the landing page's dial and Verge section |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
-| `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page |
+| `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page and tickwave's page, shared with tickwave's site |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the headline the landing page and Verge's page show, and Figure 1 and Table 1 on Verge's page, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
@@ -42,7 +42,8 @@ the index, and serve `public/` to try the search.
 
 The measurements page keeps copies of `base.css`, the header, Verge's group, the footer, `face.js`
 and `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css`,
-`doc.js` and `search.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the
+`doc.js`, `search.js` and `mark.js`, its favicon from `design/out/icons/`, its mark from `design/marks/`
+and the mark's motion from `design/out/`. `design/README.md` says how the
 copies are checked.
 
 The landing page and Verge's page work without scripts: their figures are in the text, and Verge's

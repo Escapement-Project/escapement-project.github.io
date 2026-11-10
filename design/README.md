@@ -32,12 +32,13 @@ Besides what the build generates, these hand-written files are shared by the pro
 
 | File | What |
 |---|---|
-| `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references, the Copy buttons and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
+| `static/base.css` | the shared base sheet: the header, sections, type, a product's main page, figures, tables, references, the Copy buttons and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
 | `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with. On a product's pages the product's link gives way to its group, below (the site's `templates/partials/header.html` fills the header in for Zola) |
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch, and the page's colours following it as it turns (base.css's `.face-turning`) |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
+| `static/js/mark.js` | the marks in motion on their plates, below |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
 | `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |
@@ -59,6 +60,28 @@ The product's link comes first, then its pages. The build marks where the reader
 `"true"`; and the product's link `"true"`, or `"page"` on the product's main page. Verge's group is
 `design/header-verge.html`, which the site and the measurements page both use; tickwave's site
 writes its own.
+
+### A product's main page
+
+A product's main page opens with its head, in base.css's parts:
+
+```html
+<div class="wrap product-head">
+  <div class="product-id">
+    <div class="plate" data-mark="verge"><svg>…</svg></div>
+    <div><h1>Verge</h1><p class="sub">…</p></div>
+  </div>
+  <div class="two">
+    <div><p class="lede">…</p><p>…</p><p class="ways"><a>…</a><a>…</a></p><p class="status">…</p></div>
+    <div class="product-figure">…<p>…</p><p><a>…</a></p></div>
+  </div>
+</div>
+```
+
+The plate holds the product's mark from `marks/`, inlined. The figure beside the lede ends with
+its caption and a link to the whole of what it shows. The sections below the head use the same
+sheet: `ol.steps` for numbered steps, `ul.steps` for points in the same columns, `.console` for a
+command, `.after` for a line after them and `.doc-rows` for the product's docs.
 
 ### A product's docs
 
@@ -167,6 +190,7 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../tickwave/site/base.css ../tickwave/site/header.html \
     ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js \
     ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js ../tickwave/site/search.js \
+    ../tickwave/site/mark.js ../tickwave/site/tickwave.svg ../tickwave/site/tickwave-mark.json \
     ../tickwave/site/favicon-tickwave.ico
 ```
 
@@ -181,9 +205,11 @@ Today's copies:
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
-  `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, and the shared files
-  `site/base.css`, `site/header.html`, `site/footer.html`, `site/face.js`, `site/header.js`,
-  `site/copy.js`, `site/doc.css`, `site/doc.js` and `site/search.js`.
+  `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, its mark
+  `site/tickwave.svg` from `marks/`, the mark's motion `site/tickwave-mark.json` from `out/`, and
+  the shared files `site/base.css`, `site/header.html`, `site/footer.html`, `site/face.js`,
+  `site/header.js`, `site/copy.js`, `site/doc.css`, `site/doc.js`, `site/search.js` and
+  `site/mark.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
@@ -336,7 +362,7 @@ master, and the landing page's 64-unit box.
 To change the timing, edit `tokens.toml` and rebuild, then copy `tokens.rs` into verge
 (`--check` reports the copy until then).
 
-tickwave's mark moves on the landing page's tickwave plate. The time axis zooms in on one rising
+tickwave's mark moves on the landing page's tickwave plate and on tickwave's page. The time axis zooms in on one rising
 edge, which glides to the middle, until it is the only edge in view: the project's step. It holds
 there and zooms back out. Its times are Verge's, so both marks reach the step, hold and return
 together. The zoom's own tokens are in `[motion.tickwave-mark]`:
@@ -347,7 +373,7 @@ together. The zoom's own tokens are in `[motion.tickwave-mark]`:
   as at rest.
 
 The wave and ruler come from `marks/tickwave.svg`. The build writes them with the times to
-`out/tickwave-mark.json`, which the landing page embeds for `static/js/mark.js`. A plate names its
+`out/tickwave-mark.json`, which the landing page and tickwave's page embed for `static/js/mark.js`. A plate names its
 mark with `data-mark="verge"` or `data-mark="tickwave"`.
 
 ## Link previews

@@ -54,7 +54,7 @@ MANIFEST = pathlib.Path("design/out/outputs.txt")
 # Written by hand, not built, and copied by the project's other pages: the shared base sheet, the
 # header and footer every page shows, Verge's group in the header, the scripts behind the header, the
 # Copy buttons, and a product's docs and their search. --check compares copies of these too, by name.
-SHARED = tuple(map(pathlib.Path, ("static/base.css", "static/js/face.js", "static/js/header.js",
+SHARED = tuple(map(pathlib.Path, ("static/base.css", "static/js/face.js", "static/js/header.js", "static/js/mark.js",
                                   "design/header.html", "design/header-verge.html", "design/footer.html",
                                   "static/js/copy.js",
                                   "static/doc.css", "static/js/doc.js", "static/js/search.js")))
