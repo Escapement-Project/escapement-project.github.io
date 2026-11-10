@@ -5,29 +5,33 @@
 {# The link preview: static/preview.png, drawn by design/build.py from the same headline. #}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ config.title }}">
-<meta property="og:title" content="Open firmware for NXP's MCU-Link">
+<meta property="og:title" content="Open debug tools that are correct, fast and easy to use">
 <meta property="og:description" content="{{ section.description }}">
 <meta property="og:url" content="{{ section.permalink | safe }}">
 <meta property="og:image" content="{{ get_url(path='preview.png') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Escapement Project: open firmware for NXP's MCU-Link. {{ h.ratio }}× the write rate of NXP's own firmware over SWD, through probe-rs: Verge at {{ h.oursAt }} MHz, NXP's firmware at {{ h.stockAt }} MHz, the fastest clock it reads right at.">
+<meta property="og:image:alt" content="Escapement Project: open debug tools that are correct, fast and easy to use. {{ h.ratio }}× the write rate of NXP's own firmware over SWD, through probe-rs: Verge at {{ h.oursAt }} MHz, NXP's firmware at {{ h.stockAt }} MHz, the fastest clock it reads right at.">
 <meta name="twitter:card" content="summary_large_image">
 {%- endblock head %}
 {% block header %}{% set current = "landing" %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}
 {% set d = load_data(path="data/landing.json") %}
 {% set h = d.headline %}
+{%- set_global written = "," %}
+{%- set docs_pages = get_section(path="verge/docs/_index.md") %}
+{%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
 <div class="wrap">
   <div class="hero">
     <div>
-      <h1>Open firmware for NXP's <span class="nb">MCU-Link</span></h1>
-      <p class="lede">We build Verge, open firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span> debug probes, and the tools around it: verge installs it, a bench measures it against the firmware NXP ships, and tickwave shows the bench's wire recordings.</p>
+      <h1>Open debug tools that are correct, fast and easy to use</h1>
+      <p class="lede">We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them.</p>
       <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
     </div>
     <div>
       <div class="dialface" id="dialface"></div>
       <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
+      <p class="reading"><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
     </div>
   </div>
 </div>
@@ -37,9 +41,11 @@
     <div class="two">
       <div>
         {# Verge's mark, design/marks/verge.svg: a V traced by samples, in lume on the plate. #}
-        <div class="app"><div class="plate" id="app" data-mark="verge">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a></h2><p>for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
-        <p>A probe's firmware decides how fast it talks to a target, which protocols it speaks, and how reliably it reads what comes back.</p>
+        <div class="app"><div class="plate" id="app" data-mark="verge">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a></h2><p>Firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
+        <p>Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
+        <p>Through probe-rs, Verge writes over SWD at {{ h.ratio }} times the rate of NXP's firmware. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
         <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
+        <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}{{ get_url(path='@/verge/_index.md') }}#install{% endif %}">Get started</a><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
       </div>
       <div class="specs-col">
         <dl class="specs">
@@ -47,7 +53,7 @@
           <div><dt>Trace</dt><dd>SWO, and serial consoles</dd></div>
           <div><dt>On the Pro</dt><dd><span class="ref" tabindex="0" data-cmd="power">Target supply</span>, <span class="ref" tabindex="0" data-cmd="energy">energy capture</span> and <span class="ref" tabindex="0" data-cmd="dio">DIO</span></dd></div>
           <div><dt>Hosts</dt><dd>Any CMSIS-DAP host; probe-rs for cJTAG</dd></div>
-          <div><dt>Update</dt><dd>verge, <span class="ref" tabindex="0" data-cmd="update">a command line</span> and a desktop app</dd></div>
+          <div><dt>Update</dt><dd><code>verge</code>, <span class="ref" tabindex="0" data-cmd="update">a command line</span> and a desktop app</dd></div>
         </dl>
         {# The console shows verge list until a term is pointed at; landing.js takes this one from here. #}
         <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"><i>verge</i> <i>list</i></b></code><p id="cmd-what">Say what every attached MCU-Link runs, and how each can be updated.</p></div>
@@ -63,9 +69,10 @@
     <div>
       {# tickwave's mark, design/marks/tickwave.svg: a wave on its ticks, on the plate as Verge's is; static/js/mark.js plays it. #}
       <div class="app"><div class="plate" data-mark="tickwave">{{ load_data(path="design/marks/tickwave.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name"><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p>Logic and mixed-signal captures, in a web page</p></div></div>
-      <p>tickwave draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/verge/measurements/">Verge's measurements</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
-      <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/open.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
-      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/#page">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/open.html">Open a recording</a></p>
+      <p>tickwave shows a logic or mixed-signal capture inside a web page, beside the text that cites it.</p>
+      <p>Verge's pages use it. It draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/verge/measurements/">Verge's measurements</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
+      <p>It converts your own captures too. A Saleae Logic 2 binary export, a sigrok session or a VCD file becomes a recording in your browser, and nothing is uploaded.</p>
+      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/#page">See it in a page</a><a href="{{ config.base_url | safe }}/tickwave/open.html">Open a recording</a></p>
     </div>
     </div>
   </div>

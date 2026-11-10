@@ -2,6 +2,8 @@
    base.css: the parts no other page of the project shares. Colours, type and line patterns come
    from tokens.css: this file names roles, never values. */
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gutter); align-items: center; padding: 24px 0 40px; }
+/* Balanced, so no width leaves one word on a line of its own. */
+.hero h1 { text-wrap: balance; }
 .dialface { position: relative; }
 .dialface svg { width: 100%; max-width: 480px; height: auto; display: block; margin: 0 auto; }
 /* A reading on the dial draws its own focus ring: an outline on an SVG group is not drawn everywhere. */
@@ -22,6 +24,8 @@
 /* Under the list, the verge command behind the term pointed at; verge list when none is. */
 .specs-col { position: relative; }
 .specs-col .console { margin-top: 18px; }
+/* A program's name in the list, set as the console below sets it. */
+.specs code { font: 500 .88em var(--font-code); font-stretch: var(--code-stretch); }
 /* A term pinned by a click keeps its command in the console. */
 #verge .ref.pinned { text-decoration-style: solid; text-decoration-color: var(--ink); background: var(--wash); }
 /* A wire's trace, opened under the Wires row by its name. */

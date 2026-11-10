@@ -1,6 +1,6 @@
 +++
 title = "Escapement Project"
-description = "Open firmware for NXP's MCU-Link and MCU-Link Pro debug probes, with the tools to install it and to measure it against the firmware NXP ships on them."
+description = "Open debug tools that are correct, fast and easy to use. The first is Verge, open firmware for NXP's MCU-Link debug probes; tickwave shows logic and mixed-signal captures in a web page."
 
 # The Source section's index, in this order. A repository without a language is not published yet
 # and shows as coming. `summary` is the line on its link preview (design/build.py), `icon` an icon

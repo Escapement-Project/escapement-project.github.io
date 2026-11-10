@@ -20,7 +20,8 @@
   </div>
   <div class="two">
     <div>
-      <p class="lede">A probe's firmware decides how fast it talks to a target, which protocols it speaks, and how reliably it reads what comes back.</p>
+      <p class="lede">Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
+      <p>Through probe-rs, Verge is faster than NXP's firmware at every clock both complete. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
       <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
       <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a></p>
       <p class="status">In development. The firmware and verge publish with the first release.</p>

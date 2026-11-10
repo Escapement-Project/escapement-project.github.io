@@ -630,8 +630,8 @@ def previews(tokens, out_root):
     # The hero's dial, faint and cropped at the right edge.
     c.place(bare("dial", c.ink), 880, 150, 520, opacity=0.08)
     c.brand(72, 72, 56)
-    y = c.text(72, 236, "Open firmware for NXP's MCU-Link", "Saira", 58, c.ink, 500, "expanded",
-               "Saira-Expanded-Medium", 700, 1.18, max_lines=2)
+    y = c.text(72, 236, "Open debug tools that are correct, fast and easy to use", "Saira", 50, c.ink, 500, "expanded",
+               "Saira-Expanded-Medium", 770, 1.18, max_lines=2)
     # The headline in its lume window, as the measurements page sets it.
     ratio = f"{h['ratio']}×"
     win = c.width(ratio, "MartianMono-SemiExpanded-Medium", 84) + 56
