@@ -11,7 +11,8 @@ source, `tokens.toml`, generates everything else:
 | `design/out/mark.json` | Verge's mark in motion, which the landing page embeds |
 | `design/out/fonts/` | the fixed font files verge-gui embeds |
 | `static/favicon.ico`, `static/apple-touch-icon.png` | the sites' favicon and iOS icon |
-| `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS); tickwave's icon (SVG and PNGs); and the org's avatar |
+| `static/favicon-verge.ico` | the favicon on Verge's page and docs |
+| `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS); tickwave's icon (SVG and PNGs) and its pages' favicon; and the org's avatar |
 | `static/preview.png` | the site's link preview |
 | `design/out/previews/` | each published repository's social preview, to upload on GitHub |
 
@@ -87,10 +88,11 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/footer.html \
     ../mculink-bench/page/face.js ../mculink-bench/page/header.js \
     ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
-    ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/favicon.ico \
-    ../tickwave/site/dial.svg ../tickwave/site/base.css ../tickwave/site/header.html \
+    ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/dial.svg \
+    ../tickwave/site/base.css ../tickwave/site/header.html \
     ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js \
-    ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js
+    ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js \
+    ../tickwave/site/favicon-tickwave.ico
 ```
 
 Today's copies:
@@ -103,9 +105,9 @@ Today's copies:
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
-  `site/favicon.ico`, `site/dial.svg`, and the shared files `site/base.css`, `site/header.html`,
-  `site/footer.html`, `site/face.js`, `site/header.js`, `site/copy.js`, `site/doc.css` and
-  `site/doc.js`.
+  `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, and the shared files
+  `site/base.css`, `site/header.html`, `site/footer.html`, `site/face.js`, `site/header.js`,
+  `site/copy.js`, `site/doc.css` and `site/doc.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
@@ -207,8 +209,8 @@ An icon is a mark on a plate, both set in `tokens.toml` by colour role:
 | Icon | Mark | Plate | For |
 |---|---|---|---|
 | `project` | the dial in `on-lume` | `lume` | the sites' favicon, the iOS icon, the org's avatar |
-| `verge` | the V in `lume` | `plate` | verge-gui's app icon |
-| `tickwave` | the wave in `lume`, its other ticks in `plate-line` | `plate` | tickwave's icon, its repository's preview |
+| `verge` | the V in `lume` | `plate` | verge-gui's app icon, the favicon on Verge's page and docs |
+| `tickwave` | the wave in `lume`, its other ticks in `plate-line` | `plate` | tickwave's icon and its pages' favicon, its repository's preview |
 
 A mark's parts with `class="line"` take the icon's `line` colour at its `line-opacity`; the rest take
 its `ink`. tickwave's mark is the one that has them: the ticks under the wave's edges are lume, the

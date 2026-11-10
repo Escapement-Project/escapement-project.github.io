@@ -34,14 +34,15 @@ the index, and serve `public/` to try the search.
 | `.github/search-index.py` | writes the docs' search index, `verge/docs/search.json`, from the built site: each doc's sections as plain text |
 | `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, writes the search index, and publishes it to GitHub Pages |
 
-`static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/apple-touch-icon.png`,
-`static/preview.png` and `design/out/` are generated: edit `design/tokens.toml`, the marks in
-`design/marks/` or the content the previews show, and run `uv run design/build.py` rather than
-editing them.
+`static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/favicon-verge.ico`,
+`static/apple-touch-icon.png`, `static/preview.png` and `design/out/` are generated: edit
+`design/tokens.toml`, the marks in `design/marks/` or the content the previews show, and run
+`uv run design/build.py` rather than editing them.
 
 The measurements page keeps copies of `base.css`, the header, the footer, `face.js` and
 `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css` and
-`doc.js`. `design/README.md` says how the copies are checked.
+`doc.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the copies are
+checked.
 
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the

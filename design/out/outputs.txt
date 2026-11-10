@@ -9,6 +9,7 @@ design/out/fonts/hanken-grotesk-OFL.txt
 design/out/fonts/martian-mono-OFL.txt
 design/out/fonts/saira-OFL.txt
 design/out/icons/escapement-project-avatar.png
+design/out/icons/favicon-tickwave.ico
 design/out/icons/tickwave-128.png
 design/out/icons/tickwave-16.png
 design/out/icons/tickwave-24.png
@@ -37,6 +38,7 @@ design/out/previews/verge-probe.png
 design/out/previews/verge.png
 design/out/tokens.rs
 static/apple-touch-icon.png
+static/favicon-verge.ico
 static/favicon.ico
 static/fonts/hanken-grotesk-OFL.txt
 static/fonts/hanken-grotesk.woff2

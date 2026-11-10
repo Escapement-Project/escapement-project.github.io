@@ -45,7 +45,8 @@ CACHE = DESIGN / "fonts-source"
 MARKS = DESIGN / "marks"
 # Everything the build writes. The two folders are the build's alone and are written afresh, so a
 # renamed or removed output does not linger.
-OUT_FILES = tuple(map(pathlib.Path, ("static/tokens.css", "static/favicon.ico", "static/apple-touch-icon.png",
+OUT_FILES = tuple(map(pathlib.Path, ("static/tokens.css", "static/favicon.ico", "static/favicon-verge.ico",
+                                     "static/apple-touch-icon.png",
                                      "static/preview.png")))
 OUT_DIRS = (pathlib.Path("static/fonts"), pathlib.Path("design/out"))
 # What the last build wrote. A loose file it no longer makes is found here, as an orphan.
@@ -449,9 +450,13 @@ def icons(tokens, out_root):
                 fail(f"icon.{key}.{field} is {v!r}, which is not a colour role")
     static, out = out_root / "static", out_root / "design" / "out" / "icons"
     out.mkdir(parents=True, exist_ok=True)
-    # The sites' favicon. iOS and GitHub round an icon's corners themselves: theirs are square.
-    ico = [image(icon_svg(tokens, "project", px), px) for px in (16, 32, 48, 64)]
-    ico[-1].save(static / "favicon.ico", format="ICO", sizes=[i.size for i in ico], append_images=ico[:-1])
+    # The favicons: the project's for the sites, Verge's for Verge's page and docs, and tickwave's for
+    # its pages, which copy it from design/out/icons/. iOS and GitHub round an icon's corners
+    # themselves: theirs are square.
+    for key, path in (("project", static / "favicon.ico"), ("verge", static / "favicon-verge.ico"),
+                      ("tickwave", out / "favicon-tickwave.ico")):
+        ico = [image(icon_svg(tokens, key, px), px) for px in (16, 32, 48, 64)]
+        ico[-1].save(path, format="ICO", sizes=[i.size for i in ico], append_images=ico[:-1])
     (static / "apple-touch-icon.png").write_bytes(png(icon_svg(tokens, "project", corners=False), 180))
     (out / "escapement-project-avatar.png").write_bytes(png(icon_svg(tokens, "project", corners=False), 512))
     # Verge's app icon: SVG and PNGs for Linux, ICO for Windows, ICNS on Apple's grid for macOS.

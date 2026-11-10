@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="{{ get_url(path='tokens.css', cachebust=true) }}">
 <link rel="stylesheet" href="{{ get_url(path='base.css', cachebust=true) }}">
 <link rel="stylesheet" href="{{ get_url(path='site.css', cachebust=true) }}">
-<link rel="icon" href="{{ get_url(path='favicon.ico') }}">
+{% block icon %}<link rel="icon" href="{{ get_url(path='favicon.ico') }}">{% endblock icon %}
 <link rel="apple-touch-icon" href="{{ get_url(path='apple-touch-icon.png') }}">
 {% block head %}{% endblock head %}
 </head>
