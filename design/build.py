@@ -161,17 +161,21 @@ def css(tokens, web):
         if "weight" in t:
             line += f" --{role}-weight: {t['weight']};"
         types.append(line)
+    wash = f'--wash: color-mix(in srgb, var(--ink) {round(i["wash"] * 100)}%, transparent);'
     out += [":root {", *block("day"),
             "  /* Interaction: a focus ring, and a wash of ink over what the pointer is on */",
             f'  --focus-width: {i["focus-width"]}px;',
-            f'  --wash: color-mix(in srgb, var(--ink) {round(i["wash"] * 100)}%, transparent);',
+            f"  {wash}",
             "  /* Line patterns: dash arrays as stroke-dasharray values at a 2 px line */",
             *patterns,
             "  /* Type */",
             *types,
             "  color-scheme: light;", "}",
-            "/* Night, chosen on the page or followed from the system */",
-            ':root[data-face="night"] {', *block("night"), "  color-scheme: dark;", "}",
+            "/* A face on any element that carries one: the face chosen on <html>, and the faces the",
+            "   switch's turn shows over the page (face.js). The wash follows the element's own ink. */",
+            '[data-face="day"] {', *block("day"), f"  {wash}", "  color-scheme: light;", "}",
+            '[data-face="night"] {', *block("night"), f"  {wash}", "  color-scheme: dark;", "}",
+            "/* Night followed from the system, until the page chooses */",
             "@media (prefers-color-scheme: dark) {",
             '  :root:not([data-face="day"]) {', *block("night", "    "), "    color-scheme: dark;", "  }", "}"]
     return "\n".join(out) + "\n"

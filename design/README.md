@@ -36,7 +36,7 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with. On a product's pages the product's link gives way to its group, below (the site's `templates/partials/header.html` fills the header in for Zola) |
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows |
-| `static/js/face.js` | the day and night switch, and the page's colours following it as it turns (base.css's `.face-turning`) |
+| `static/js/face.js` | the day and night switch, and the turn between faces: the page dips to the new face's background and comes back up in it (base.css's `.face-cover`) |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
 | `static/js/mark.js` | the marks in motion on their plates, below |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
@@ -224,7 +224,8 @@ The publish workflow runs the check, and the measurements page's, before it buil
 Every colour has a role, and a role keeps its meaning wherever it appears. Each has a day and a
 night value. `tokens.css` sets the day values on `:root`. It sets the night values when the page
 sets `data-face="night"` on `<html>`, or when the system prefers dark and the page has not set
-`data-face="day"`.
+`data-face="day"`. Any element with `data-face` takes that face's values, as the switch's turn
+does to show the new face over the old.
 
 | Role | Day | Night | For |
 |---|---|---|---|

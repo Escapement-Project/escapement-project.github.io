@@ -59,7 +59,7 @@ seq.hero.end = TURN.from + TURN.ms;
 const stepOpacity = () => css("color-scheme") === "dark" ? 0.16 : 0.13;
 function dial() {
   // Its colours are the face's own variables, so a change of face recolours the drawing in place
-  // (and fades it with the page) without drawing it again; only the step's opacity is set per face.
+  // without drawing it again; only the step's opacity is set per face.
   // Text sizes in the dial's 400 units, raised so nothing shows smaller than 11 px.
   const host = document.getElementById("dialface");
   const shown = host.clientWidth || 400, fs = (base) => Math.max(base, 11 * 400 / Math.min(shown, 480));
