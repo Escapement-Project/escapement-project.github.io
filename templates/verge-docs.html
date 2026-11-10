@@ -9,7 +9,6 @@
 {%- set_global written = "," %}
 {%- for p in section.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
 <div class="wrap docs-index">
-  <p class="crumbs"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a> <span aria-hidden="true">/</span> Docs</p>
   <div class="docs-head">
     <h1>Verge's docs</h1>
     {% include "partials/find.html" %}

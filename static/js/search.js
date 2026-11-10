@@ -205,7 +205,7 @@
     unmark();
     markedFor = q;
     const re = marker(ws);
-    const skip = "svg, .zola-anchor, .crumbs, .doc-source, button, mark";
+    const skip = "svg, .zola-anchor, .doc-source, button, mark";
     const walk = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
       acceptNode: (n) => (n.parentElement.closest(skip) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
     });
