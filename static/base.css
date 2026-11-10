@@ -9,6 +9,11 @@ a { color: inherit; }
 .nb { white-space: nowrap; }
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 3px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+/* Scrollbars thin and in the page's own colours, in either face: the page's on the page, a scroll
+   area's on its own background. The colour is inherited and the width is not, so each scroll area
+   names its width. */
+html { scrollbar-width: thin; scrollbar-color: var(--rule) var(--page); }
+:where(pre, table, figure, .diagram, nav) { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
 
 /* The header stays on screen and looks the same at every scroll position: it sticks to the top,
    and once the page has scrolled (header.js sets .scrolled) a hairline shows under it. Nothing in
