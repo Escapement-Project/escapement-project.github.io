@@ -351,6 +351,51 @@ def master(name, size):
     return int(m.group(1)), m.group(2), path == fitted
 
 
+def tickwave_motion(tokens):
+    """tickwave's mark in motion: the zoom's tokens, Verge's times, and the wave and ruler as
+    marks/tickwave.svg draws them, read from its rects: the wave's runs and edges above the ruler,
+    the ticks on it, the edges' long and in ink, the rest short and in the line colour."""
+    z, m = tokens["motion"]["tickwave-mark"], tokens["motion"]["mark"]
+    _, body, _ = master("tickwave", None)
+    rects = [(*map(float, r[:4]), r[4] == "line") for r in re.findall(
+        r'<rect x="([-\d.]+)" y="([-\d.]+)" width="([-\d.]+)" height="([-\d.]+)"(?: class="(line)")?/>', body)]
+    # The ticks are as wide as the line-coloured ones; the wave is everything else.
+    tick_widths = {w for _, _, w, _, line in rects if line}
+    ticks = [r for r in rects if r[2] in tick_widths]
+    wave = [r for r in rects if r not in ticks]
+    width = min(min(w, h) for _, _, w, h, _ in wave)
+    runs = [r for r in wave if r[3] == width]
+    edges = sorted(x + width / 2 for x, _, w, h, _ in wave if w == width and h > width)
+    hi, lo = min(y for _, y, _, _, _ in runs), max(y for _, y, _, _, _ in runs)
+    run = [min(x for x, *_ in runs), max(x + w for x, _, w, _, _ in runs)]
+    low_first = min(runs)[1] == lo
+    centres = sorted((x + w / 2, y, h, line) for x, y, w, h, line in ticks)
+    step = centres[1][0] - centres[0][0]
+    major = {(y, h) for _, y, h, line in centres if not line}
+    minor = {(y, h) for _, y, h, line in centres if line}
+    if len(runs) != len(edges) + 1 or len(major) != 1 or len(minor) != 1 or len({w for _, _, w, _, _ in ticks}) != 1 \
+            or any(abs(b[0] - a[0] - step) > 1e-9 for a, b in zip(centres, centres[1:])) \
+            or sorted(x for x, _, _, line in centres if not line) != edges:
+        fail("marks/tickwave.svg: give the wave as runs and edges of one width above a ruler of evenly spaced "
+             "ticks of one width, the edges' long and in ink (no class), the rest short (class line)")
+    rising = edges[0 if low_first else 1::2]
+    if z["edge"] not in rising:
+        fail(f"motion.tickwave-mark.edge: {z['edge']} is not one of the mark's rising edges, {rising}")
+    # Every other edge must leave the wave's run, its whole width, once the zoomed-to edge is in the middle.
+    for e in edges:
+        x = 32 + (e - z["edge"]) * z["scale"]
+        if e != z["edge"] and run[0] < x + width / 2 and x - width / 2 < run[1]:
+            fail(f"motion.tickwave-mark.scale: at {z['scale']} the edge at {e} is still in view, at {x:g}")
+    if not 1 < z["thirds"][0] < z["thirds"][1] <= z["scale"]:
+        fail("motion.tickwave-mark.thirds: give two zooms between 1 and the scale, the first lower")
+    zoom = round(m["sweep"] + m["move"], 4)
+    return {"zoom": zoom, "hold": m["hold"], "end": round(2 * zoom + m["hold"], 4), "ease": m["ease"],
+            "edge": z["edge"], "scale": z["scale"], "thirds": z["thirds"],
+            "wave": {"width": width, "run": run, "hi": hi, "lo": lo, "edges": edges, "low_first": low_first},
+            "ticks": {"first": centres[0][0], "step": step, "width": ticks[0][2],
+                      "major": list(next(iter(major))), "minor": list(next(iter(minor)))}}
+
+
 def mark_motion(tokens):
     """Verge's mark in motion, as both its drawings need it: the times, and for the 64-unit master
     and the 24 px fitted one, each sample's place at rest and on the step, with the lines' places and
@@ -668,6 +713,8 @@ def build(tokens, out_root):
     motion = mark_motion(tokens)
     page = {k: v for k, v in motion.items() if k not in ("master", "fitted_24", "grid")} | {"geometry": motion["grid"]}
     write_text(out_root / "design" / "out" / "mark.json", json.dumps(page, separators=(",", ":")) + "\n")
+    write_text(out_root / "design" / "out" / "tickwave-mark.json",
+               json.dumps(tickwave_motion(tokens), separators=(",", ":")) + "\n")
     icons(tokens, out_root)
     previews(tokens, out_root)
 

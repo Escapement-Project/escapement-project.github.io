@@ -8,7 +8,7 @@ source, `tokens.toml`, generates everything else:
 | `static/tokens.css` | the site, and any page that keeps a copy |
 | `static/fonts/` | the web fonts `tokens.css` loads, subset to Latin |
 | `design/out/tokens.rs` | verge-gui's colours, patterns, font list and Verge's mark in motion |
-| `design/out/mark.json` | Verge's mark in motion, which the landing page embeds |
+| `design/out/mark.json`, `design/out/tickwave-mark.json` | Verge's and tickwave's marks in motion, which the landing page embeds |
 | `design/out/fonts/` | the fixed font files verge-gui embeds |
 | `static/favicon.ico`, `static/apple-touch-icon.png` | the sites' favicon and iOS icon |
 | `static/favicon-verge.ico` | the favicon on Verge's page and docs |
@@ -310,7 +310,7 @@ Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's
 The org's avatar is uploaded by hand, in the org's settings on GitHub:
 `design/out/icons/escapement-project-avatar.png`.
 
-## The mark in motion
+## The marks in motion
 
 Verge's mark moves on the landing page's Verge plate and in verge-gui. A beam sweeps the plate and
 each sample moves from the V to the project's step as the beam reaches it, grey stems rising from
@@ -329,12 +329,26 @@ Both draw it from one source, so they cannot drift apart. The samples' places co
   `plate-line`. The trace, floor and stems draw under the samples and the beam over them.
 
 The build writes the result twice: as `tokens.rs`'s `mark` module for verge-gui, and as
-`out/mark.json`, which `templates/index.html` embeds for `static/js/landing.js`. Each drawing comes
+`out/mark.json`, which `templates/index.html` embeds for `static/js/mark.js`. Each drawing comes
 with its places and widths in its own units: the 64-unit master on its plate, the fitted 24 px
 master, and the landing page's 64-unit box.
 
 To change the timing, edit `tokens.toml` and rebuild, then copy `tokens.rs` into verge
 (`--check` reports the copy until then).
+
+tickwave's mark moves on the landing page's tickwave plate. The time axis zooms in on one rising
+edge, which glides to the middle, until it is the only edge in view: the project's step. It holds
+there and zooms back out. Its times are Verge's, so both marks reach the step, hold and return
+together. The zoom's own tokens are in `[motion.tickwave-mark]`:
+
+- **The edge:** the rising edge it zooms to.
+- **The scale:** how far it zooms. The build fails unless every other edge leaves the wave's run.
+- **The thirds:** the zoom over which a tick at each third fades in, so the ruler stays as dense
+  as at rest.
+
+The wave and ruler come from `marks/tickwave.svg`. The build writes them with the times to
+`out/tickwave-mark.json`, which the landing page embeds for `static/js/mark.js`. A plate names its
+mark with `data-mark="verge"` or `data-mark="tickwave"`.
 
 ## Link previews
 

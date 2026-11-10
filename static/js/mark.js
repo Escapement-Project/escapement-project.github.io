@@ -1,6 +1,9 @@
-// Verge's mark in motion, on every plate that carries it: an element with data-mark holding
-// design/marks/verge.svg. It plays once when the plate is first wholly in view below the header,
-// and again when the pointer or a tap reaches it. A beam sweeps the plate and each sample moves
+// The marks in motion, on every plate that carries one: an element with data-mark="verge" holding
+// design/marks/verge.svg, or data-mark="tickwave" holding design/marks/tickwave.svg. A mark plays
+// once when its plate is first wholly in view below the header, and again when the pointer or a tap
+// reaches it. Both reach the project's step, hold there and return, in the same times.
+//
+// Verge's: a beam sweeps the plate and each sample moves
 // from the V to the project's step as the beam passes it, grey stems rising from the floor; a hold
 // on the step; the next sweep wipes back to the V. Every number comes from the design tokens
 // (design/tokens.toml's [motion.mark] and design/marks/verge.svg, built into design/out/mark.json,
@@ -8,10 +11,10 @@
 // plate's own 64-unit box. The stems, the step's trace and the beam live in groups of their own,
 // removed at the end, so at rest the plate holds the mark and nothing else.
 (() => {
-  const data = document.getElementById("mark");
   const plates = document.querySelectorAll("[data-mark]");
-  if (!data || !plates.length) return;
-  const MARK = JSON.parse(data.textContent);
+  if (!plates.length) return;
+  const json = (id) => { const el = document.getElementById(id); return el && JSON.parse(el.textContent); };
+  const MARK = json("mark"), TW = json("tickwave-mark");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const f1 = (v) => v.toFixed(1);
@@ -30,7 +33,7 @@
     return { y, beam, trace: to > from ? [from, to] : null, lines };
   }
 
-  function play(plate) {
+  function playVerge(plate) {
     const svg = plate.querySelector("svg"), dots = [...svg.querySelectorAll("circle")];
     if (reduced.matches || plate.dataset.playing) return;
     plate.dataset.playing = "1";
@@ -71,8 +74,62 @@
     step(t0);
   }
 
+  // tickwave's: the time axis zooms in on one rising edge, which glides to the middle, until it is
+  // the only edge in view, the project's step; it holds as long as Verge holds its own, then zooms
+  // back out. A tick at each third fades in as the ticks spread, so the ruler stays as dense as at
+  // rest. The numbers come from design/tokens.toml's [motion.tickwave-mark], Verge's times and
+  // design/marks/tickwave.svg, built into design/out/tickwave-mark.json (#tickwave-mark). Each frame
+  // is the mark's own rects placed for the zoom, the wave cut to its run; the plate gets its own
+  // markup back at the end.
+  function tickwaveAt(t) {
+    const m = TW, w = m.wave, k = m.ticks, p = m.ease, f = (v) => v.toFixed(2), parts = [];
+    const inout = (x) => (x = clamp01(x)) < 0.5 ? 2 ** (p - 1) * x ** p : 1 - (2 - 2 * x) ** p / 2;
+    const a = t < m.zoom ? inout(t / m.zoom) : t < m.zoom + m.hold ? 1 : inout((m.end - t) / m.zoom);
+    const scale = m.scale ** a, at = m.edge + (32 - m.edge) * a, c = m.edge - (at - 32) / scale;
+    const X = (u) => 32 + (u - c) * scale, half = w.width / 2;
+    const rect = (x0, x1, y, h) => {
+      x0 = Math.max(x0, w.run[0]); x1 = Math.min(x1, w.run[1]);
+      if (x1 > x0) parts.push(`<rect x="${f(x0)}" y="${f(y)}" width="${f(x1 - x0)}" height="${f(h)}"/>`);
+    };
+    let from = -Infinity, low = w.low_first;
+    for (const e of w.edges) {
+      const x = X(e);
+      rect(from, x + half, low ? w.lo : w.hi, w.width);
+      rect(x - half, x + half, w.hi, w.lo + w.width - w.hi);
+      from = x - half; low = !low;
+    }
+    rect(from, Infinity, low ? w.lo : w.hi, w.width);
+    const tick = (x, [y, h], line, op) => parts.push(`<rect x="${f(x - k.width / 2)}" y="${f(y)}" width="${f(k.width)}" height="${f(h)}"`
+      + `${line ? ' class="line"' : ""}${op < 1 ? ` style="opacity:${f(op)}"` : ""}/>`);
+    const third = clamp01((scale - m.thirds[0]) / (m.thirds[1] - m.thirds[0])), reach = (32 + k.width) / scale;
+    for (let j = Math.floor((c - reach - k.first) / k.step); k.first + j * k.step <= c + reach; j++) {
+      const u = k.first + j * k.step, edge = w.edges.includes(u);
+      tick(X(u), edge ? k.major : k.minor, !edge, 1);
+      if (third > 0) for (const d of [1, 2]) tick(X(u + d * k.step / 3), k.minor, true, third);
+    }
+    return parts.join("");
+  }
+
+  function playTickwave(plate) {
+    const svg = plate.querySelector("svg");
+    if (reduced.matches || plate.dataset.playing) return;
+    plate.dataset.playing = "1";
+    const rest = svg.innerHTML, t0 = performance.now();
+    const step = (now) => {
+      const t = Math.max(0, now - t0) / 1000;
+      if (t < TW.end) { svg.innerHTML = tickwaveAt(t); requestAnimationFrame(step); return; }
+      // Back to the mark's own markup, as design/marks/tickwave.svg writes it.
+      svg.innerHTML = rest;
+      delete plate.dataset.playing;
+    };
+    step(t0);
+  }
+
+  const players = { verge: MARK && playVerge, tickwave: TW && playTickwave };
   const header = document.querySelector("header")?.offsetHeight ?? 0;
   for (const plate of plates) {
+    const play = players[plate.dataset.mark];
+    if (!play) continue;
     plate.addEventListener("pointerenter", () => play(plate));
     // The header can cover the plate, so it plays once wholly in view below it.
     new IntersectionObserver((seen, io) => { if (seen.some((s) => s.isIntersecting)) { io.disconnect(); setTimeout(() => play(plate), 200); } },

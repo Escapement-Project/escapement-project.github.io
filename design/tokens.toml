@@ -138,6 +138,16 @@ line-opacity = 0.45             # the stems, floor and trace in plate-line at th
 beam-opacity = 0.6              # the beam at this; the trace, floor and stems under the samples, the beam over
 fitted-line = 1.0               # every line's width at 24 px, on the fitted master, in pixels
 
+# tickwave's mark in motion: the time axis zooms in on one rising edge until it is the only edge in
+# view, the project's step, holds there and zooms back out. Its times are Verge's, so both marks
+# reach the step, hold and return together: in over motion.mark's sweep and move, held for its
+# hold, out as long as in, eased in and out at its power. The wave and ruler come from
+# marks/tickwave.svg.
+[motion.tickwave-mark]
+edge = 38                       # the rising edge it zooms to, which glides to the middle
+scale = 3                       # how far it zooms: far enough that every other edge leaves the wave's run
+thirds = [1.6, 2.4]             # the zoom over which a tick at each third fades in, so the ruler stays as dense as at rest
+
 # Type: Saira's wide cut for display, Hanken Grotesk for text, Martian Mono for figures that change
 # in place (wide) and for code (normal width).
 [type.display]

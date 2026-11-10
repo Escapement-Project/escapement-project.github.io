@@ -12,7 +12,7 @@
 <div class="wrap verge-head">
   <div class="verge-id">
     {# Verge's mark, design/marks/verge.svg, on its plate; static/js/mark.js plays it. #}
-    <div class="plate" data-mark>{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="66" height="66" aria-hidden="true" fill="currentColor" ') | safe }}</div>
+    <div class="plate" data-mark="verge">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="66" height="66" aria-hidden="true" fill="currentColor" ') | safe }}</div>
     <div>
       <h1>Verge</h1>
       <p class="sub">Open CMSIS-DAP firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p>

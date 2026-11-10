@@ -27,7 +27,7 @@ the index, and serve `public/` to try the search.
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
 | `static/js/landing.js` | the landing page's dial and Verge section |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
-| `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
+| `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the headline the landing page and Verge's page show, and Figure 1 and Table 1 on Verge's page, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
