@@ -5,13 +5,13 @@
 {# The link preview: static/preview.png, drawn by design/build.py from the same headline. #}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ config.title }}">
-<meta property="og:title" content="Open debug tools that are correct, fast and easy to use">
+<meta property="og:title" content="{{ section.extra.statement }}">
 <meta property="og:description" content="{{ section.description }}">
 <meta property="og:url" content="{{ section.permalink | safe }}">
 <meta property="og:image" content="{{ get_url(path='preview.png') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Escapement Project: open debug tools that are correct, fast and easy to use. {{ h.ratio }}× the write rate of NXP's own firmware over SWD, through probe-rs: Verge at {{ h.oursAt }} MHz, NXP's firmware at {{ h.stockAt }} MHz, the fastest clock it reads right at.">
+<meta property="og:image:alt" content="Escapement Project. {{ section.extra.statement }}. {{ section.extra.lede }}">
 <meta name="twitter:card" content="summary_large_image">
 {%- endblock head %}
 {% block header %}{% set current = "landing" %}{% include "partials/header.html" %}{% endblock header %}
@@ -26,8 +26,8 @@
     {# The project's mark (design/marks/dial.svg), large and faint behind the statement's right side
        and off the hero's edge. landing.js has header.js's ProjectMark play it once as it arrives. #}
     <div class="hero-mark" aria-hidden="true">{{ load_data(path="design/marks/dial.svg", format="plain") | trim | replace(from="<svg ", to='<svg fill="currentColor" ') | safe }}</div>
-    <h1>Open debug tools that are correct, fast and easy to use</h1>
-    <p class="lede">We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them.</p>
+    <h1>{{ section.extra.statement }}</h1>
+    <p class="lede">{{ section.extra.lede }}</p>
     <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
   </div>
 </div></div>

@@ -2,11 +2,14 @@
 title = "Escapement Project"
 description = "Open debug tools that are correct, fast and easy to use. The first is Verge, open firmware for NXP's MCU-Link debug probes; tickwave shows logic and mixed-signal captures in a web page."
 
+# The hero's statement and its lede, which the link preview carries too (design/build.py).
 # The Source section's index, in this order. A repository without a language is not published yet
 # and shows as coming. `summary` is the line on its link preview (design/build.py), `icon` an icon
 # from design/tokens.toml's [icon] that the preview carries, and `licence` one that differs from
 # the default below.
 [extra]
+statement = "Open debug tools that are correct, fast and easy to use"
+lede = "We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them."
 licence = "Apache License 2.0"
 
 [[extra.repos]]

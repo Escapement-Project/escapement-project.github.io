@@ -12,7 +12,7 @@ fixed font instances under design/out/fonts/ for verge-gui; the icons under desi
 Verge's app icon for each platform, tickwave's icon and the org's avatar; and each published
 repository's social preview under design/out/previews/. The source fonts download once from
 google/fonts at the commit tokens.toml pins; the marks are design/marks/. The previews also read the
-headline from data/landing.json and the repositories from content/_index.md.
+landing's statement and lede, and the repositories, from content/_index.md.
 
     uv run design/build.py                   # write every output
     uv run design/build.py --check FILE...   # are the outputs current, and is each FILE, a
@@ -655,26 +655,17 @@ def previews(tokens, out_root):
     """The site's link preview (1200 x 630) and one social preview (1280 x 640) per published
     repository, on the night face."""
     fonts = out_root / "design" / "out" / "fonts"
-    lume, on_lume = tokens["color"]["lume"]["day"], tokens["color"]["on-lume"]["day"]
-    h = json.loads((ROOT / "data" / "landing.json").read_text())["headline"]
     site = front_matter(ROOT / "content" / "_index.md")
 
+    # The landing's hero at rest: the project's mark large and faint behind the statement's right
+    # side, cropped by the card's edges, then the statement and its lede (content/_index.md).
     c = Card(tokens, fonts, 1200, 630, "static/preview.png")
-    # The hero's dial, faint and cropped at the right edge.
-    c.place(bare("dial", c.ink), 880, 150, 520, opacity=0.08)
+    c.place(bare("dial", c.ink), 700, 40, 620, opacity=0.08)
     c.brand(72, 72, 56)
-    y = c.text(72, 236, "Open debug tools that are correct, fast and easy to use", "Saira", 50, c.ink, 500, "expanded",
-               "Saira-Expanded-Medium", 770, 1.18, max_lines=2)
-    # The headline in its lume window, as the measurements page sets it.
-    ratio = f"{h['ratio']}×"
-    win = c.width(ratio, "MartianMono-SemiExpanded-Medium", 84) + 56
-    c.parts.append(f'<rect x="72" y="{y + 64:.1f}" width="{win:.1f}" height="124" rx="10" fill="{lume}"/>')
-    c.text(100, y + 156, ratio, "Martian Mono", 84, on_lume, 500, "semi-expanded", "MartianMono-SemiExpanded-Medium")
-    claim = (f"the write rate of NXP's own firmware over SWD, through probe-rs: Verge at {h['oursAt']} MHz, "
-             f"NXP's firmware at {h['stockAt']} MHz, the fastest clock it reads right at")
-    # Five lines end above the card's bottom margin; a wider ratio leaves the claim less room.
-    c.text(72 + win + 32, y + 96, claim, "Hanken Grotesk", 26, c.ink2, 400, "normal", "HankenGrotesk-Regular",
-           830 - 72 - win - 32, max_lines=5)
+    y = c.text(72, 262, site["extra"]["statement"], "Saira", 60, c.ink, 500, "expanded",
+               "Saira-Expanded-Medium", 940, 1.16, max_lines=2)
+    c.text(72, y + 88, site["extra"]["lede"], "Hanken Grotesk", 28, c.ink2, 400, "normal", "HankenGrotesk-Regular",
+           820, 1.4, max_lines=3)
     (out_root / "static" / "preview.png").write_bytes(c.png())
 
     out = out_root / "design" / "out" / "previews"

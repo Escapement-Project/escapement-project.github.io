@@ -23,8 +23,8 @@ uv run design/build.py
 ```
 
 The source fonts download once, from google/fonts at the commit `tokens.toml` pins. The icons
-come from the marks in `marks/`. The link previews also read the headline from `data/landing.json`
-and the repositories from `content/_index.md`.
+come from the marks in `marks/`. The link previews also read the landing's statement and lede, and
+the repositories, from `content/_index.md`.
 
 ## Shared files
 
@@ -411,8 +411,8 @@ to nothing by id. Its clips exist only while it moves, as Firefox's reader view 
 
 ## Link previews
 
-A link to the site shows `static/preview.png`: the project's mark, the page's headline, and the
-measured ratio in its lume window with the clocks the claim depends on. Each published repository
+A link to the site shows `static/preview.png`: the landing's hero at rest, its statement and lede
+over the project's mark, large and faint and cropped at the card's edges. Each published repository
 gets a social preview with its name, the `summary` from `content/_index.md`, its language and
 licence (the content's default, or its own `licence`). Verge's three repositories also carry
 Verge's icon (`icon = "verge"`). A repository without a language is not published yet and gets no
