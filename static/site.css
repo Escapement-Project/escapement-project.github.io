@@ -193,7 +193,7 @@
 
 /* A doc: the text in a reading column, the docs listed beside it; on phones, the list after it. */
 /* A doc page: the contents in a rail on the left, the text beside it. */
-.doc-wrap { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 48px; padding-top: 32px; padding-bottom: 64px; align-items: start; }
+.doc-wrap { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 48px; padding-top: 32px; padding-bottom: 32px; align-items: start; }
 .doc { min-width: 0; max-width: 46em; }
 .crumbs { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
 .crumbs a { color: var(--ink); }
