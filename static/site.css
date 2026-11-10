@@ -25,10 +25,19 @@
 .dialface .tick { stroke: color-mix(in srgb, var(--ink) 35%, var(--ring)); }
 .dialface .tick.on { stroke: var(--ink); }
 .reading { text-align: center; color: var(--ink-2); font-size: 15px; max-width: 30em; margin: 14px auto 0; }
-/* Verge's figure: the dial stands apart without the kit's rule beside it (base.css), and its link
-   sits centred under the caption, as the caption under the dial. */
+/* Verge's figure: the dial stands apart without the kit's rule beside it (base.css), its caption
+   centred under it. The caption is the figure's last paragraph, which the kit sets as a link. */
 .dial-figure { border-left: 0; padding-left: 0; }
-.product-figure p.reading:last-child { margin: 10px auto 0; }
+.dial-figure p.reading { color: var(--ink-2); font-weight: 400; margin: 14px auto 0; }
+/* Beside the text, the dial starts level with the product's name rather than under it: the head is
+   one grid, the dial in its right column across the name's row and the text's. */
+@media (min-width: 861px) {
+  .dial-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gutter); align-items: start; }
+  .dial-head > .product-id { grid-column: 1; grid-row: 1; }
+  .dial-head > .two { display: contents; }
+  .dial-head > .two > :first-child { grid-column: 1; grid-row: 2; }
+  .dial-head .dial-figure { grid-column: 2; grid-row: 1 / span 2; }
+}
 
 .app { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
 .app .plate { width: 58px; height: 58px; border-radius: 13px; }

@@ -9,7 +9,7 @@
 {%- set docs_pages = get_section(path="verge/docs/_index.md") %}
 {%- set_global written = "," %}
 {%- for p in docs_pages.pages %}{% set_global written = written ~ p.slug ~ "," %}{% endfor %}
-<div class="wrap product-head">
+<div class="wrap product-head dial-head">
   <div class="product-id">
     {# Verge's mark, design/marks/verge.svg, on its plate; static/js/mark.js plays it. #}
     <div class="plate" data-mark="verge">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="66" height="66" aria-hidden="true" fill="currentColor" ') | safe }}</div>
@@ -23,14 +23,13 @@
       <p class="lede">Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
       <p>Through probe-rs, Verge is faster than NXP's firmware at every clock both complete. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
       <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
-      <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a></p>
+      <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
       <p class="status">In development. The firmware and verge publish with the first release.</p>
     </div>
     <div class="product-figure dial-figure">
       {# Verge's headline as a dial, drawn by static/js/dial.js; without scripts the caption carries it. #}
       <div class="dialface" id="dialface"></div>
       <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
-      <p class="reading"><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
     </div>
   </div>
 </div>
