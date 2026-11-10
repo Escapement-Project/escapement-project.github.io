@@ -32,10 +32,10 @@ Besides what the build generates, five hand-written files are shared by every pa
 | File | What |
 |---|---|
 | `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
-| `design/header.html` | the header every page shows: the mark, the places, the menu of places on phones and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with; each page marks its own place with `aria-current="page"` (the site's `templates/partials/header.html` fills it for Zola) |
+| `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with; each page marks its own place with `aria-current="page"` (the site's `templates/partials/header.html` fills it for Zola) |
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch |
-| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the menu of places on phones, and the published address for a page opened from disk |
+| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
 
 Edit them here; the copies follow.
 

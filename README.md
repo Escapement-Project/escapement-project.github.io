@@ -18,7 +18,7 @@ zola build                       # the site, into public/
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
 | `design/header.html`, `design/footer.html` | the header and footer every page of the project shows; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
-| `static/js/header.js` | the header's hairline, the mark on the section in view, and the menu of places on phones, on every page |
+| `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
