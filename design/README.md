@@ -36,7 +36,7 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with. On a product's pages the product's link gives way to its group, below (the site's `templates/partials/header.html` fills the header in for Zola) |
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows |
-| `static/js/face.js` | the day and night switch |
+| `static/js/face.js` | the day and night switch, and the page's colours following it as it turns (base.css's `.face-turning`) |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |

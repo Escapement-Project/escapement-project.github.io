@@ -56,15 +56,17 @@ const TURN = { from: passes(RISER), ms: 1000 };
 const readingAt = (t) => RATIO * (1 - (1 - clamp01((t - TURN.from) / TURN.ms)) ** 3);
 seq.hero.end = TURN.from + TURN.ms;
 
+const stepOpacity = () => css("color-scheme") === "dark" ? 0.16 : 0.13;
 function dial() {
-  const ink = css("--ink"), muted = css("--ink-2"), ring = css("--ring"), face = css("--face"), hair = css("--hair");
+  // Its colours are the face's own variables, so a change of face recolours the drawing in place
+  // (and fades it with the page) without drawing it again; only the step's opacity is set per face.
   // Text sizes in the dial's 400 units, raised so nothing shows smaller than 11 px.
   const host = document.getElementById("dialface");
   const shown = host.clientWidth || 400, fs = (base) => Math.max(base, 11 * 400 / Math.min(shown, 480));
   const pt = (deg, r) => { const a = deg * Math.PI / 180; return [C + r * Math.sin(a), C - r * Math.cos(a)]; };
   const h = DATA.headline;
   const s = [`<svg viewBox="0 0 400 400" role="group" aria-label="The headline as a dial"><g aria-hidden="true">`];
-  s.push(`<circle cx="${C}" cy="${C}" r="198" fill="${ring}" stroke="${hair}"/><circle cx="${C}" cy="${C}" r="158" fill="${face}"/>`);
+  s.push(`<circle cx="${C}" cy="${C}" r="198" style="fill: var(--ring); stroke: var(--hair)"/><circle cx="${C}" cy="${C}" r="158" style="fill: var(--face)"/>`);
   // The outer scale, a tick every tenth, those up to the reading drawn in ink. It turns as one group;
   // each number turns back about its own place, so it stays upright wherever the scale stops.
   s.push(`<g id="scale">`);
@@ -72,41 +74,41 @@ function dial() {
     const v = i / 10, major = i % 10 === 0, half = i % 5 === 0;
     const [x1, y1] = pt(scaleAt(v), 194), [x2, y2] = pt(scaleAt(v), major ? 172 : half ? 180 : 186);
     s.push(`<line class="tick" data-v="${v}" x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke-width="${major ? 2.4 : 1}"/>`);
-    if (major) { const [tx, ty] = pt(scaleAt(v), 150); s.push(`<text class="number" data-at="${scaleAt(v)}" data-x="${f1(tx)}" data-y="${f1(ty)}" x="${f1(tx)}" y="${f1(ty + 5)}" text-anchor="middle" font-family='${css("--font-display")}' font-weight="${css("--display-weight")}" font-stretch="${css("--display-stretch")}" font-size="${fs(13)}" fill="${ink}">${v}×</text>`); }
+    if (major) { const [tx, ty] = pt(scaleAt(v), 150); s.push(`<text class="number" data-at="${scaleAt(v)}" data-x="${f1(tx)}" data-y="${f1(ty)}" x="${f1(tx)}" y="${f1(ty + 5)}" text-anchor="middle" font-family='${css("--font-display")}' font-weight="${css("--display-weight")}" font-stretch="${css("--display-stretch")}" font-size="${fs(13)}" style="fill: var(--ink)">${v}×</text>`); }
   }
   s.push(`</g>`);
   // The logo's step itself, scaled so the logo's inner circle (r 23 of its 64) is the face (r 158).
   // The clip goes on a group: on the scaled path it would scale with it.
   s.push(`<clipPath id="face"><circle cx="${C}" cy="${C}" r="158"/></clipPath><clipPath id="dial-sweep"><rect x="0" y="0" width="0" height="400"/></clipPath>`);
-  s.push(`<g clip-path="url(#face)"><path transform="translate(${C} ${C}) scale(${K}) translate(-32 -32)" d="M4,38 H29 V20 H60 V26 H35 V44 H4 Z" fill="${ink}" fill-opacity="${css("color-scheme") === "dark" ? 0.16 : 0.13}"/></g>`);
+  s.push(`<g clip-path="url(#face)"><path transform="translate(${C} ${C}) scale(${K}) translate(-32 -32)" d="M4,38 H29 V20 H60 V26 H35 V44 H4 Z" class="step" style="fill: var(--ink)" fill-opacity="${stepOpacity()}"/></g>`);
   // Its top edge, traced: NXP's blue along the low run, the riser in ink, Verge's teal along the high
   // run, one width throughout. Butt ends at a corner would leave half the corner's square bare, so
   // each run reaches half a width past the riser's line to fill it, and the riser stops at the runs'
   // edges: drawn under them, its ink showed through their antialiased edges. The face clips the ends.
   const TRACE = 2.5, half = TRACE / 2;
   s.push(`<g clip-path="url(#face)"><g clip-path="url(#dial-sweep)" fill="none" stroke-width="${TRACE}">`
-    + `<path d="M${RISER.toFixed(2)},${(LOW - half).toFixed(2)} V${(HIGH + half).toFixed(2)}" stroke="${ink}"/>`
-    + `<path d="M0,${LOW.toFixed(2)} H${(RISER + half).toFixed(2)}" stroke="${css("--series-nxp")}"/>`
-    + `<path d="M${(RISER - half).toFixed(2)},${HIGH.toFixed(2)} H400" stroke="${css("--series-verge")}"/></g></g>`);
-  s.push(`<rect x="144" y="300" width="112" height="40" rx="4" fill="${css("--lume")}" stroke="${css("--window-edge")}"/>`);
+    + `<path d="M${RISER.toFixed(2)},${(LOW - half).toFixed(2)} V${(HIGH + half).toFixed(2)}" style="stroke: var(--ink)"/>`
+    + `<path d="M0,${LOW.toFixed(2)} H${(RISER + half).toFixed(2)}" style="stroke: var(--series-nxp)"/>`
+    + `<path d="M${(RISER - half).toFixed(2)},${HIGH.toFixed(2)} H400" style="stroke: var(--series-verge)"/></g></g>`);
+  s.push(`<rect x="144" y="300" width="112" height="40" rx="4" style="fill: var(--lume); stroke: var(--window-edge)"/>`);
   s.push("</g>");
   // The readings, each a focusable group that says what it is. A reading's text shows a whole
   // character at a time as the sweep passes, through a clip with a band per line.
   const reading = (id, label, tip, body) => s.push(`<g class="reading" id="${id}" tabindex="0" role="img" aria-label="${label}" data-tip="${tip}">`
-    + `<rect class="hit" fill="transparent"/><rect class="focus" fill="none" stroke="${ink}" stroke-width="2" rx="4"/>`
+    + `<rect class="hit" fill="transparent"/><rect class="focus" fill="none" style="stroke: var(--ink)" stroke-width="2" rx="4"/>`
     + `<clipPath id="${id}-shown"><rect/><rect/></clipPath><g clip-path="url(#${id}-shown)">${body}</g></g>`);
   const figures = `font-family='${css("--font-figures")}' font-weight="${css("--figures-weight")}" font-stretch="${css("--figures-stretch")}"`;
-  const lines = (x, anchor, name, value) => `<text x="${f1(x)}" y="${C - 6}" text-anchor="${anchor}" font-family='${css("--font-text")}' font-weight="600" font-size="${fs(11)}" letter-spacing="1.2" fill="${muted}">${name}</text>`
-    + `<text x="${f1(x)}" y="${f1(C + 6 + fs(17) * .72)}" text-anchor="${anchor}" fill="${ink}"><tspan ${figures} font-size="${fs(17)}">${value}</tspan><tspan font-family='${css("--font-text")}' font-size="${fs(12)}" font-weight="500" fill="${muted}" dx="4">KiB/s</tspan></text>`;
+  const lines = (x, anchor, name, value) => `<text x="${f1(x)}" y="${C - 6}" text-anchor="${anchor}" font-family='${css("--font-text")}' font-weight="600" font-size="${fs(11)}" letter-spacing="1.2" style="fill: var(--ink-2)">${name}</text>`
+    + `<text x="${f1(x)}" y="${f1(C + 6 + fs(17) * .72)}" text-anchor="${anchor}" style="fill: var(--ink)"><tspan ${figures} font-size="${fs(17)}">${value}</tspan><tspan font-family='${css("--font-text")}' font-size="${fs(12)}" font-weight="500" style="fill: var(--ink-2)" dx="4">KiB/s</tspan></text>`;
   reading("r-nxp", `NXP's firmware V3.174: ${h.stock} KiB/s at ${h.stockAt} MHz, the fastest clock it reads right at`,
     `<b>NXP's firmware V3.174</b><br>${h.stock} KiB/s at ${h.stockAt} MHz, the fastest<br>clock it reads right at`, lines(RISER - 16, "end", "NXP 3.174", h.stock));
   reading("r-verge", `Verge, ${h.oursName}: ${h.ours} KiB/s at ${h.oursAt} MHz`,
     `<b>Verge, ${h.oursName}</b><br>${h.ours} KiB/s at ${h.oursAt} MHz`, lines(RISER_RIGHT + 16, "start", "VERGE", h.ours));
   s.push(`<g class="reading" id="r-ratio" tabindex="0" role="img" aria-label="${h.ratio} times: Verge's ${h.ours} KiB/s over NXP's ${h.stock}" data-tip="<b>${h.ratio}×</b><br>Verge's ${h.ours} KiB/s over NXP's ${h.stock}">`
-    + `<rect class="hit" fill="transparent" x="141" y="297" width="118" height="46" rx="6"/><rect class="focus" fill="none" stroke="${ink}" stroke-width="2" x="141" y="297" width="118" height="46" rx="6"/>`
-    + `<text id="ratio" x="200" y="${300 + 20 + 22 * .36}" text-anchor="middle" ${figures} font-size="22" fill="${css("--on-lume")}">${h.ratio}×</text></g>`);
+    + `<rect class="hit" fill="transparent" x="141" y="297" width="118" height="46" rx="6"/><rect class="focus" fill="none" style="stroke: var(--ink)" stroke-width="2" x="141" y="297" width="118" height="46" rx="6"/>`
+    + `<text id="ratio" x="200" y="${300 + 20 + 22 * .36}" text-anchor="middle" ${figures} font-size="22" style="fill: var(--on-lume)">${h.ratio}×</text></g>`);
   // The red index at six, in the ring's band inside the ticks, pointing out at the reading.
-  s.push(`<path aria-hidden="true" transform="rotate(${INDEX} ${C} ${C})" d="M${C - 7},${C - 159} L${C + 7},${C - 159} L${C},${C - 171} Z" fill="${css("--hand")}"/>`);
+  s.push(`<path aria-hidden="true" transform="rotate(${INDEX} ${C} ${C})" d="M${C - 7},${C - 159} L${C + 7},${C - 159} L${C},${C - 171} Z" style="fill: var(--hand)"/>`);
   s.push(`</svg><div class="tip" id="dialtip" hidden></div>`);
   host.innerHTML = s.join("");
   for (const id of ["r-nxp", "r-verge"]) {
@@ -216,18 +218,19 @@ function scopeSVG(key, W) {
   const spec = WIRES[key], n = spec.wires.find(([, v]) => v !== "clock")[1].length;
   const L = SCOPE.left, R = W - 6, cw = (R - L) / n, X = (i) => L + i * cw;
   const top = SCOPE.notes, H = top + spec.wires.length * SCOPE.row + SCOPE.key;
-  const probe = css("--series-verge"), target = css("--ink"), muted = css("--ink-2"), hair = css("--hair");
+  // The face's own variables, as the dial's: a change of face recolours an open trace in place.
+  const probe = "var(--series-verge)", target = "var(--ink)", muted = "var(--ink-2)", hair = "var(--hair)";
   const s = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${spec.title}" style='font-family:${css("--font-text")};font-size:11px'>`];
-  for (const m of new Set(spec.notes.flat().filter((v) => typeof v === "number"))) s.push(`<line x1="${f1(X(m))}" x2="${f1(X(m))}" y1="${top - 2}" y2="${top + spec.wires.length * SCOPE.row}" stroke="${hair}"/>`);
+  for (const m of new Set(spec.notes.flat().filter((v) => typeof v === "number"))) s.push(`<line x1="${f1(X(m))}" x2="${f1(X(m))}" y1="${top - 2}" y2="${top + spec.wires.length * SCOPE.row}" style="stroke: ${hair}"/>`);
   s.push(`<clipPath id="scope-sweep"><rect x="0" y="0" width="0" height="${H}"/></clipPath>`);
-  for (const [a, b, text] of spec.notes) s.push(`<text class="note" x="${f1((X(a) + X(b)) / 2)}" y="11" text-anchor="middle" fill="${muted}">${text}</text>`);
+  for (const [a, b, text] of spec.notes) s.push(`<text class="note" x="${f1((X(a) + X(b)) / 2)}" y="11" text-anchor="middle" style="fill: ${muted}">${text}</text>`);
   s.push(`<g clip-path="url(#scope-sweep)" fill="none" stroke-width="1.6">`);
   spec.wires.forEach(([name, v], w) => {
     const y0 = top + w * SCOPE.row, hi = y0 + 6, lo = y0 + 20, mid = y0 + 13;
     if (v === "clock") {
       let d = `M${L},${lo}`;
       for (let i = 0; i < n; i++) d += `H${f1(X(i) + cw / 2)}V${hi}H${f1(X(i + 1))}V${lo}`;
-      s.push(`<path d="${d}" stroke="${probe}"/>`);
+      s.push(`<path d="${d}" style="stroke: ${probe}"/>`);
       return;
     }
     let prev = null;
@@ -236,15 +239,15 @@ function scopeSVG(key, W) {
       const stroke = c === "z" ? muted : "ab".includes(c) ? target : probe;
       const extra = c === "z" ? ` stroke-dasharray="2 3" stroke-width="1.2"` : c === "x" ? ` stroke-opacity=".35"` : "";
       const rise = prev != null && prev !== y && c !== "z" && v[i - 1] !== "z" ? `M${f1(X(i))},${prev}V${y}` : "";
-      s.push(`<path d="${rise}M${f1(X(i))},${y}H${f1(X(i + 1))}" stroke="${stroke}"${extra}/>`);
+      s.push(`<path d="${rise}M${f1(X(i))},${y}H${f1(X(i + 1))}" style="stroke: ${stroke}"${extra}/>`);
       prev = y;
     }
   });
   s.push("</g>");
-  spec.wires.forEach(([name], w) => s.push(`<text x="4" y="${top + w * SCOPE.row + 17}" fill="${muted}">${name}</text>`));
+  spec.wires.forEach(([name], w) => s.push(`<text x="4" y="${top + w * SCOPE.row + 17}" style="fill: ${muted}">${name}</text>`));
   const ky = H - 7;
-  s.push(`<line x1="4" x2="18" y1="${ky - 4}" y2="${ky - 4}" stroke="${probe}" stroke-width="2"/><text x="22" y="${ky}" fill="${muted}">probe drives</text>`);
-  s.push(`<line x1="104" x2="118" y1="${ky - 4}" y2="${ky - 4}" stroke="${target}" stroke-width="2"/><text x="122" y="${ky}" fill="${muted}">target drives</text>`);
+  s.push(`<line x1="4" x2="18" y1="${ky - 4}" y2="${ky - 4}" style="stroke: ${probe}" stroke-width="2"/><text x="22" y="${ky}" style="fill: ${muted}">probe drives</text>`);
+  s.push(`<line x1="104" x2="118" y1="${ky - 4}" y2="${ky - 4}" style="stroke: ${target}" stroke-width="2"/><text x="122" y="${ky}" style="fill: ${muted}">target drives</text>`);
   s.push("</svg>");
   return s.join("");
 }
@@ -306,11 +309,14 @@ for (const ref of document.querySelectorAll("#verge .ref")) {
 document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref, #console")) unpin(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") unpin(); });
 
-// Redrawn for a change of face: the dial draws in the face's colours.
 function render() {
   dial(); closeScope(); sizeConsole();
 }
-document.addEventListener("facechange", render);
+// A change of face: the dial and an open trace take their new colours from the page's, and fade with
+// it; nothing changes size, so nothing is drawn or measured again. Only the step's opacity is per face.
+document.addEventListener("facechange", () => {
+  document.querySelector("#dialface .step")?.setAttribute("fill-opacity", stepOpacity());
+});
 window.addEventListener("resize", () => { dial(); closeScope(); sizeConsole(); });
 if (reduced.matches) finish(seq.hero);
 reduced.addEventListener("change", () => { if (reduced.matches) finish(seq.hero); });
