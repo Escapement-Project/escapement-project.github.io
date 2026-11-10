@@ -28,7 +28,7 @@
     <div class="measured">
       <div class="window">{{ h.ratio }}×</div>
       <p>the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
-      <p><a href="{{ config.base_url | safe }}/measurements/">All measurements</a></p>
+      <p><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
     </div>
   </div>
 </div>
@@ -72,7 +72,7 @@
 
 <section id="measurements">
   <div class="wrap">
-    <div class="head"><h2><a href="{{ config.base_url | safe }}/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
+    <div class="head"><h2><a href="{{ config.base_url | safe }}/verge/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
     <div>
       <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
       <div class="two">

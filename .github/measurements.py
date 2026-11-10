@@ -13,7 +13,9 @@ import shutil
 import sys
 
 page, site = map(pathlib.Path, sys.argv[1:])
-dest = site / "static" / "measurements"
+# Served at /verge/measurements/, so the site's fonts are two folders up.
+WHERE = pathlib.PurePosixPath("verge/measurements")
+dest = site / "static" / WHERE
 if dest.exists() or dest.is_symlink():
     # Locally this is the link to mculink-bench: writing through it would change that repository.
     sys.exit(f"{dest} exists; this copies into a fresh checkout")
@@ -30,6 +32,7 @@ for name in names:
         # The page then draws with the site's newer font; its own copy is due an update.
         print(f"::warning::the page's fonts/{name} differs from the site's")
 
+up = "../" * len(WHERE.parts)
 shutil.copytree(page, dest, ignore=shutil.ignore_patterns("fonts"))
-(dest / "index.html").write_text(html.replace('url("fonts/', 'url("../fonts/'))
+(dest / "index.html").write_text(html.replace('url("fonts/', f'url("{up}fonts/'))
 print(f"copied the page, loading {len(names)} fonts from the site's")

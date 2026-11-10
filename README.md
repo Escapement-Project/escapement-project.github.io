@@ -53,11 +53,11 @@ version `config.toml` pins; the pages load no fonts or scripts from anywhere els
 
 ## The measurements page
 
-The site serves mculink-bench's measurements page at `/measurements/`. To see it locally, link the
+The site serves mculink-bench's measurements page at `/verge/measurements/`. To see it locally, link the
 page's folder from a mculink-bench checkout beside this one:
 
 ```sh
-ln -s ../../mculink-bench/page/out static/measurements
+ln -s ../../../mculink-bench/page/out static/verge/measurements
 ```
 
 Git ignores the link. `zola serve` follows it, so a rebuilt measurements page shows on the next

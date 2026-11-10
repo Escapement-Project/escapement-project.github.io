@@ -1,6 +1,6 @@
 design/fonts-source/
 public/
 # A link to the measurements page, mculink-bench/page/out: see README.md.
-static/measurements
+static/verge/measurements
 # Verge's docs, copied from their repositories by .github/verge-docs.py.
 content/verge/docs/
