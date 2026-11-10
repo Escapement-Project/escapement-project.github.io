@@ -1,8 +1,9 @@
-// The docs' search (templates/partials/find.html). The sections that mention every word typed take
-// the contents' place while there is a query, grouped by doc. A result links to its heading with
-// the query, so the page it opens shows the same results, that one marked, and the words marked in
-// the text. The index, verge/docs/search.json, is written after the build by
-// .github/search-index.py and loads the first time the field is used.
+// A product's docs search, shared by the project's docs (design/README.md has the markup and the
+// index's format). The sections that mention every word typed take the contents' place while there
+// is a query, grouped by doc. A result links to its heading with the query, so the page it opens
+// shows the same results, that one marked, and the words marked in the text. The index, at the
+// field's data-index, is written by each product's build and loads the first time the field is
+// used.
 (() => {
   const find = document.querySelector(".find");
   const found = document.getElementById("found");
@@ -205,7 +206,7 @@
     unmark();
     markedFor = q;
     const re = marker(ws);
-    const skip = "svg, .zola-anchor, .doc-source, button, mark";
+    const skip = "svg, .anchor, .doc-source, button, mark";
     const walk = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
       acceptNode: (n) => (n.parentElement.closest(skip) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
     });

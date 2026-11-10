@@ -23,8 +23,8 @@ the index, and serve `public/` to try the search.
 | `design/header.html`, `design/header-verge.html`, `design/footer.html` | the header and footer every page of the project shows, and Verge's group in the header on Verge's pages; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
-| `static/doc.css`, `static/js/doc.js` | a doc page's frame, shared with tickwave's docs: the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
-| `static/js/search.js` | the docs' search, on the docs' index and every doc page |
+| `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
+| `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
 | `static/js/landing.js` | the landing page's dial and Verge section |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
@@ -41,9 +41,9 @@ the index, and serve `public/` to try the search.
 `uv run design/build.py` rather than editing them.
 
 The measurements page keeps copies of `base.css`, the header, Verge's group, the footer, `face.js`
-and `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css` and
-`doc.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the copies are
-checked.
+and `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css`,
+`doc.js` and `search.js`, and its favicon from `design/out/icons/`. `design/README.md` says how the
+copies are checked.
 
 The landing page and Verge's page work without scripts: their figures are in the text, and Verge's
 page has Table 1, which Zola renders from `data/landing.json`. Scripts add the landing's dial, and
@@ -53,8 +53,8 @@ version `config.toml` pins; the pages load no fonts or scripts from anywhere els
 
 ## The measurements page
 
-The site serves mculink-bench's measurements page at `/verge/measurements/`. To see it locally, link the
-page's folder from a mculink-bench checkout beside this one:
+The site serves mculink-bench's measurements page at `/verge/measurements/`. To see it locally,
+link the page's folder from a mculink-bench checkout beside this one:
 
 ```sh
 ln -s ../../../mculink-bench/page/out static/verge/measurements

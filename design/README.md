@@ -39,7 +39,8 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `static/js/face.js` | the day and night switch |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`.doc pre`), except a block marked as text, which is output |
-| `static/doc.css`, `static/js/doc.js` | a doc page's frame: the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet. The markup is below |
+| `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
+| `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |
 
 Edit them here; the copies follow.
 
@@ -59,16 +60,41 @@ The product's link comes first, then its pages. The build marks where the reader
 `design/header-verge.html`, which the site and the measurements page both use; tickwave's site
 writes its own.
 
-### A doc page's markup
+### A product's docs
 
-doc.css and doc.js expect this. The site's is `templates/verge-doc.html`, which adds the docs'
-search at the top of the rail (`.find`) and its results beside the contents (`#found`).
+Each product's docs are built by that product, into the markup below; doc.css, doc.js, search.js
+and copy.js do the rest, so the docs read and work the same whoever built them. The site's are
+`templates/verge-docs.html` and `templates/verge-doc.html`; tickwave's site writes its own.
+
+The docs index:
+
+```html
+<div class="wrap docs-index">
+  <div class="docs-head">
+    <h1>Verge's docs</h1>
+    <search class="find" data-index="search.json">…</search>
+  </div>
+  <p class="intro">Where the docs are written, in a line.</p>
+  <div class="found" id="found" role="listbox" aria-label="Sections found" hidden></div>
+  <div class="doc-groups">
+    <div id="a-group">
+      <h2 class="group">A group</h2>
+      <ul>
+        <li><a href="…">A doc</a><p>What it covers.</p></li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+A doc page:
 
 ```html
 <div class="wrap doc-wrap">
   <button class="doc-bar" type="button" aria-expanded="false" aria-controls="doc-rail">
     <span class="label">Contents</span><span class="where">The doc's title</span></button>
   <div class="doc-rail" id="doc-rail">
+    <search class="find" data-index="search.json">…</search>
     <div class="doc-list">
       <nav class="doc-nav" aria-label="…">
         <ul>
@@ -80,19 +106,51 @@ search at the top of the rail (`.find`) and its results beside the contents (`#f
             </ul></li>
         </ul>
       </nav>
+      <div class="found" id="found" role="listbox" aria-label="Sections found" hidden></div>
     </div>
   </div>
-  <article class="doc">…</article>
+  <article class="doc">
+    <h1>The doc's title</h1>
+    <h2 id="a-section">A section<a class="anchor" href="#a-section" aria-label="Link to this section">#</a></h2>
+    …
+    <p class="doc-source">From <a href="…">its repository</a>, where changes to this page go.</p>
+  </article>
 </div>
 ```
 
-- The docs may sit in groups, each a `<details class="group">` with a `<summary>` and its `<ul>`;
-  open the reader's group. A doc not yet written can be a `<span class="coming">` in place of its
-  link.
+- The docs sit in groups or in one list. Grouped, the index has a `.group` heading over each list
+  and the rail a `<details class="group">` with a `<summary>` and its `<ul>`, the reader's group
+  open; in one list, the index has one `<div>` with no heading and the rail a bare `<ul>`. A doc
+  not yet written can be a `<span class="coming">` in place of its link.
+- The search field is `templates/partials/find.html`'s markup with the product's index at
+  `data-index` and its label naming the product's docs. Without it the page works as a plain list.
 - Each `.toc` link's fragment is the `id` of its heading in the doc. A subsection's list shows
   while the reader is in its section.
+- Headings h2 to h4 end with the link to themselves; the h1 has none.
+- The page's title is the doc's name as the rail lists it, then the product, then the project:
+  "Host interface – Verge – Escapement Project", and the index's "Docs – Verge – Escapement
+  Project".
 - The root needs the `js` class before the page draws, as the header needs it: without it, a narrow
   page shows the contents above the text and no bar.
+
+### The search index
+
+search.js reads `{"docs": [[title, address], ...], "sections": [[doc, id, heading, text], ...]}`
+from the field's `data-index`: the docs in the index's order, each doc's sections in page order,
+`doc` a doc's place in `docs`, every address relative to the index file. Each product's build writes
+it (the site's is `.github/search-index.py`, run after `zola build`), to this definition:
+
+- A doc's text is its `article.doc` and nothing outside it.
+- A doc's title is its name as the rail lists it.
+- The first section is the text after the h1 and before the first h2 or h3 with an id, headed by
+  the doc's title, with id `""`, left out when it is empty.
+- Then each h2 or h3 with an id starts a section, which runs to the next h2 or h3 with an id. A
+  heading without an id does not start one: its text joins the section it is in. A heading's
+  section is kept even with no text of its own, as when an h3 follows its h2 directly. h4 and
+  deeper stay in their section.
+- Text, a heading's included, is plain, its whitespace collapsed, with a space between blocks.
+  Left out wherever they sit, headings included: `svg`, `script`, `style`, the heading link
+  (`.anchor`) and the source line (`.doc-source`).
 
 ## Keeping copies current
 
@@ -108,7 +166,7 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/dial.svg \
     ../tickwave/site/base.css ../tickwave/site/header.html \
     ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js \
-    ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js \
+    ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js ../tickwave/site/search.js \
     ../tickwave/site/favicon-tickwave.ico
 ```
 
@@ -125,7 +183,7 @@ Today's copies:
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
   `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, and the shared files
   `site/base.css`, `site/header.html`, `site/footer.html`, `site/face.js`, `site/header.js`,
-  `site/copy.js`, `site/doc.css` and `site/doc.js`.
+  `site/copy.js`, `site/doc.css`, `site/doc.js` and `site/search.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made

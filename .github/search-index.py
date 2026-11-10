@@ -45,10 +45,9 @@ class Doc(HTMLParser):
         self.depth += 1
         if self.skip:
             return
-        # Not the text: the trail above the title, the line naming the source, heading anchors and
-        # the figures' labels.
-        if tag in ("svg", "script", "style") or "crumbs" in classes or "doc-source" in classes \
-                or "zola-anchor" in classes:
+        # Not the text (design/README.md): the line naming the source, heading links and the
+        # figures' labels.
+        if tag in ("svg", "script", "style") or "doc-source" in classes or "anchor" in classes:
             self.skip = self.depth
             return
         if tag == "h1":
