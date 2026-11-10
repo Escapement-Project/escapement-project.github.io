@@ -61,7 +61,7 @@
   <div class="wrap">
     <div class="head"><h2><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p class="kicker">Logic and mixed-signal captures, in a web page</p></div>
     <div>
-      <p>tickwave draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/measurements/">the measurements page</a>. On the measurements page it also opens the recordings the wire figures come from: every clock edge of a flash read, at each clock asked for.</p>
+      <p>tickwave draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/measurements/">the measurements page</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
       <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/convert.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
       <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/demo.html">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/">Open a recording</a></p>
     </div>
