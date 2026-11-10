@@ -44,7 +44,10 @@
 .repos dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
 
 @media (min-width: 2000px) {
-  .hero { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  /* The hero takes the sections' content column (base.css), its text over theirs, the dial over
+     the column beside. */
+  .wrap:has(> .hero) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 4fr); gap: var(--gutter); }
+  .hero { grid-column: 2; }
 }
 @media (max-width: 860px) {
   .hero { grid-template-columns: minmax(0, 1fr); }
