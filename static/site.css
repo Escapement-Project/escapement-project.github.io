@@ -81,11 +81,14 @@
   .hero { gap: 28px; padding-top: 8px; }
 }
 
+/* The ways on from a page or a section: links in a row, weighted as a heading's. */
+.ways { display: flex; flex-wrap: wrap; gap: 12px 28px; font-weight: 600; }
+#tickwave .ways { margin-top: 22px; }
 /* The not-found page: the dial with its edge left flat, beside what to do next. */
 .notfound { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: center; padding: 88px 0 104px; }
 .notfound svg { width: 136px; height: 136px; color: var(--ink-2); }
 .notfound .lede { text-wrap: pretty; }
-.notfound .ways { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 8px 0 0; font-weight: 600; }
+.notfound .ways { margin: 8px 0 0; }
 @media (max-width: 640px) {
   .notfound { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 48px 0 72px; }
   .notfound svg { width: 96px; height: 96px; }
@@ -98,7 +101,7 @@
 .verge-id .plate svg { width: 66px; height: 66px; }
 .verge-id h1 { margin: 0; }
 .verge-id .sub { color: var(--ink-2); margin: 2px 0 0; }
-.verge-head .ways { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 22px 0 0; font-weight: 600; }
+.verge-head .ways { margin: 22px 0 0; }
 /* Until the first release, a line under the ways in and another over the install steps says so. */
 .verge-head .status { margin-top: 14px; }
 #install .status { margin-bottom: 24px; }

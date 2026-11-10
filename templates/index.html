@@ -22,7 +22,7 @@
   <div class="hero">
     <div>
       <h1>Open firmware for NXP's <span class="nb">MCU-Link</span></h1>
-      <p class="lede">We build open firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span> debug probes, with the tools to install it and to measure it against the firmware NXP ships on them.</p>
+      <p class="lede">We build Verge, open firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span> debug probes, and the tools around it: verge installs it, a bench measures it against the firmware NXP ships, and tickwave shows the bench's wire recordings.</p>
       <p class="status">In development. The firmware, tools and measurements publish with the first release.</p>
     </div>
     <div>
@@ -85,6 +85,17 @@
           <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. {% if d.tableNote %}{{ d.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
         </figure>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="tickwave">
+  <div class="wrap">
+    <div class="head"><h2><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p class="kicker">Logic and mixed-signal captures, in a web page</p></div>
+    <div>
+      <p>tickwave draws Figure 1 above. On <a href="{{ config.base_url | safe }}/measurements/">the measurements page</a> it opens the recordings the wire figures come from: every clock edge of a flash read, at each clock asked for.</p>
+      <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/convert.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
+      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/demo.html">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/">Open a recording</a></p>
     </div>
   </div>
 </section>
