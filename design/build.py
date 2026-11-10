@@ -51,10 +51,11 @@ OUT_DIRS = (pathlib.Path("static/fonts"), pathlib.Path("design/out"))
 # What the last build wrote. A loose file it no longer makes is found here, as an orphan.
 MANIFEST = pathlib.Path("design/out/outputs.txt")
 # Written by hand, not built, and copied by the project's other pages: the shared base sheet, the
-# header and footer every page shows, and the scripts behind the header. --check compares copies of
-# these too, by name.
+# header and footer every page shows, the scripts behind the header, the Copy buttons, and a doc
+# page's frame. --check compares copies of these too, by name.
 SHARED = tuple(map(pathlib.Path, ("static/base.css", "static/js/face.js", "static/js/header.js",
-                                  "design/header.html", "design/footer.html")))
+                                  "design/header.html", "design/footer.html", "static/js/copy.js",
+                                  "static/doc.css", "static/js/doc.js")))
 # Apple's grid: a 1024 canvas holds an 824 plate, with room for the shadow macOS draws.
 MACOS_PLATE = 824 / 1024
 

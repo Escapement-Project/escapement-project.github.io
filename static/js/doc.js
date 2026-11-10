@@ -1,7 +1,8 @@
-// A doc page's contents (templates/verge-doc.html). It marks the section the reader is in, in the
-// contents and in the bar narrow screens keep at the top, and opens and closes the bar's sheet of
-// contents and search. Without it the contents still work: every link is there, the reader's group
-// open.
+// A doc page's contents, shared by the project's docs: the markup it expects is in design/README.md,
+// and the site's is templates/verge-doc.html. It marks the section the reader is in, in the contents
+// and in the bar narrow screens keep at the top, and opens and closes the bar's sheet of contents
+// (and search, where the page has it). Without it the contents still work: every link is there, the
+// reader's group open.
 (() => {
   const wrap = document.querySelector(".doc-wrap");
   if (!wrap) return;

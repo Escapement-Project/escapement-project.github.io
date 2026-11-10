@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Docs – Verge – {{ config.title }}{% endblock title %}
 {% block description %}Verge's docs: using the firmware and verge, the host interface, building it, and how it works inside.{% endblock description %}
+{% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">{% endblock head %}
 {% block header %}{% set current = "docs" %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}
 {%- set verge = get_section(path="verge/_index.md", metadata_only=true) %}

@@ -27,17 +27,54 @@ and the repositories from `content/_index.md`.
 
 ## Shared files
 
-Besides what the build generates, five hand-written files are shared by every page of the project:
+Besides what the build generates, these hand-written files are shared by the project's pages:
 
 | File | What |
 |---|---|
-| `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
+| `static/base.css` | the shared base sheet: the header, sections, type, figures, tables, references, the Copy buttons and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
 | `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with; each page marks its own place with `aria-current="page"` (the site's `templates/partials/header.html` fills it for Zola) |
 | `design/footer.html` | the footer every page shows |
 | `static/js/face.js` | the day and night switch |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, and the published address for a page opened from disk |
+| `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`.doc pre`), except a block marked as text, which is output |
+| `static/doc.css`, `static/js/doc.js` | a doc page's frame: the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet. The markup is below |
 
 Edit them here; the copies follow.
+
+### A doc page's markup
+
+doc.css and doc.js expect this. The site's is `templates/verge-doc.html`, which adds the docs'
+search at the top of the rail (`.find`) and its results beside the contents (`#found`).
+
+```html
+<div class="wrap doc-wrap">
+  <button class="doc-bar" type="button" aria-expanded="false" aria-controls="doc-rail">
+    <span class="label">Contents</span><span class="where">The doc's title</span></button>
+  <div class="doc-rail" id="doc-rail">
+    <div class="doc-list">
+      <nav class="doc-nav" aria-label="…">
+        <ul>
+          <li><a href="…">Another doc</a></li>
+          <li><a href="…" aria-current="page">This doc</a>
+            <ul class="toc">
+              <li><a href="#a-section">A section</a>
+                <ul><li><a href="#a-subsection">A subsection</a></li></ul></li>
+            </ul></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <article class="doc">…</article>
+</div>
+```
+
+- The docs may sit in groups, each a `<details class="group">` with a `<summary>` and its `<ul>`;
+  open the reader's group. A doc not yet written can be a `<span class="coming">` in place of its
+  link.
+- Each `.toc` link's fragment is the `id` of its heading in the doc. A subsection's list shows
+  while the reader is in its section.
+- The root needs the `js` class before the page draws, as the header needs it: without it, a narrow
+  page shows the contents above the text and no bar.
 
 ## Keeping copies current
 
@@ -52,7 +89,8 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../verge/gui/src/tokens.rs ../verge/gui/fonts/*.ttf ../verge/gui/fonts/*-OFL.txt ../verge/gui/icons/*.png \
     ../tickwave/site/tokens.css ../tickwave/site/fonts/* ../tickwave/site/favicon.ico \
     ../tickwave/site/dial.svg ../tickwave/site/base.css ../tickwave/site/header.html \
-    ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js
+    ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js \
+    ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js
 ```
 
 Today's copies:
@@ -66,7 +104,8 @@ Today's copies:
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
   `site/favicon.ico`, `site/dial.svg`, and the shared files `site/base.css`, `site/header.html`,
-  `site/footer.html`, `site/face.js` and `site/header.js`.
+  `site/footer.html`, `site/face.js`, `site/header.js`, `site/copy.js`, `site/doc.css` and
+  `site/doc.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made

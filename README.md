@@ -18,12 +18,12 @@ the index, and serve `public/` to try the search.
 | `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `verge.html` for Verge's page, `verge-docs.html` and `verge-doc.html` for its docs, `404.html` for any address without a page |
 | `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
 | `content/verge/_index.md` | Verge's page, and its docs: their groups, order, addresses and where each lives |
-| `static/base.css` | the base every page of the project shares: header, sections, type, figures, tables and footer, naming colour roles, never values |
+| `static/base.css` | the base every page of the project shares: header, sections, type, figures, tables, Copy buttons and footer, naming colour roles, never values |
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
 | `design/header.html`, `design/footer.html` | the header and footer every page of the project shows; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
 | `static/js/header.js` | the header's hairline, the mark on the section in view, and the header brought back on the way up where it scrolls away, on every page |
-| `static/js/doc.js` | a doc page's contents: the section the reader is in, and the sheet narrow screens open from the bar |
+| `static/doc.css`, `static/js/doc.js` | a doc page's frame, shared with tickwave's docs: the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page |
 | `static/js/landing.js` | the landing page's dial, figure, links and Verge section |
 | `static/js/mark.js` | Verge's mark in motion, on the landing page and Verge's page |
@@ -40,7 +40,8 @@ the index, and serve `public/` to try the search.
 editing them.
 
 The measurements page keeps copies of `base.css`, the header, the footer, `face.js` and
-`header.js`, as it does of the tokens; `design/README.md` says how they are checked.
+`header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css` and
+`doc.js`. `design/README.md` says how the copies are checked.
 
 The landing page works without scripts: its figures are in the text and in Table 1, which Zola
 renders from `data/landing.json`. Scripts add the dial, Figure 1, and the highlights that link the
