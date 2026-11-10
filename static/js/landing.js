@@ -29,7 +29,8 @@ function start(s, delay = 0) {
 // traced as a capture would be: NXP's firmware on the low run, Verge on the high one. The readings
 // sit on the face's centre line, mirrored about the riser as the step is about the centre. The outer
 // scale turns until the ratio sits at a red index at six, under the window that prints it, so the
-// centre carries nothing but the step and the readings.
+// centre carries nothing but the step and the readings. The window prints the ratio from the start:
+// the result is fixed, and only the scale moves to show it.
 const C = 200, K = 158 / 23, lv = (u) => C + (u - 32) * K;
 const LOW = lv(38), RISER = lv(29), RISER_RIGHT = lv(35), HIGH = lv(20);
 const chord = (y) => Math.sqrt(158 ** 2 - (y - C) ** 2);
@@ -45,9 +46,9 @@ const UNDER_WINDOW = 28;
 const RATIO = parseFloat(DATA.headline.ratio);
 // The sequence in milliseconds. The sweep crosses the face at a steady rate, as a scope's time base
 // does: it draws the trace, and each reading's characters show once it is past them. The scale
-// leaves 0x at the index as the edge rises and slows into the ratio, out-cubic and no overshoot,
-// since every value it passes is a reading; the window and the scale's ink follow its value. Each
-// part follows the sweep's position or the reading, never a timer of its own, so none can lead or lag.
+// leaves 0x at the index as the edge rises and slows into the ratio, out-cubic and no overshoot, so
+// the index never points past the result; the scale's ink follows it. Each part follows the sweep's
+// position or the scale's value, never a timer of its own, so none can lead or lag.
 const SWEEP = { from: C - chord(LOW), to: 360, ms: 560 };
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const sweepX = (t) => t < 0 ? -Infinity : SWEEP.from + (SWEEP.to - SWEEP.from) * clamp01(t / SWEEP.ms);
@@ -146,7 +147,6 @@ function heroFrame() {
     const off = Math.abs((((+n.dataset.at + turn - INDEX) % 360) + 540) % 360 - 180);
     n.style.visibility = off < UNDER_WINDOW ? "hidden" : "";
   }
-  svg.querySelector("#ratio").textContent = `${v.toFixed(DATA.headline.ratio.split(".")[1]?.length ?? 0)}×`;
 }
 // A reading's tip sits under it, or over it where under would leave the dial.
 function dialTip(g) {
