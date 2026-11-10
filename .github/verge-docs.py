@@ -10,11 +10,12 @@ content/verge/docs/, which is generated and ignored by git.
 A doc keeps reading on GitHub, so its links are relative links between files, or GitHub links to a
 file in another repository. Here a link to a doc in the list, either way, becomes a link to that
 doc's page (Zola's @/ link, which zola build checks), and a relative link to any other file becomes
-a link to that file on GitHub. A file name that names a doc in the list, in a code span such as
-`HOST-INTERFACE.md` or bare in the text, links the same way. An anchor is written as GitHub makes
-it from a heading, and becomes the one Zola makes from the same heading: GitHub drops punctuation
-("Past NXP's limits" is #past-nxps-limits), where Zola turns it into a dash (#past-nxp-s-limits).
-The doc's first heading is its title, which the page prints itself, so it is dropped.
+a link to that file on GitHub. A file name or path that names a doc in the list, relative to the doc
+it is in, links the same way, in a code span such as `BOARDS.md` or bare in the text such as
+docs/host-interface.md. An anchor is written as GitHub makes it from a heading, and becomes the one
+Zola makes from the same heading: GitHub drops punctuation ("Past NXP's limits" is
+#past-nxps-limits), where Zola turns it into a dash (#past-nxp-s-limits). The doc's first heading is
+its title, which the page prints itself, so it is dropped.
 
 An SVG image from the doc's own repository, on a line of its own, is copied into the page as a
 figure rather than linked, so the site's colours, fonts and day and night faces reach it. Its alt
@@ -138,6 +139,14 @@ def figure(doc: dict, alt: str, link: str) -> str:
     body = "\n".join(line for line in svg.splitlines() if line.strip())
     return f'<figure class="diagram">\n{body}\n</figure>'
 
+# A .md file name, with the directories before it if any.
+DOC_NAME = r"((?:[\w-]+/)*[A-Za-z][\w-]*\.md)"
+
+def named(doc: dict, name: str, text: str, unchanged: str) -> str:
+    """`text` as a link to the page of the listed doc `name` names from `doc`, or `unchanged`."""
+    linked = target(doc, name)
+    return f"[{text}]({linked})" if linked.startswith("@/") else unchanged
+
 def rewrite(doc: dict, text: str) -> str:
     lines, fenced = [], False
     for line in text.splitlines():
@@ -148,13 +157,11 @@ def rewrite(doc: dict, text: str) -> str:
             line = figure(doc, image[1], image[2])
         elif not fenced:
             line = re.sub(r"(\]\()([^)\s]+)(\))", lambda m: m[1] + target(doc, m[2]) + m[3], line)
-            line = re.sub(r"(?<!\[)`([A-Z][A-Z0-9-]*\.md)`(?!\])",
-                          lambda m: f"[`{m[1]}`]({target(doc, m[1])})" if (doc["repo"], m[1]) in sources else m[0], line)
-            # A bare file name in the text, outside code spans and links.
+            line = re.sub(r"(?<!\[)`" + DOC_NAME + r"`(?!\])", lambda m: named(doc, m[1], f"`{m[1]}`", m[0]), line)
+            # A bare file name or path in the text, outside code spans and links.
             parts = re.split(r"(`[^`]*`|\[[^\]]*\]\([^)]*\))", line)
             line = "".join(part if i % 2 else re.sub(
-                r"(?<![\w/.-])([A-Z][A-Z0-9-]*\.md)\b",
-                lambda m: f"[{m[1]}]({target(doc, m[1])})" if (doc["repo"], m[1]) in sources else m[0], part)
+                r"(?<![\w/.-])" + DOC_NAME + r"\b", lambda m: named(doc, m[1], m[1], m[0]), part)
                 for i, part in enumerate(parts))
         lines.append(line)
     return "\n".join(lines) + "\n"
