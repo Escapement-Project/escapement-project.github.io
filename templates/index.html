@@ -64,8 +64,8 @@
       {# tickwave's mark, design/marks/tickwave.svg: a wave on its ticks, on the plate as Verge's is; static/js/mark.js plays it. #}
       <div class="app"><div class="plate" data-mark="tickwave">{{ load_data(path="design/marks/tickwave.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</div><div><h2 class="name"><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p>Logic and mixed-signal captures, in a web page</p></div></div>
       <p>tickwave draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/verge/measurements/">Verge's measurements</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
-      <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/convert.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
-      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/demo.html">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/">Open a recording</a></p>
+      <p>It opens your own recordings too. <a href="{{ config.base_url | safe }}/tickwave/open.html">Its converter</a> turns a Saleae Logic 2 binary export, a sigrok session or a VCD file into a recording, and nothing you open is uploaded.</p>
+      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/#page">Try the demo</a><a href="{{ config.base_url | safe }}/tickwave/open.html">Open a recording</a></p>
     </div>
     </div>
   </div>
