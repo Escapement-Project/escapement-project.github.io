@@ -46,7 +46,7 @@
       </div>
       <div class="specs-col">
         <dl class="specs">
-          <div id="wires"><dt>Wires</dt><dd><span class="ref" tabindex="0" data-cmd="swd" data-wire="swd">SWD</span>, <span class="ref" tabindex="0" data-cmd="jtag" data-wire="jtag">JTAG</span>, and <span class="ref" tabindex="0" data-cmd="cjtag" data-wire="cjtag">cJTAG</span> in <span class="ref" tabindex="0" data-cmd="oscan">OScan1, 2, 5 and 6</span></dd></div>
+          <div id="wires"><dt>Wires</dt><dd><span class="ref" tabindex="0" data-cmd="swd">SWD</span>, <span class="ref" tabindex="0" data-cmd="jtag">JTAG</span>, and <span class="ref" tabindex="0" data-cmd="cjtag">cJTAG</span> in <span class="ref" tabindex="0" data-cmd="oscan">OScan1, 2, 5 and 6</span></dd></div>
           <div><dt>Trace</dt><dd>SWO, and serial consoles</dd></div>
           <div><dt>On the Pro</dt><dd><span class="ref" tabindex="0" data-cmd="power">Target supply</span>, <span class="ref" tabindex="0" data-cmd="energy">energy capture</span> and <span class="ref" tabindex="0" data-cmd="dio">DIO</span></dd></div>
           <div><dt>Hosts</dt><dd>Any CMSIS-DAP host; probe-rs for cJTAG</dd></div>
@@ -54,7 +54,6 @@
         </dl>
         {# The console shows verge list until a term is pointed at; landing.js takes this one from here. #}
         <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"><i>verge</i> <i>list</i></b></code><p id="cmd-what">Say what every attached MCU-Link runs, and how each can be updated.</p></div>
-        <div class="scope" id="scope" hidden></div>
       </div>
     </div>
   </div>

@@ -25,14 +25,16 @@ the index, and serve `public/` to try the search.
 | `static/js/header.js` | the header's hairline, the mark on the section in view, the header brought back on the way up where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
-| `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives, and its Verge section: its wire traces and commands |
+| `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives, and its Verge section's commands |
 | `static/js/dial.js` | Verge's headline as a dial, at the head of Verge's page |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
+| `static/js/wires.js` | loads tickwave's elements for the Wires section on Verge's page as it nears the view |
 | `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page and tickwave's page, shared with tickwave's site |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the headline the landing page and Verge's page show, and Figure 1 and Table 1 on Verge's page, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
+| `.github/wire-refs.py` | checks every recording Verge's page's Wires section cites against the recordings' annotations, before the site publishes |
 | `.github/search-index.py` | writes the docs' search index, `verge/docs/search.json`, from the built site: each doc's sections as plain text |
 | `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, writes the search index, and publishes it to GitHub Pages |
 
