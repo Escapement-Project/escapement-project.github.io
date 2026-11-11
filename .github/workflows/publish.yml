@@ -93,6 +93,7 @@ jobs:
           python3 site/.github/measurements.py mculink-bench/page/out site
           python3 site/.github/verge-docs.py site
           cd site && "$RUNNER_TEMP/zola" build
+          python3 .github/code-words.py public
           python3 .github/search-index.py public
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

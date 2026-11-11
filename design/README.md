@@ -150,6 +150,13 @@ A doc page:
 - Each `.toc` link's fragment is the `id` of its heading in the doc. A subsection's list shows
   while the reader is in its section.
 - Headings h2 to h4 end with the link to themselves; the h1 has none.
+- In inline code (a `<code>` outside a `<pre>`), each word of up to 22 characters, a run between
+  spaces, is a `<span class="word">`, which doc.css keeps on one line: `<code><span
+  class="word">verge</span> <span class="word">update</span></code>`. A longer word, a path, is left
+  bare and breaks anywhere. A list item at 320 px holds 23 characters of code in Firefox, whose
+  code face is the wider, and the 23rd is left for punctuation against the word. A list inside a
+  list holds 19, so a longer word kept whole there sticks out past the text. The site's pass is
+  `.github/code-words.py`, run after `zola build`.
 - The page's title is the doc's name as the rail lists it, then the product, then the project:
   "Host interface – Verge – Escapement Project", and the index's "Docs – Verge – Escapement
   Project".
