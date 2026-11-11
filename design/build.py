@@ -322,20 +322,20 @@ def mark_rust(mk):
             "",
             f"    pub const SWEEP: f32 = {f(mk['sweep'])};",
             f"    pub const MOVE: f32 = {f(mk['move'])};",
-            "    /// The second sweep starts.",
+            "    /// The second sweep starts; the first starts at `GROW`, once the samples have dimmed.",
             f"    pub const BACK: f32 = {f(mk['back'])};",
             "    /// At rest again.",
             f"    pub const END: f32 = {f(mk['end'])};",
             f"    pub const GROW: f32 = {f(mk['grow'])};",
             "    /// A loop's length, where it loops: the sequence, then a rest on the V.",
             f"    pub const LOOP: f32 = {f(mk['loop'])};",
-            "    /// A sample's move eases out at this power.",
+            "    /// A sample's rise eases out at this power.",
             f"    pub const EASE: i32 = {mk['ease']};",
-            "    /// The samples across the 64-unit grid, which time each one's move.",
+            "    /// The samples across the 64-unit grid, which time each one's rise.",
             f"    pub const GRID_X: [f32; 7] = {arr(mk['grid_x'])};",
             f"    pub const RISER: f32 = {f(mk['riser'])};",
             f"    pub const FLOOR_RUN: (f32, f32) = ({f(mk['floor_run'][0])}, {f(mk['floor_run'][1])});",
-            "    /// The stems, floor and trace in plate-line at this opacity, under the samples.",
+            "    /// The lines and the dimmed samples in plate-line at this opacity, under the lit samples.",
             f"    pub const LINE_OPACITY: f32 = {f(mk['line_opacity'])};",
             "    /// The beam at this, over them.",
             f"    pub const BEAM_OPACITY: f32 = {f(mk['beam_opacity'])};",
@@ -425,8 +425,9 @@ def tickwave_motion(tokens):
             fail(f"motion.tickwave-mark.scale: at {z['scale']} the edge at {e} is still in view, at {x:g}")
     if not 1 < z["thirds"][0] < z["thirds"][1] <= z["scale"]:
         fail("motion.tickwave-mark.thirds: give two zooms between 1 and the scale, the first lower")
+    # Still while Verge's samples dim, so both reach the step and leave it together.
     zoom = round(m["sweep"] + m["move"], 4)
-    return {"zoom": zoom, "hold": m["hold"], "end": round(2 * zoom + m["hold"], 4), "ease": m["ease"],
+    return {"wait": m["grow"], "zoom": zoom, "hold": m["hold"], "end": round(m["grow"] + 2 * zoom + m["hold"], 4), "ease": m["ease"],
             "edge": z["edge"], "scale": z["scale"], "thirds": z["thirds"],
             "wave": {"width": width, "run": run, "hi": hi, "lo": lo, "edges": edges, "low_first": low_first},
             "ticks": {"first": centres[0][0], "step": step, "width": ticks[0][2],
@@ -465,8 +466,10 @@ def mark_motion(tokens):
     _, fitted_dots, fitted = samples(24)
     if not fitted:
         fail("design/marks/verge-24.svg: the strip's 24 px drawing needs the fitted master")
-    back = m["sweep"] + m["move"] + m["hold"]
-    end = back + m["sweep"] + m["move"]
+    # The samples dim, the first sweep and the last rise, the hold (the step dims over its end), the
+    # second sweep and its last rise, the lines retracting.
+    back = m["grow"] + m["sweep"] + m["move"] + m["hold"]
+    end = back + m["sweep"] + m["move"] + m["grow"]
     # Four decimals: a ten-thousandth of a grid unit is far below a pixel, and short enough that
     # each line of tokens.rs stays as rustfmt writes it.
     def tidy(v):

@@ -339,21 +339,25 @@ The org's avatar is uploaded by hand, in the org's settings on GitHub:
 
 ## The marks in motion
 
-Verge's mark moves on the landing page's Verge plate and in verge-gui. A beam sweeps the plate and
-each sample moves from the V to the project's step as the beam reaches it, grey stems rising from
-the floor. The step has the low run, the middle sample half-way up the riser, then the high run.
-The mark holds on the step, then the next sweep wipes it back to the V.
+Verge's mark moves on the landing page's Verge plate, on Verge's page and in verge-gui. It takes
+tickwave's grammar of a capture taken again. The V dims to grey as a floor and stems grow under it.
+A beam sweeps the plate. As it reaches each sample, the grey one fades and a new one rises in lume
+from the floor to its place on the project's step. The step has the low run, the middle sample
+half-way up the riser, then the high run. The riser's stem is lume: the step's edge, as tickwave's
+ruler and the project's mark show one. The mark holds on the step, and the step dims over the
+hold's end. The next sweep takes the V again the same way.
 
 Both draw it from one source, so they cannot drift apart. The samples' places come from the marks:
 `marks/verge.svg`, and `marks/verge-24.svg` for verge-gui's 24 px strip. Everything else is in
 `tokens.toml`'s `[motion.mark]`:
 
-- **Times:** the sweep, a sample's move, the hold on the step, the stems growing and retracting,
-  and the rest between plays where it loops.
-- **The move's easing:** the power of an ease-out; 3 is out-cubic, which never overshoots.
+- **Times:** the sweep, a sample's rise, the hold on the step, the dim before each sweep (which is
+  also how long the stems take to grow and retract), and the rest between plays where it loops.
+- **The rise's easing:** the power of an ease-out; 3 is out-cubic, which never overshoots.
 - **The step:** each sample's level, from the floor (0) to the top (1).
 - **Lines:** the riser's place and the floor's, the beam's run, the line widths and opacities, in
-  `plate-line`. The trace, floor and stems draw under the samples and the beam over them.
+  `plate-line`. A dimmed sample takes the lines' opacity. The trace, floor, stems and dimmed
+  samples draw under the lit samples, and the beam over them.
 
 The build writes the result twice: as `tokens.rs`'s `mark` module for verge-gui, and as
 `out/mark.json`, which `templates/index.html` embeds for `static/js/mark.js`. Each drawing comes
@@ -366,7 +370,8 @@ To change the timing, edit `tokens.toml` and rebuild, then copy `tokens.rs` into
 tickwave's mark moves on the landing page's tickwave plate and on tickwave's page. The time axis zooms in on one rising
 edge, which glides to the middle, until it is the only edge in view: the project's step. It holds
 there and zooms back out. Its times are Verge's, so both marks reach the step, hold and return
-together. The zoom's own tokens are in `[motion.tickwave-mark]`:
+together: it stays still while Verge's samples dim, then zooms in over Verge's sweep and rise. The
+zoom's own tokens are in `[motion.tickwave-mark]`:
 
 - **The edge:** the rising edge it zooms to.
 - **The scale:** how far it zooms. The build fails unless every other edge leaves the wave's run.

@@ -114,19 +114,21 @@ capture-second = [12, 4]
 capture-opacity = 0.6
 capture-width = 1.5
 
-# Verge's mark in motion: a beam sweeps the plate and each sample moves from the V to the project's
-# step as the beam reaches it, grey stems rising from the floor; a hold on the step; the next sweep
-# wipes back to the V. Its shape is the mark's own (design/marks/verge.svg, and verge-24.svg where it
-# is drawn at 24 px); this section is everything else. The landing page and verge-gui both draw it
-# from what the build generates (design/README.md, "The mark in motion"). Places are on the 64-unit
-# grid, times in seconds.
+# Verge's mark in motion, in tickwave's grammar of a capture taken again: the V dims to grey as a
+# floor and stems grow under it; a beam sweeps the plate, and as it reaches each sample the grey one
+# fades and a new one rises in lume from the floor to its place on the project's step, the riser's
+# stem in lume (the step's edge, as tickwave's ruler and the project's mark show one); a hold; the
+# step dims and the next sweep takes the V again the same way. Its shape is the mark's own
+# (design/marks/verge.svg, and verge-24.svg where it is drawn at 24 px); this section is everything
+# else. The landing page and verge-gui both draw it from what the build generates (design/README.md,
+# "The mark in motion"). Places are on the 64-unit grid, times in seconds.
 [motion.mark]
-sweep = 0.4                     # the beam crossing the plate, each way
-move = 0.2                      # one sample's move, once the beam reaches it
+sweep = 0.28                    # the beam crossing the plate, each way
+move = 0.18                     # one sample's rise, once the beam reaches it
 hold = 0.6                      # on the step, from the last sample landing to the second sweep
-grow = 0.1                      # the floor and stems growing at the start, retracting at the end
+grow = 0.1                      # the samples dimming before each sweep; the floor and stems growing at the start, retracting at the end
 rest = 1.4                      # on the V between plays, where it loops (verge-gui, waiting)
-ease = 3                        # a move eases out at this power: out-cubic, which never overshoots
+ease = 3                        # a rise eases out at this power: out-cubic, which never overshoots
 step = [0, 0, 0, 0.5, 1, 1, 1]  # each sample's level on the step, from the floor (0) to the top (1)
 riser = 32                      # the step's riser
 floor = [4, 60]                 # the floor's run
@@ -134,15 +136,15 @@ beam = [2, 62]                  # the beam's run, top to bottom
 stem = 1.6                      # line widths: the stems,
 line = 1.1                      # the floor and the step's trace,
 beam-width = 1.2                # and the beam
-line-opacity = 0.45             # the stems, floor and trace in plate-line at this opacity,
+line-opacity = 0.45             # the stems, floor, trace and dimmed samples in plate-line at this opacity,
 beam-opacity = 0.6              # the beam at this; the trace, floor and stems under the samples, the beam over
 fitted-line = 1.0               # every line's width at 24 px, on the fitted master, in pixels
 
 # tickwave's mark in motion: the time axis zooms in on one rising edge until it is the only edge in
 # view, the project's step, holds there and zooms back out. Its times are Verge's, so both marks
-# reach the step, hold and return together: in over motion.mark's sweep and move, held for its
-# hold, out as long as in, eased in and out at its power. The wave and ruler come from
-# marks/tickwave.svg.
+# reach the step, hold and return together: still while Verge's samples dim (motion.mark's grow),
+# in over its sweep and move, held for its hold, out as long as in, eased in and out at its power.
+# The wave and ruler come from marks/tickwave.svg.
 [motion.tickwave-mark]
 edge = 38                       # the rising edge it zooms to, which glides to the middle
 scale = 3                       # how far it zooms: far enough that every other edge leaves the wave's run
