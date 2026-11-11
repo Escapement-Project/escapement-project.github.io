@@ -378,6 +378,8 @@ def project_motion(tokens):
         fail(f"motion.project-mark.densest: {t['densest']} runs the edges into each other; give more than the edge's {width:g}")
     if t["line"] - t["raised"] < low_bottom + t["clear"]:
         fail(f"motion.project-mark: the raised ticks reach {t['line'] - t['raised']:g}, into the low run; keep them under {low_bottom + t['clear']:g}")
+    if t["lead"] < 32 + inner + width / 2:
+        fail(f"motion.project-mark.lead: {t['lead']} shows the chirp's first edge in Lock's first frame; give at least {32 + inner + width / 2:g}")
     if not inner < t["cut"] < outer:
         fail(f"motion.project-mark.cut: {t['cut']} is not inside the ring's band, {inner:g} to {outer:g}")
     values = {"inner": inner, "outer": outer, "width": width, "riser": (riser_left + riser_right) / 2,

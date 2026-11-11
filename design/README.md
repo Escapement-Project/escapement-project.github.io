@@ -391,7 +391,8 @@ mark with `data-mark="verge"` or `data-mark="tickwave"`.
 
 The project's mark moves in the header, as the logo on every page of the project, and in the
 landing page's hero. Its edge is a signal through the ring. In Lock, which the hero plays as it
-comes into view, a chirp passes through the ring at one speed, its pulses widening. It slows to rest
+comes into view, the ring opens on the mark's low run alone, flat as the not-found page draws it.
+Then a chirp passes through the ring at one speed, its pulses widening. It slows to rest
 as one rising edge reaches the centre, which is the mark. In Again, which the logo plays when a
 mouse or pen reaches it, the signal moves on from the mark through a new chirp and locks again. It
 gathers speed as Lock sheds it. A tap follows the logo's link and plays nothing. tickwave's ruler
@@ -406,7 +407,8 @@ Its tokens are in `[motion.project-mark]`:
   takes to gather speed.
 - **The chirp:** its densest half-period, how many of those open it, how much longer each later
   one is, and the low it ends on. The build fails unless that low fills the ring's left half, so
-  only the mark's one edge shows at rest.
+  only the mark's one edge shows at rest. Lock's lead: the low run before the chirp. The build fails
+  if it is short enough to show the chirp's first edge in Lock's first frame.
 - **The ruler:** the ticks' width, spacing and heights, the line they stand on, how far under the
   low run the raised ones stop, and the circle inside the ring's outside they are cut to.
 - **Floors in pixels:** the least gap between two pulses and the least tick width, spacing and

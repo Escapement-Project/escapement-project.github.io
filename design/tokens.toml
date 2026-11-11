@@ -166,6 +166,7 @@ densest = 7                     # the chirp's densest half-period,
 dense = 6                       # how many of it open the chirp,
 growth = 1.12                   # each half-period after them this much longer,
 fill = 26                       # until a low reaches this: then only the mark's one edge shows in the ring
+lead = 60                       # Lock opens on this much low run before the chirp, its first frame flat
 tick = 1.5                      # the ruler: a tick's width,
 spacing = 3                     # about this far apart,
 raised = 4                      # the raised ticks' height, on the edges,
