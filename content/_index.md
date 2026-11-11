@@ -1,6 +1,6 @@
 +++
 title = "Escapement Project"
-description = "Open debug tools that are correct, fast and easy to use. The first is Verge, open firmware for NXP's MCU-Link debug probes; tickwave shows logic and mixed-signal captures in a web page."
+description = "Open debug tools that are correct, fast and easy to use. The first is Verge, open firmware for NXP's MCU-Link debug probes; tickwave is a web viewer for mixed-signal captures."
 
 # The hero's statement and its lede, which the link preview carries too (design/build.py).
 # The Source section's index, in this order. A repository without a language is not published yet
