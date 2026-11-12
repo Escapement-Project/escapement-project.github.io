@@ -265,6 +265,12 @@ normal vision and 2.1 under deuteranopia by day (OKLab ΔE ×100).
 Interaction has no hue. Focus is a 2 px ink ring. What the pointer is on gets a wash of ink at
 12 % (`--wash`), and what is selected an ink fill with page text.
 
+Nothing moves under the reader. A readout's words and figures hold their places as the values
+change: the figures are tabular, and a word that changes is set as wide as its widest form. A label
+keeps off what it reads. An embedded chart or capture holds its height from the first paint, before
+its script loads, and keeps it. A control stays where the reader pressed it. One that opens or
+switches something undoes it when pressed again: Open becomes Close.
+
 ## Data
 
 A colour follows the probe it measures, never its rank, so a filter never repaints what remains.
