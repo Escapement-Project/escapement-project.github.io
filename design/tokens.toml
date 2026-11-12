@@ -242,6 +242,88 @@ fixed = [
   { name = "MartianMono-SemiExpanded-Medium", wdth = 112.5, wght = 500 },
 ]
 
+# Fallback faces: until a web font loads, its text sets in a local font scaled so the site's text
+# takes the same width on average, on the web font's ascent, descent and line gap, so a line breaks
+# where it will in the web font more often than not. design/fallbacks.py fits the numbers from the
+# fixed instances and the site's text. Each `local` names a list below: Arial, Arial Bold and
+# Courier New, then the metric-compatible fonts that stand in for them.
+[fallback-local]
+sans = ["Arial", "ArialMT", "Liberation Sans", "LiberationSans", "Arimo"]
+sans-bold = ["Arial Bold", "Arial-BoldMT", "Liberation Sans Bold", "LiberationSans-Bold", "Arimo Bold", "Arimo-Bold"]
+mono = ["Courier New", "CourierNewPSMT", "Liberation Mono", "LiberationMono", "Cousine"]
+
+[[fallbacks]]
+family = "Hanken Grotesk"
+local = "sans"
+weight = "100 449"
+size-adjust = 99.88
+ascent = 100.12
+descent = 30.34
+line-gap = 0.00
+# from HankenGrotesk-Regular.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Hanken Grotesk"
+local = "sans"
+weight = "450 549"
+size-adjust = 100.41
+ascent = 99.60
+descent = 30.18
+line-gap = 0.00
+# from HankenGrotesk-Medium.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Hanken Grotesk"
+local = "sans-bold"
+weight = "550 1000"
+size-adjust = 94.47
+ascent = 105.85
+descent = 32.07
+line-gap = 0.00
+# from HankenGrotesk-SemiBold.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Saira"
+local = "sans"
+weight = "100 549"
+size-adjust = 118.14
+ascent = 96.07
+descent = 37.16
+line-gap = 0.00
+# from Saira-Expanded-Medium.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Saira"
+local = "sans-bold"
+weight = "550 1000"
+size-adjust = 111.59
+ascent = 101.71
+descent = 39.34
+line-gap = 0.00
+# from Saira-Expanded-SemiBold.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Martian Mono"
+local = "mono"
+weight = "100 1000"
+stretch = "100%"
+size-adjust = 116.65
+ascent = 85.73
+descent = 17.15
+line-gap = 0.00
+# from MartianMono-Medium.ttf, 347823 characters of the site's text
+
+[[fallbacks]]
+family = "Martian Mono"
+local = "mono"
+weight = "100 1000"
+stretch = "112.5%"
+size-adjust = 124.98
+ascent = 80.01
+descent = 16.00
+line-gap = 0.00
+# from MartianMono-SemiExpanded-Medium.ttf, 347823 characters of the site's text
+
 # Icons: a mark from design/marks/ in `ink` on a plate of `ground`, both colour roles at their day
 # values. The plate's corners round by `corner` of its side; a 64-unit master sits `inset` of the
 # side in from each edge. At a size with a master fitted to the pixel grid (NAME-SIZE.svg), that

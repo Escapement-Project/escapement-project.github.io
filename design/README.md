@@ -308,6 +308,12 @@ egui has no variable axes, so verge-gui gets fixed instances, named as the fonts
 name them: Saira Expanded Medium and SemiBold, Hanken Grotesk Regular, Medium and SemiBold, and
 Martian Mono Medium and SemiExpanded Medium.
 
+Until a web font loads, its text sets in a fallback face: Arial, or Courier New for Martian Mono,
+scaled so the site's text takes the same width on average, with the web font's ascent and descent.
+Most lines then break where they will in the web font, so little moves when it arrives.
+`design/fallbacks.py` fits the numbers in `[[fallbacks]]` from the fixed instances and the built
+site's text.
+
 The fonts are under the SIL Open Font License 1.1, with no Reserved Font Name. Each family's
 licence sits beside its files.
 

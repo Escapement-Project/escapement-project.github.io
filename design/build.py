@@ -128,8 +128,31 @@ def check_type(tokens, fonts):
                 fail(f"type.{role}.{field} is {want}, outside fonts.{key}.web's {axis} {lo}-{hi}")
 
 
-def stack(t):
-    return ", ".join(f'"{f}"' if " " in f or f[0].isupper() else f for f in [t["family"], *t["fallback"]])
+def stack(t, fitted):
+    """A role's font stack, each family with a fallback face followed by that face."""
+    names = []
+    for f in [t["family"], *t["fallback"]]:
+        names += [f, f"{f} fallback"] if f in fitted else [f]
+    return ", ".join(f'"{f}"' if " " in f or f[0].isupper() else f for f in names)
+
+
+def fallback_faces(tokens, web):
+    """The [[fallbacks]] faces as @font-face rules: a local font, scaled and given the web font's
+    vertical metrics (design/fallbacks.py fits them)."""
+    families, local, out = {f["family"] for f in web}, tokens.get("fallback-local", {}), []
+    for fb in tokens.get("fallbacks", []):
+        if fb["family"] not in families:
+            fail(f"fallbacks: {fb['family']!r} is no web font's family")
+        if fb["local"] not in local:
+            fail(f"fallbacks: {fb['family']} {fb['weight']} names local {fb['local']!r}, which [fallback-local] lacks")
+        desc = [f'font-family: "{fb["family"]} fallback"', "src: " + ", ".join(f'local("{n}")' for n in local[fb["local"]]),
+                f'font-weight: {fb["weight"]}']
+        if "stretch" in fb:
+            desc.append(f'font-stretch: {fb["stretch"]}')
+        desc += [f'size-adjust: {fb["size-adjust"]:g}%', f'ascent-override: {fb["ascent"]:g}%',
+                 f'descent-override: {fb["descent"]:g}%', f'line-gap-override: {fb["line-gap"]:g}%']
+        out.append("@font-face { " + "; ".join(desc) + "; }")
+    return out
 
 
 def css(tokens, web):
@@ -142,6 +165,8 @@ def css(tokens, web):
         if f["stretch"]:
             desc.append(f'font-stretch: {f["stretch"]}')
         out.append("@font-face { " + "; ".join(desc + ["font-display: swap"]) + "; }")
+    out += fallback_faces(tokens, web)
+    fitted = {fb["family"] for fb in tokens.get("fallbacks", [])}
 
     def block(face, indent="  "):
         return [f"{indent}--{role}: {colour(role, face, v[face])[0]};" for role, v in tokens["color"].items()]
@@ -155,7 +180,7 @@ def css(tokens, web):
             patterns.append(f"  --{name}: {v:g}{'px' if name.endswith('-width') else ''};")
     types = []
     for role, t in tokens["type"].items():
-        line = f"  --font-{role}: {stack(t)};"
+        line = f"  --font-{role}: {stack(t, fitted)};"
         if "stretch" in t:
             line += f" --{role}-stretch: {t['stretch']:g}%;"
         if "weight" in t:
