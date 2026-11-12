@@ -106,10 +106,10 @@
   <div class="wrap">
     <div class="head"><h2><a href="{{ config.base_url | safe }}/verge/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
     <div>
-      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
+      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, the fastest clock its firmware reads right at.</p>
       <div class="two">
         <figure>
-          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table"></tickwave-chart></div>
+          <div class="chart"><tickwave-chart id="chart" end-labels readout="tooltip" table="table"></tickwave-chart></div>
           <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ landing.figureNote }}</figcaption>
         </figure>
         <figure>

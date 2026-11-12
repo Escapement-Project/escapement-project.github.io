@@ -191,13 +191,6 @@
           }
         ]
       }
-    ],
-    "limits": [
-      {
-        "x": "20",
-        "series": "stock",
-        "label": "NXP's firmware reads right up to 20 MHz"
-      }
     ]
   }
 }
