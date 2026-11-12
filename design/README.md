@@ -39,7 +39,7 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `static/js/face.js` | the day and night switch, and the turn between faces: the page dips to the new face's background and comes back up in it (base.css's `.face-cover`) |
 | `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
 | `static/js/mark.js` | the marks in motion on their plates, below |
-| `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text, which is output |
+| `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text or output, which is a program's output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
 | `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |
 
@@ -315,7 +315,11 @@ Comments and punctuation take `ink-2`. Nothing is set in italics.
 
 The highlighters paint with Catppuccin Latte's theme, and `[code-latte]` gives the role each Latte
 colour becomes. `build.py` refuses a role's day colour that is not one of its own. tickwave's docs
-map them as they highlight.
+map them as they highlight. Verge's docs are highlighted by Zola in class mode, and
+`.github/code-colours.py`, run after `zola build`, rewrites Zola's `giallo.css` so each class takes
+its role. Zola's highlighter reads a block marked `text` as plain, like one with no language, so
+`.github/verge-docs.py` marks program output `output` instead. `config.toml` gives `output` a grammar
+that highlights nothing.
 
 Latte gets its look from chroma, not contrast. Seven of its nine colours are under 4.5:1 on the
 surface a code block sits on, `type` at 2.4:1 the lowest. So each day colour has a second value at

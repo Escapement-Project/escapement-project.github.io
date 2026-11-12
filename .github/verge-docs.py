@@ -152,6 +152,10 @@ def rewrite(doc: dict, text: str) -> str:
     for line in text.splitlines():
         image = re.fullmatch(r"!\[([^\]]*)\]\(([^)\s#:]+\.svg)\)\s*", line)
         if line.lstrip().startswith("```"):
+            # Zola's highlighter reads `text` as plain, like a block with no language, and copy.js
+            # tells program output by its mark, so output goes in as `output` (config.toml)
+            if not fenced:
+                line = re.sub(r"^(\s*```+)\s*text\s*$", r"\1output", line)
             fenced = not fenced
         elif not fenced and image and not image[2].startswith("/"):
             line = figure(doc, image[1], image[2])

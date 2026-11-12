@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}{{ page.title }} – Verge – {{ config.title }}{% endblock title %}
 {% block description %}{{ page.description }}{% endblock description %}
-{% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">{% endblock head %}
+{% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">
+<link rel="stylesheet" href="{{ get_url(path='giallo.css', cachebust=true) }}">{% endblock head %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
 {% block header %}{% set current = "verge/docs" %}{% set inside = true %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}

@@ -7,6 +7,14 @@ default_language = "en"
 compile_sass = false
 build_search_index = false
 
+# Code in the docs: highlighted with Catppuccin Latte as classes, which .github/code-colours.py turns
+# into the project's code colours. Program output is marked `output`, a grammar that highlights
+# nothing; giallo reads `text` as plain, like a block with no language (.github/verge-docs.py).
+[markdown.highlighting]
+theme = "catppuccin-latte"
+style = "class"
+extra_grammars = ["highlighting/output.json"]
+
 [extra]
 # The organisation the repository links go to, in both zola serve and zola build.
 github = "https://github.com/Escapement-Project"
