@@ -2,6 +2,8 @@
 {% block title %}Verge – {{ config.title }}{% endblock title %}
 {% block description %}{{ section.description }}{% endblock description %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
+{# tickwave's sheet lays a recording's row out before tickwave.js defines its view. #}
+{% block head %}<link rel="stylesheet" href="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave.css">{% endblock head %}
 {% block header %}{% set current = "verge" %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}
 {%- set landing = load_data(path="data/landing.json") %}{% set h = landing.headline %}
@@ -84,15 +86,15 @@
       <dl class="wire-rows">
         <div><dt>SWD</dt><dd>
           <p>One read of the debug port's ID register: the <tickwave-ref for="w-swd" annotation="wire_swd/request/381228451">request</tickwave-ref>, the <tickwave-ref for="w-swd" annotation="wire_swd/ack/381228624">turnaround and acknowledge</tickwave-ref>, and <tickwave-ref for="w-swd" annotation="wire_swd/data/381228731">32 bits of data and parity</tickwave-ref>. Asked for 50 MHz, Verge sends each request at <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">50 MHz</tickwave-ref> and reads data at <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">37.5 MHz</tickwave-ref>.</p>
-          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" annotations="{{ rec | safe }}gcc-swd-reads.annotations.toml" series="verge"></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" annotations="{{ rec | safe }}gcc-swd-reads.annotations.toml" series="verge"><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 381&nbsp;KiB</span></tickwave-view></div>
         </dd></div>
         <div><dt>JTAG</dt><dd>
           <p>Asked for 30 or 50 MHz, Verge's TCK runs at 30 MHz in its fast bursts: <tickwave-ref for="w-jtag" annotation="wire_clock/clock/9969845407">85% of their periods</tickwave-ref> are 33 ns.</p>
-          <div class="recordings"><tickwave-view id="w-jtag" src="{{ rec | safe }}gcc-jtag-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-jtag-probe-rs.annotations.toml" series="verge"></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-jtag" src="{{ rec | safe }}gcc-jtag-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-jtag-probe-rs.annotations.toml" series="verge"><span slot="title">Verge (GCC): probe-rs JTAG throughput</span><span slot="facts">10.8&nbsp;s; 4 channels: TCK, TMS, TDI, TDO; 4.2&nbsp;MiB</span></tickwave-view></div>
         </dd></div>
         <div><dt>cJTAG</dt><dd>
           <p>Every JTAG bit is a frame of packets on TMSC. In OScan1 a frame has three: inverted TDI, TMS and TDO. With packets at 50 MHz, a frame takes <tickwave-ref for="w-oscan1" annotation="wire_cjtag/frame/28412491163">127 ns</tickwave-ref>, a JTAG clock of 7.9 MHz. In OScan5 a bit in a shift takes two packets, <tickwave-ref for="w-oscan5" annotation="wire_cjtag/frame/21271888413">100 ns</tickwave-ref>. The TDO packet is the long one: the probe waits out <tickwave-ref for="w-oscan1" annotation="wire_cjtag/tdo/28412491210">the target's TDO delay</tickwave-ref> before ending it.</p>
-          <div class="recordings"><tickwave-view id="w-oscan1" src="{{ rec | safe }}gcc-oscan1-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-oscan1-probe-rs.annotations.toml" channels="TCKC TMSC" series="verge"></tickwave-view><tickwave-view id="w-oscan5" src="{{ rec | safe }}gcc-oscan5-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-oscan5-probe-rs.annotations.toml" channels="TCKC TMSC" series="verge"></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-oscan1" src="{{ rec | safe }}gcc-oscan1-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-oscan1-probe-rs.annotations.toml" channels="TCKC TMSC" series="verge"><span slot="title">Verge (GCC): probe-rs cJTAG OScan1 throughput</span><span slot="facts">29.5&nbsp;s; 2 of 3 channels: TCKC, TMSC; 11&nbsp;MiB</span></tickwave-view><tickwave-view id="w-oscan5" src="{{ rec | safe }}gcc-oscan5-probe-rs.tickwave" annotations="{{ rec | safe }}gcc-oscan5-probe-rs.annotations.toml" channels="TCKC TMSC" series="verge"><span slot="title">Verge (GCC): probe-rs cJTAG OScan5 throughput</span><span slot="facts">22.3&nbsp;s; 2 of 3 channels: TCKC, TMSC; 8.8&nbsp;MiB</span></tickwave-view></div>
         </dd></div>
       </dl>
       <p class="after">The measurements page has every recording, with NXP's firmware's wire beside Verge's. <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
@@ -107,7 +109,7 @@
       <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, <span class="ref" tabindex="0" data-limit>the fastest clock its firmware reads right at</span>.</p>
       <div class="two">
         <figure>
-          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table" height="300"></tickwave-chart></div>
+          <div class="chart"><tickwave-chart id="chart" legend="above" end-labels readout="tooltip" table="table"></tickwave-chart></div>
           <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ landing.figureNote }}</figcaption>
         </figure>
         <figure>

@@ -16,6 +16,8 @@
 .hero-mark svg { display: block; width: 100%; height: 100%; }
 .hero-mark .pm-ruler { opacity: .5; }
 .dialface { position: relative; }
+/* The dial's script draws a square of up to 480 px; its place is held from the first paint. */
+.js .dialface { aspect-ratio: 1; max-width: 480px; margin-inline: auto; }
 .dialface svg { width: 100%; max-width: 480px; height: auto; display: block; margin: 0 auto; }
 /* A reading on the dial draws its own focus ring: an outline on an SVG group is not drawn everywhere. */
 .dialface .reading { outline: none; }
@@ -64,11 +66,12 @@ html:not(.js) .wire-hint { display: none; }
 .wire-rows dt { font-weight: 600; }
 .wire-rows dd { margin: 0; }
 .wire-rows dd > p { margin: 0 0 6px; max-width: 36em; text-wrap: pretty; }
-.wire-rows tickwave-view { display: block; margin: 0; font-size: 15px; }
-.wire-rows tickwave-view::part(summary) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 24px; align-items: center; padding: 8px 0 0; background: none; border: 0; border-radius: 0; }
-.wire-rows tickwave-view::part(title) { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
-.wire-rows tickwave-view::part(facts) { grid-row: 2; grid-column: 1; color: var(--ink-2); font-size: 14px; }
-.wire-rows tickwave-view::part(open-button) { grid-row: 1 / 3; grid-column: 2; font-size: 14px; padding: 5px 14px; min-height: 32px; }
+/* A recording's row, set through tickwave's properties, which its sheet reads too: the row is the
+   same before and after tickwave.js defines the view. */
+.wire-rows tickwave-view { margin: 0; font-size: 15px; --tickwave-summary-padding: 8px 0 0; --tickwave-summary-gap: 2px 24px;
+  --tickwave-summary-border-width: 0; --tickwave-summary-background: none; --tickwave-summary-radius: 0;
+  --tickwave-title-size: 15px; --tickwave-facts-size: 14px;
+  --tickwave-open-button-size: 14px; --tickwave-open-button-padding: 5px 14px; --tickwave-open-button-height: 32px; }
 .wire-rows tickwave-view::part(viewer) { background: var(--surface); border: 0; border-radius: 14px; margin: 10px 0 4px; }
 tickwave-ref { cursor: help; }
 @media (max-width: 860px) {
@@ -166,3 +169,5 @@ tickwave-ref { cursor: help; }
 }
 
 .chart tickwave-chart { display: block; }
+/* Figure 1's plot height, stated once: tickwave's sheet reserves it before the chart is defined. */
+#chart { --tickwave-chart-height: 300px; }
