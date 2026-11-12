@@ -86,7 +86,7 @@
       <dl class="wire-rows">
         <div><dt>SWD</dt><dd>
           <p>One read of the debug port's ID register: the <tickwave-ref for="w-swd" annotation="wire_swd/request/381228451">request</tickwave-ref>, the <tickwave-ref for="w-swd" annotation="wire_swd/ack/381228624">turnaround and acknowledge</tickwave-ref>, and <tickwave-ref for="w-swd" annotation="wire_swd/data/381228731">32 bits of data and parity</tickwave-ref>. Asked for 50 MHz, Verge sends each request at <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">50 MHz</tickwave-ref> and reads data at <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">37.5 MHz</tickwave-ref>.</p>
-          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" annotations="{{ rec | safe }}gcc-swd-reads.annotations.toml" series="verge"><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 381&nbsp;KiB</span></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" annotations="{{ rec | safe }}gcc-swd-reads.annotations.toml" series="verge"><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 382&nbsp;KiB</span></tickwave-view></div>
         </dd></div>
         <div><dt>JTAG</dt><dd>
           <p>Asked for 30 or 50 MHz, Verge's TCK runs at 30 MHz in its fast bursts: <tickwave-ref for="w-jtag" annotation="wire_clock/clock/9969845407">85% of their periods</tickwave-ref> are 33 ns.</p>
