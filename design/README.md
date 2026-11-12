@@ -294,6 +294,40 @@ Patterns, as stroke dash arrays at a 2 px line:
 | `--capture-opacity`, `--capture-width` | 60 %, 1.5 px | a run under energy capture |
 | `--dash-capture-second` | `12 4` | a second run of one build under energy capture; the first keeps the build's pattern |
 
+## Code
+
+Code in the docs takes Catppuccin's colours: Latte by day and Mocha by night. Each of nine roles
+has one Catppuccin colour, set in `[code]` in `tokens.toml` and written as `--code-<role>`:
+
+| Role | Catppuccin | Day | Night | More contrast, day |
+|---|---|---|---|---|
+| `keyword` | mauve | `#8839ef` | `#cba6f7` | `#7a22dd` |
+| `type` | yellow | `#df8e1d` | `#f9e2af` | `#855103` |
+| `function` | blue | `#1e66f5` | `#89b4fa` | `#024edc` |
+| `number` | peach | `#fe640b` | `#fab387` | `#a13c03` |
+| `builtin` | red | `#d20f39` | `#f38ba8` | `#ba0530` |
+| `operator` | teal | `#179299` | `#94e2d5` | `#03686e` |
+| `escape` | pink | `#ea76cb` | `#f5c2e7` | `#9c2d83` |
+| `string` | green | `#40a02b` | `#a6e3a1` | `#1b6c02` |
+| `parameter` | maroon | `#e64553` | `#eba0ac` | `#950324` |
+
+Comments and punctuation take `ink-2`. Nothing is set in italics.
+
+The highlighters paint with Catppuccin Latte's theme, and `[code-latte]` gives the role each Latte
+colour becomes. `build.py` refuses a role's day colour that is not one of its own. tickwave's docs
+map them as they highlight.
+
+Latte gets its look from chroma, not contrast. Seven of its nine colours are under 4.5:1 on the
+surface a code block sits on, `type` at 2.4:1 the lowest. So each day colour has a second value at
+its own hue, darkened until it keeps 4.5:1 on page, surface, raised and sunken. The pages use these
+when the reader's system asks for more contrast (`prefers-contrast: more`). Darkening brings red and
+maroon together, so `parameter` sits darker than the rest, as far from `builtin` as Latte has it.
+Mocha keeps at least 7.5:1 on every ground, so night has one set.
+
+These colours appear only in code. They never mark status or data, so they are not held apart
+from those colours: by day `type`, `number`, `builtin` and `parameter` sit close to the status
+colours.
+
 ## Type
 
 | Role | Face | CSS |

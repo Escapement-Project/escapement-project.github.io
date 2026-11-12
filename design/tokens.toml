@@ -96,6 +96,68 @@ night = "#3987e5"
 day = "#47525c"
 night = "#aab5be"
 
+# Code in the docs: Catppuccin's colour for each role, Latte by day and Mocha by night, so code keeps
+# its pastel look. Several Latte colours fall under 4.5:1, so `day-more` holds each at its own hue,
+# darkened until it keeps 4.5:1 on page, surface, raised and sunken; the pages use these values
+# when the reader's system asks for more contrast. Mocha keeps 7.5:1, so night has no second set.
+# Comments and punctuation take ink-2. These colours appear only in code, never for status or data.
+[code.keyword]                  # mauve
+day = "#8839ef"
+night = "#cba6f7"
+day-more = "#7a22dd"
+[code.type]                     # yellow
+day = "#df8e1d"
+night = "#f9e2af"
+day-more = "#855103"
+[code.function]                 # blue
+day = "#1e66f5"
+night = "#89b4fa"
+day-more = "#024edc"
+[code.number]                   # peach
+day = "#fe640b"
+night = "#fab387"
+day-more = "#a13c03"
+[code.builtin]                  # red
+day = "#d20f39"
+night = "#f38ba8"
+day-more = "#ba0530"
+[code.operator]                 # teal
+day = "#179299"
+night = "#94e2d5"
+day-more = "#03686e"
+[code.escape]                   # pink
+day = "#ea76cb"
+night = "#f5c2e7"
+day-more = "#9c2d83"
+[code.string]                   # green
+day = "#40a02b"
+night = "#a6e3a1"
+day-more = "#1b6c02"
+[code.parameter]                # maroon: darker than the rest, to stay as far from red as Latte has it
+day = "#e64553"
+night = "#eba0ac"
+day-more = "#950324"
+# The role each Catppuccin Latte colour becomes, for a highlighter that paints with Latte's theme:
+# Zola's for Verge's docs (.github/code-colours.py), tickwave's for its own. A colour not listed
+# fails the build.
+[code-latte]
+"#8839ef" = "keyword"           # mauve
+"#df8e1d" = "type"              # yellow
+"#04a5e5" = "type"              # sky
+"#209fb5" = "type"              # sapphire
+"#1e66f5" = "function"          # blue
+"#7287fd" = "function"          # lavender
+"#fe640b" = "number"            # peach
+"#d20f39" = "builtin"           # red
+"#179299" = "operator"          # teal
+"#ea76cb" = "escape"            # pink
+"#dc8a78" = "escape"            # rosewater
+"#dd7878" = "escape"            # flamingo
+"#40a02b" = "string"            # green
+"#e64553" = "parameter"         # maroon
+"#7c7f93" = "ink-2"             # overlay2: comments and punctuation
+"#6c6f85" = "ink-2"             # subtext0
+
 # Interaction is hue-free: a 2 px ink focus ring, an ink wash at 12 % for what the pointer is on,
 # an ink fill with page text for what is selected.
 [interaction]

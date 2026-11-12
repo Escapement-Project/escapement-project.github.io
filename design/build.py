@@ -81,7 +81,7 @@ def colour(role, face, value):
         return value, "Color32::TRANSPARENT"
     m = re.fullmatch(r"#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})", value)
     if not m:
-        fail(f"color.{role}.{face} is {value!r}: give #rgb, #rrggbb, #rrggbbaa or transparent")
+        fail(f"{role if '.' in role else 'color.' + role}.{face} is {value!r}: give #rgb, #rrggbb, #rrggbbaa or transparent")
     h = m.group(1)
     if len(h) == 3:
         h = "".join(c * 2 for c in h)
@@ -128,6 +128,19 @@ def check_type(tokens, fonts):
                 fail(f"type.{role}.{field} is {want}, outside fonts.{key}.web's {axis} {lo}-{hi}")
 
 
+def check_code(tokens):
+    """[code-latte] gives each Latte colour a code role or ink-2, and each role's day colour is one of
+    its own: the highlighters paint by these, so a slip would recolour code without a word."""
+    roles = tokens["code"]
+    for colour_, role in tokens["code-latte"].items():
+        colour(f"code-latte.{colour_}", "", colour_)
+        if role not in roles and role != "ink-2":
+            fail(f"code-latte.{colour_!r} is {role!r}: give a [code.*] role or ink-2")
+    for role, v in roles.items():
+        if tokens["code-latte"].get(v["day"].lower()) != role:
+            fail(f"code.{role}.day {v['day']} is not one of the colours [code-latte] gives {role}")
+
+
 def stack(t, fitted):
     """A role's font stack, each family with a fallback face followed by that face."""
     names = []
@@ -169,7 +182,17 @@ def css(tokens, web):
     fitted = {fb["family"] for fb in tokens.get("fallbacks", [])}
 
     def block(face, indent="  "):
-        return [f"{indent}--{role}: {colour(role, face, v[face])[0]};" for role, v in tokens["color"].items()]
+        return [f"{indent}--{role}: {colour(role, face, v[face])[0]};" for role, v in tokens["color"].items()] + \
+            code_block(face, indent)
+
+    def code_block(face, indent="  "):
+        return [f"{indent}--code-{role}: {colour(f'code.{role}', face, v.get(face, ''))[0]};"
+                for role, v in tokens["code"].items()]
+
+    def more_block(face, indent="  "):
+        # A code colour's `<face>-more` value where it has one, and its own value otherwise
+        return [f"{indent}--code-{role}: {colour(f'code.{role}', face + '-more', v.get(face + '-more', v[face]))[0]};"
+                for role, v in tokens["code"].items()]
 
     i = tokens["interaction"]
     patterns = []
@@ -204,7 +227,18 @@ def css(tokens, web):
             '[data-face="night"] {', *block("night"), f"  {wash}", "  color-scheme: dark;", "}",
             "/* Night followed from the system, until the page chooses */",
             "@media (prefers-color-scheme: dark) {",
-            '  :root:not([data-face="day"]) {', *block("night", "    "), "    color-scheme: dark;", "  }", "}"]
+            '  :root:not([data-face="day"]) {', *block("night", "    "), "    color-scheme: dark;", "  }", "}",
+            "/* Code colours at 4.5:1 when the reader's system asks for more contrast, in the same order",
+            "   as the faces above, so each selector still picks its face */",
+            "@media (prefers-contrast: more) {",
+            "  :root {", *more_block("day", "    "), "  }",
+            '  [data-face="day"] {', *more_block("day", "    "), "  }",
+            '  [data-face="night"] {', *more_block("night", "    "), "  }", "}"]
+    # Night followed from the system already outranks the :root above; it needs a rule of its own
+    # only when a night colour has a second value.
+    if any("night-more" in v for v in tokens["code"].values()):
+        out += ["@media (prefers-contrast: more) and (prefers-color-scheme: dark) {",
+                '  :root:not([data-face="day"]) {', *more_block("night", "    "), "  }", "}"]
     return "\n".join(out) + "\n"
 
 
@@ -730,6 +764,7 @@ def build(tokens, out_root):
     """Every output, into out_root."""
     fonts = families(tokens)
     check_type(tokens, fonts)
+    check_code(tokens)
     web_dir, fixed_dir = out_root / "static" / "fonts", out_root / "design" / "out" / "fonts"
     web_dir.mkdir(parents=True, exist_ok=True)
     fixed_dir.mkdir(parents=True, exist_ok=True)
