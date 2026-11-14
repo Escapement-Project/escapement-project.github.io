@@ -1,5 +1,5 @@
 {
-  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
   "date": "2026-11-04",
   "clocks": [
     1,
@@ -57,6 +57,7 @@
   ],
   "tableNote": "NXP's figure at 50 MHz is from one run: the other failed.",
   "figureNote": "Past 20 MHz NXP's firmware reads wrong, and its runs failed: both at 30 MHz, one of two at 50 MHz. Its line ends at 20 MHz.",
+  "hostNote": "The host was probe-rs 17beb8e80, a build of the project's fork with changes for speed that the probe-rs under verge does not have.",
   "headline": {
     "ratio": "3.39",
     "ours": "2,258",
@@ -67,7 +68,7 @@
   },
   "figure1": {
     "format": "tickwave-chart/1",
-    "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+    "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
     "x": {
       "name": "SWD clock asked for",
       "unit": "MHz",
