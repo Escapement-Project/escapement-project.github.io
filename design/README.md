@@ -14,7 +14,7 @@ source, `tokens.toml`, generates everything else:
 | `static/favicon-verge.ico` | the favicon on Verge's page and docs |
 | `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS); tickwave's icon (SVG and PNGs) and its pages' favicon; and the org's avatar |
 | `static/preview.png` | the site's link preview |
-| `design/out/previews/` | each published repository's social preview, to upload on GitHub |
+| `design/out/previews/` | each repository's social preview, to upload on GitHub |
 
 Edit `tokens.toml`, then rebuild:
 
@@ -476,11 +476,10 @@ to nothing by id. Its clips exist only while it moves, as Firefox's reader view 
 ## Link previews
 
 A link to the site shows `static/preview.png`: the landing's hero at rest, its statement and lede
-over the project's mark, large and faint and cropped at the card's edges. Each published repository
-gets a social preview with its name, the `summary` from `content/_index.md`, its language and
-licence (the content's default, or its own `licence`). Verge's three repositories also carry
-Verge's icon (`icon = "verge"`). A repository without a language is not published yet and gets no
-preview.
+over the project's mark, large and faint and cropped at the card's edges. Each repository gets a
+social preview with its name, the `summary` from `content/_index.md`, its language and licence
+(the content's default, or its own `licence`). Verge's three repositories also carry Verge's icon
+(`icon = "verge"`), and tickwave its own.
 
 The previews are drawn on the night face, with the plate as ground. They use the fixed fonts the
 build makes and never the system's, so any machine draws the same bytes. The build fails when a

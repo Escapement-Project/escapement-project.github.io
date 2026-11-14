@@ -34,6 +34,7 @@ design/out/mark.json
 design/out/previews/mculink-bench.png
 design/out/previews/mculink-stock-notes.png
 design/out/previews/mculink-verge.png
+design/out/previews/tickwave.png
 design/out/previews/verge-probe.png
 design/out/previews/verge.png
 design/out/tickwave-mark.json

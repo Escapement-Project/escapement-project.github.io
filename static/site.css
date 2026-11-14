@@ -89,7 +89,6 @@ tickwave-ref { cursor: help; }
 .repos dt a { display: block; font-weight: 600; text-decoration: none; }
 .repos dt a:hover { text-decoration: underline; }
 .repos .lang { display: inline-block; margin-top: 2px; font-size: 13px; color: var(--ink-2); }
-.repos .lang.soon { background: var(--lume); color: var(--on-lume); padding: 1px 7px; border-radius: 4px; font-weight: 600; }
 .repos .licence { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-2); }
 .repos dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
 

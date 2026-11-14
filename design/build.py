@@ -735,11 +735,9 @@ def previews(tokens, out_root):
     out = out_root / "design" / "out" / "previews"
     out.mkdir(parents=True, exist_ok=True)
     for r in site["extra"]["repos"]:
-        # The same test as the Source section's: no language means not published yet.
-        if not r.get("language"):
-            continue
-        if not r.get("summary"):
-            content_fail(f"repository {r['name']} has no summary for its preview")
+        for key in ("summary", "language"):
+            if not r.get(key):
+                content_fail(f"repository {r['name']} has no {key} for its preview")
         if r.get("icon") and r["icon"] not in tokens["icon"]:
             content_fail(f"repository {r['name']}'s icon is {r['icon']!r}, which tokens.toml's [icon] does not name")
         c = Card(tokens, fonts, 1280, 640, f"design/out/previews/{r['name']}.png")

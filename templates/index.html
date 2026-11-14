@@ -84,7 +84,7 @@
     <div class="repos-cols" aria-hidden="true"><span>Repository</span><span>What it is</span></div>
     <dl class="repos">
       {%- for r in section.extra.repos %}
-      <div><dt><a href="{{ config.extra.github }}/{{ r.name }}">{{ r.name }}</a>{% if r.language %}<span class="lang">{{ r.language }}</span>{% else %}<span class="lang soon">Coming</span>{% endif %}{% if r.licence %}<span class="licence">{{ r.licence }}</span>{% endif %}</dt><dd>{{ r.about }}</dd></div>
+      <div><dt><a href="{{ config.extra.github }}/{{ r.name }}">{{ r.name }}</a><span class="lang">{{ r.language }}</span>{% if r.licence %}<span class="licence">{{ r.licence }}</span>{% endif %}</dt><dd>{{ r.about }}</dd></div>
       {%- endfor %}
     </dl>
     </div>
