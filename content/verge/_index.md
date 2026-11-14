@@ -24,10 +24,11 @@ docs = [
 
 [[extra.groups]]
 title = "For host authors"
-about = "For a tool that drives the probe: how it identifies itself, its vendor commands, Verge Aux and the energy stream, and bringing up a cJTAG target."
+about = "For a tool that drives the probe: how it identifies itself, its vendor commands, Verge Aux and the energy stream, bringing up a cJTAG target, and the Rust library verge is built on."
 docs = [
   { name = "host-interface", title = "Host interface", repo = "mculink-verge", path = "docs/host-interface.md", about = "How the probe identifies itself, its vendor commands, Verge Aux and the energy stream." },
   { name = "cjtag-targets", title = "cJTAG targets", repo = "mculink-verge", path = "docs/cjtag-targets.md", about = "Bringing up a TI cJTAG target: power, the activation, other formats and detach." },
+  { name = "library", title = "The verge-probe library", repo = "verge-probe", path = "docs/library.md", about = "Finding probes, debugging with Verge's commands beside probe-rs, and the Pro's supply, pins, bridges and energy, from Rust." },
 ]
 
 [[extra.groups]]
