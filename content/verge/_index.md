@@ -13,7 +13,7 @@ about = "Getting started, updating and recovering a probe, the wires and their c
 docs = [
   { name = "getting-started", title = "Getting started", repo = "verge", path = "docs/getting-started.md", about = "Which probes it runs on, installing verge, and the first update." },
   { name = "updating", title = "Updating and recovery", repo = "verge", path = "docs/updating.md", about = "How each firmware updates, the jumpers, ISP mode, and updating many probes." },
-  { name = "desktop-app", title = "The desktop app", repo = "verge", path = "docs/desktop-app.md", about = "verge-gui: updating, the Pro's supply and DIO pins, and watching and recording energy." },
+  { name = "desktop-app", title = "The desktop app", repo = "verge", path = "docs/desktop-app.md", about = "verge-gui: updating, the DIO pins, the Pro's supply, and watching and recording energy." },
   { name = "wires", title = "Wires and clocks", repo = "mculink-verge", path = "docs/wires.md", about = "SWD, JTAG and cJTAG, the clock you get for the one you ask, and each wire's limits." },
   { name = "trace-and-serial", title = "Trace and serial ports", repo = "mculink-verge", path = "docs/trace-and-serial.md", about = "SWO capture and the target's serial ports." },
   { name = "probes", title = "Probes and jumpers", repo = "mculink-verge", path = "docs/probes.md", about = "What each probe has, and what each jumper turns off." },

@@ -23,7 +23,7 @@ const COMMANDS = {
   oscan: ["verge cjtag", "Show or limit the cJTAG scan formats a unit running Verge offers a host."],
   power: ["verge power on", "Read or switch the target supply of an MCU-Link Pro running Verge."],
   energy: ["verge energy watch", "Show the capture live: the newest pair, the total, and graphs of current and power."],
-  dio: ["verge dio --high 0,1", "Drive and read the four DIO pins on an MCU-Link Pro's J19 header, on a unit running Verge."],
+  dio: ["verge dio --high 0,1", "Drive and read the four DIO pins of an MCU-Link or MCU-Link Pro running Verge."],
   update: ["verge update", "Install a firmware on a unit, the best way its state allows."],
 };
 let commandShown = "list";
