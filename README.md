@@ -88,7 +88,10 @@ it; its alt text becomes the figure's accessible name. A listed doc that does no
 coming. Run it again after a doc changes. The workflow does the same from each repository's default
 branch, so those repositories must be public too.
 
-## The marks
+## Licence
+
+MIT or Apache-2.0, at your choice: `LICENSE-MIT` and `LICENSE-APACHE`. The fonts in `static/fonts/`
+and `design/out/fonts/` are under the SIL Open Font License, with their licence texts beside them.
 
 The project's marks are its dial, Verge's V of samples and tickwave's wave. The masters in
 `design/marks/` are under the Creative Commons Attribution 4.0 International licence (CC BY 4.0),
