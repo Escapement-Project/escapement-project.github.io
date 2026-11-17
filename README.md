@@ -87,3 +87,14 @@ own, is copied into the page as a figure, so the site's colours, fonts and day a
 it; its alt text becomes the figure's accessible name. A listed doc that does not exist yet shows as
 coming. Run it again after a doc changes. The workflow does the same from each repository's default
 branch, so those repositories must be public too.
+
+## The marks
+
+The project's marks are its dial, Verge's V of samples and tickwave's wave. The masters in
+`design/marks/` are under the Creative Commons Attribution 4.0 International licence (CC BY 4.0),
+in `design/marks/CC-BY-4.0.txt`. So is every image drawn from them: the icons and previews in
+`design/out/`, and the favicons and link preview in `static/`. Credit the Escapement Project.
+
+Use the marks to refer to the Escapement Project or its tools, in an article, a talk, a package or a
+link. Don't use them, changed or not, as another project's mark. Don't use them to suggest that the
+project made or endorses something it didn't.

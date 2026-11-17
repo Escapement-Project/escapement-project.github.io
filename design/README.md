@@ -358,7 +358,8 @@ licence sits beside its files.
 ## Icons
 
 There are three marks in `marks/`: the project's dial with one rising edge, Verge's V of samples,
-and tickwave's wave on its ticks.
+and tickwave's wave on its ticks. They and every image drawn from them are under CC BY 4.0, with a
+note on their use in the repository's README.
 Each has a master on a 64-unit grid. At 16, 24 and 32 px, a master fitted to the pixel grid takes
 over (`dial-16.svg`, `verge-24.svg` and so on). Its straight edges sit on whole pixels, so the mark
 stays sharp where the scaled master would blur. A fitted master fills its plate at the size it
