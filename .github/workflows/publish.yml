@@ -1,6 +1,6 @@
 # Builds the site with the measurements page from mculink-bench's default branch and Verge's docs
-# from mculink-verge's and verge's, and publishes it to GitHub Pages. A new measurements page or doc
-# publishes on the next run: push here, or run it by hand.
+# from mculink-verge's, verge's and verge-probe's, and publishes it to GitHub Pages. A new
+# measurements page or doc publishes on the next run: push here, or run it by hand.
 name: Publish
 
 on:
@@ -63,6 +63,15 @@ jobs:
         with:
           repository: Escapement-Project/verge
           path: verge
+          sparse-checkout: |
+            /*.md
+            /docs/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Escapement-Project/verge-probe
+          path: verge-probe
           sparse-checkout: |
             /*.md
             /docs/
