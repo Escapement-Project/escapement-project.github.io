@@ -1,15 +1,25 @@
 // The landing page: the hero's mark, and the Verge section's commands.
 
 // The hero's mark plays Lock once, as the hero comes into view and its type has loaded: header.js's
-// ProjectMark, which holds Lock's first frame until then.
+// ProjectMark, which holds Lock's first frame until then. The plates' marks (mark.js) wait for it,
+// so two marks never play at once: until Lock is still, or at once where the page opens with the
+// hero out of view.
 const heroMark = document.querySelector(".hero-mark svg"), hero = heroMark && window.ProjectMark?.mount(heroMark);
+let heroStill;
+window.marksWait = new Promise((resolve) => { heroStill = resolve; });
 if (hero) {
   hero.ready();
+  let first = true;
   const io = new IntersectionObserver((seen) => {
-    if (seen.some((x) => x.isIntersecting)) { io.disconnect(); document.fonts.ready.then(() => setTimeout(() => hero.arrive(), 250)); }
+    const seenNow = seen.some((x) => x.isIntersecting);
+    if (first && !seenNow) heroStill();
+    first = false;
+    if (!seenNow) return;
+    io.disconnect();
+    document.fonts.ready.then(() => setTimeout(() => hero.arrive().then(heroStill), 250));
   }, { threshold: 0.4 });
   io.observe(heroMark);
-}
+} else heroStill();
 
 // The Verge section. A term names a wire or a feature, and the verge command that drives it shows
 // under the list, described in the tool's own help text. The page itself shows verge list, for a
@@ -17,13 +27,13 @@ if (hero) {
 const READS = "Read target memory over SWD, JTAG or cJTAG, as probe-rs's read does.";
 const COMMANDS = {
   list: [document.getElementById("cmd").textContent, document.getElementById("cmd-what").textContent],
-  swd: ["verge read --chip <chip> --protocol swd b32 0x20000000 4", READS],
-  jtag: ["verge read --chip <chip> --protocol jtag b32 0x20000000 4", READS],
-  cjtag: ["verge read --chip <chip> --protocol cjtag b32 0x20000000 4", READS],
-  oscan: ["verge cjtag", "Show or limit the cJTAG scan formats a unit running Verge offers a host."],
+  swd: ["verge read --chip MSPM0L1306 b32 0x20000000 4", READS],
+  jtag: ["verge read --chip CC1312R --protocol jtag b32 0 64", READS],
+  cjtag: ["verge read --chip CC1312R --protocol cjtag b32 0 64", READS],
+  oscan: ["verge read --chip CC1312R --protocol cjtag --cjtag-format oscan5 b32 0 64", "Read target memory over cJTAG in the scan format you ask for; OScan1 when left out."],
   power: ["verge power on", "Read or switch the target supply of an MCU-Link Pro running Verge."],
   energy: ["verge energy watch", "Show the capture live: the newest pair, the total, and graphs of current and power."],
-  dio: ["verge dio --high 0,1", "Drive and read the four DIO pins of an MCU-Link or MCU-Link Pro running Verge."],
+  dio: ["verge dio --high 0,1,2", "Drive and read the four DIO pins of an MCU-Link or MCU-Link Pro running Verge."],
   update: ["verge update", "Install a firmware on a unit, the best way its state allows."],
 };
 let commandShown = "list";
@@ -45,28 +55,30 @@ function sizeConsole() {
 }
 
 // Pointing at a term previews its command. A click, or Enter, pins it, so the command stays to be
-// selected or copied, and copies it (static/js/copy.js); leaving a term goes back to the pinned one,
-// or to verge list. Escape, or a click anywhere but a term or the console, unpins.
+// selected or copied with the console's Copy button; leaving a term goes back to the pinned one, or
+// to verge list. Escape, or a click anywhere but a term or the console, unpins. The terms are plain
+// words without scripts: this makes them terms and puts them in the tab order.
 let pinned = null;
-const show = (ref) => showCommand(ref?.dataset.cmd ?? "list");
+const show = (term) => showCommand(term?.dataset.cmd ?? "list");
 const vergeOff = () => show(pinned);
 const unpin = () => { pinned?.classList.remove("pinned"); pinned = null; vergeOff(); };
-const pin = (ref) => {
+const pin = (term) => {
   pinned?.classList.remove("pinned");
-  pinned = ref;
-  ref.classList.add("pinned");
-  show(ref);
-  window.copyCommand?.(document.getElementById("console"));
+  pinned = term;
+  term.classList.add("pinned");
+  show(term);
 };
-for (const ref of document.querySelectorAll("#verge .ref")) {
-  ref.addEventListener("pointerenter", () => show(ref));
-  ref.addEventListener("focus", () => show(ref));
-  ref.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") vergeOff(); });
-  ref.addEventListener("blur", vergeOff);
-  ref.addEventListener("click", () => pin(ref));
-  ref.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pin(ref); } });
+for (const term of document.querySelectorAll("#verge [data-cmd]")) {
+  term.classList.add("term");
+  term.tabIndex = 0;
+  term.addEventListener("pointerenter", () => show(term));
+  term.addEventListener("focus", () => show(term));
+  term.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") vergeOff(); });
+  term.addEventListener("blur", vergeOff);
+  term.addEventListener("click", () => pin(term));
+  term.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pin(term); } });
 }
-document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .ref, #console")) unpin(); });
+document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#verge .term, #console")) unpin(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") unpin(); });
 
 window.addEventListener("resize", sizeConsole);

@@ -12,10 +12,11 @@ file in another repository. Here a link to a doc in the list, either way, become
 doc's page (Zola's @/ link, which zola build checks), and a relative link to any other file becomes
 a link to that file on GitHub. A file name or path that names a doc in the list, relative to the doc
 it is in, links the same way, in a code span such as `BOARDS.md` or bare in the text such as
-docs/host-interface.md. An anchor is written as GitHub makes it from a heading, and becomes the one
-Zola makes from the same heading: GitHub drops punctuation ("Past NXP's limits" is
-#past-nxps-limits), where Zola turns it into a dash (#past-nxp-s-limits). The doc's first heading is
-its title, which the page prints itself, so it is dropped.
+docs/host-interface.md. Such a link, and one whose text is the file name it links to, reads as the
+doc's name in the list ("Boards"), as the rail names it. An anchor is written as GitHub makes it
+from a heading, and becomes the one Zola makes from the same heading: GitHub drops punctuation
+("Past NXP's limits" is #past-nxps-limits), where Zola turns it into a dash (#past-nxp-s-limits).
+The doc's first heading is its title, which the page prints itself, so it is dropped.
 
 An SVG image from the doc's own repository, on a line of its own, is copied into the page as a
 figure rather than linked, so the site's colours, fonts and day and night faces reach it. Its alt
@@ -51,6 +52,7 @@ def checkout(repo: str) -> pathlib.Path:
 
 docs = [dict(d, group=g["title"]) for g in groups for d in g["docs"]]
 by_source = {(d["repo"], d["path"]): d for d in docs}
+by_name = {d["name"]: d for d in docs}
 
 out = args.site / "content" / "verge" / "docs"
 if out.exists():
@@ -142,10 +144,23 @@ def figure(doc: dict, alt: str, link: str) -> str:
 # A .md file name, with the directories before it if any.
 DOC_NAME = r"((?:[\w-]+/)*[A-Za-z][\w-]*\.md)"
 
-def named(doc: dict, name: str, text: str, unchanged: str) -> str:
-    """`text` as a link to the page of the listed doc `name` names from `doc`, or `unchanged`."""
+def page_doc(link: str) -> dict | None:
+    """The listed doc a site link goes to, or None for a link elsewhere."""
+    m = re.match(r"@/verge/docs/([\w-]+)\.md", link)
+    return by_name[m[1]] if m else None
+
+def named(doc: dict, name: str, unchanged: str) -> str:
+    """A link to the page of the listed doc that the file name `name` names from `doc`, as the rail
+    names it, or `unchanged` where `name` is not a listed doc."""
     linked = target(doc, name)
-    return f"[{text}]({linked})" if linked.startswith("@/") else unchanged
+    to = page_doc(linked)
+    return f"[{to['title']}]({linked})" if to else unchanged
+
+def retitled(doc: dict, m: re.Match) -> str:
+    """A link whose text is the file name of the doc it links to, with the doc's name as the rail
+    names it."""
+    to = page_doc(m[2])
+    return f"[{to['title']}]({m[2]})" if to and page_doc(target(doc, m[1])) is to else m[0]
 
 def rewrite(doc: dict, text: str) -> str:
     lines, fenced = [], False
@@ -161,11 +176,14 @@ def rewrite(doc: dict, text: str) -> str:
             line = figure(doc, image[1], image[2])
         elif not fenced:
             line = re.sub(r"(\]\()([^)\s]+)(\))", lambda m: m[1] + target(doc, m[2]) + m[3], line)
-            line = re.sub(r"(?<!\[)`" + DOC_NAME + r"`(?!\])", lambda m: named(doc, m[1], f"`{m[1]}`", m[0]), line)
+            line = re.sub(r"(?<!!)\[`?" + DOC_NAME + r"`?\]\((@/[^)\s]+)\)",
+                          lambda m: retitled(doc, m), line)
+            line = re.sub(r"(?<!\[)`" + DOC_NAME + r"`(?!\])", lambda m: named(doc, m[1], m[0]),
+                          line)
             # A bare file name or path in the text, outside code spans and links.
             parts = re.split(r"(`[^`]*`|\[[^\]]*\]\([^)]*\))", line)
             line = "".join(part if i % 2 else re.sub(
-                r"(?<![\w/.-])" + DOC_NAME + r"\b", lambda m: named(doc, m[1], m[1], m[0]), part)
+                r"(?<![\w/.-])" + DOC_NAME + r"\b", lambda m: named(doc, m[1], m[0]), part)
                 for i, part in enumerate(parts))
         lines.append(line)
     return "\n".join(lines) + "\n"

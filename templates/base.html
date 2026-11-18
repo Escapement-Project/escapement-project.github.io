@@ -17,6 +17,23 @@
 <link rel="stylesheet" href="{{ get_url(path='site.css', cachebust=true) }}">
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon.ico') }}">{% endblock icon %}
 <link rel="apple-touch-icon" href="{{ get_url(path='apple-touch-icon.png') }}">
+{#- The link preview: static/preview.png, the landing's hero, which design/build.py draws from the
+    statement and lede in content/_index.md. A page names itself in og_title and og_description. #}
+{% block og %}
+{%- set landing = get_section(path="_index.md", metadata_only=true) %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ config.title }}">
+<meta property="og:title" content="{% block og_title %}{{ config.title }}{% endblock og_title %}">
+<meta property="og:description" content="{% block og_description %}{{ config.description }}{% endblock og_description %}">
+{%- if current_url is defined and current_url %}
+<meta property="og:url" content="{{ current_url | safe }}">
+{%- endif %}
+<meta property="og:image" content="{{ get_url(path='preview.png') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ config.title }}. {{ landing.extra.statement }}. {{ landing.extra.lede }}">
+<meta name="twitter:card" content="summary_large_image">
+{%- endblock og %}
 {% block head %}{% endblock head %}
 </head>
 <body>

@@ -78,33 +78,37 @@ function dial() {
     if (major) { const [tx, ty] = pt(scaleAt(v), 150); s.push(`<text class="number" data-at="${scaleAt(v)}" data-x="${f1(tx)}" data-y="${f1(ty)}" x="${f1(tx)}" y="${f1(ty + 5)}" text-anchor="middle" font-family='${css("--font-display")}' font-weight="${css("--display-weight")}" font-stretch="${css("--display-stretch")}" font-size="${fs(13)}" style="fill: var(--ink)">${v}×</text>`); }
   }
   s.push(`</g>`);
-  // The logo's step itself, scaled so the logo's inner circle (r 23 of its 64) is the face (r 158).
-  // The clip goes on a group: on the scaled path it would scale with it.
-  s.push(`<clipPath id="face"><circle cx="${C}" cy="${C}" r="158"/></clipPath><clipPath id="dial-sweep"><rect x="0" y="0" width="0" height="400"/></clipPath>`);
-  s.push(`<g clip-path="url(#face)"><path transform="translate(${C} ${C}) scale(${K}) translate(-32 -32)" d="M4,38 H29 V20 H60 V26 H35 V44 H4 Z" class="step" style="fill: var(--ink)" fill-opacity="${stepOpacity()}"/></g>`);
+  // The logo's step itself, scaled so the logo's inner circle (r 23 of its 64) is the face (r 158):
+  // design/marks/dial.svg's low run, riser and high run, each run ending on the circle.
+  s.push(`<path transform="translate(${C} ${C}) scale(${K}) translate(-32 -32)" d="M9.796,38 H29 V20 H51.621 A23,23 0 0,1 54.204,26 H35 V44 H12.379 A23,23 0 0,1 9.796,38 Z" class="step" style="fill: var(--ink)" fill-opacity="${stepOpacity()}"/>`);
   // Its top edge, traced: NXP's blue along the low run, the riser in ink, Verge's teal along the high
   // run, one width throughout. Butt ends at a corner would leave half the corner's square bare, so
   // each run reaches half a width past the riser's line to fill it, and the riser stops at the runs'
-  // edges: drawn under them, its ink showed through their antialiased edges. The face clips the ends.
-  const TRACE = 2.5, half = TRACE / 2;
-  s.push(`<g clip-path="url(#face)"><g clip-path="url(#dial-sweep)" fill="none" stroke-width="${TRACE}">`
-    + `<path d="M${RISER.toFixed(2)},${(LOW - half).toFixed(2)} V${(HIGH + half).toFixed(2)}" style="stroke: var(--ink)"/>`
-    + `<path d="M0,${LOW.toFixed(2)} H${(RISER + half).toFixed(2)}" style="stroke: var(--series-nxp)"/>`
-    + `<path d="M${(RISER - half).toFixed(2)},${HIGH.toFixed(2)} H400" style="stroke: var(--series-verge)"/></g></g>`);
+  // edges: drawn under them, its ink showed through their antialiased edges. Each run is a band that
+  // ends on the face's circle. The sweep draws it from the left (dialFrame).
+  const TRACE = 2.5, half = TRACE / 2, f2 = (v) => v.toFixed(2);
+  const fromLeft = (y, to) => `M${f2(C - chord(y + half))},${f2(y + half)} A158,158 0 0,1 ${f2(C - chord(y - half))},${f2(y - half)} H${f2(to)} V${f2(y + half)} Z`;
+  const toRight = (y, from) => `M${f2(from)},${f2(y - half)} H${f2(C + chord(y - half))} A158,158 0 0,1 ${f2(C + chord(y + half))},${f2(y + half)} H${f2(from)} Z`;
+  s.push(`<g class="sweep">`
+    + `<path d="M${f2(RISER)},${f2(LOW - half)} V${f2(HIGH + half)}" fill="none" stroke-width="${TRACE}" style="stroke: var(--ink)"/>`
+    + `<path d="${fromLeft(LOW, RISER + half)}" style="fill: var(--series-nxp)"/>`
+    + `<path d="${toRight(HIGH, RISER - half)}" style="fill: var(--series-verge)"/></g>`);
   s.push(`<rect x="144" y="300" width="112" height="40" rx="4" style="fill: var(--lume); stroke: var(--window-edge)"/>`);
   s.push("</g>");
   // The readings, each a focusable group that says what it is. A reading's text shows a whole
-  // character at a time as the sweep passes, through a clip with a band per line.
+  // character at a time as the sweep passes (dialFrame).
   const reading = (id, label, tip, body) => s.push(`<g class="reading" id="${id}" tabindex="0" role="img" aria-label="${label}" data-tip="${tip}">`
     + `<rect class="hit" fill="transparent"/><rect class="focus" fill="none" style="stroke: var(--ink)" stroke-width="2" rx="4"/>`
-    + `<clipPath id="${id}-shown"><rect/><rect/></clipPath><g clip-path="url(#${id}-shown)">${body}</g></g>`);
+    + `<g class="shown">${body}</g></g>`);
   const figures = `font-family='${css("--font-figures")}' font-weight="${css("--figures-weight")}" font-stretch="${css("--figures-stretch")}"`;
-  const lines = (x, anchor, name, value) => `<text x="${f1(x)}" y="${C - 6}" text-anchor="${anchor}" font-family='${css("--font-text")}' font-weight="600" font-size="${fs(11)}" letter-spacing="1.2" style="fill: var(--ink-2)">${name}</text>`
+  // A reading's name in two lines over its figure: the firmware, then which of it.
+  const lines = (x, anchor, name, which, value) => [[name, C - 6 - fs(11) * 1.35], [which, C - 6]].map(([text, y]) =>
+    `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}" font-family='${css("--font-text")}' font-weight="600" font-size="${fs(11)}" style="fill: var(--ink-2)">${text}</text>`).join("")
     + `<text x="${f1(x)}" y="${f1(C + 6 + fs(17) * .72)}" text-anchor="${anchor}" style="fill: var(--ink)"><tspan ${figures} font-size="${fs(17)}">${value}</tspan><tspan font-family='${css("--font-text")}' font-size="${fs(12)}" font-weight="500" style="fill: var(--ink-2)" dx="4">KiB/s</tspan></text>`;
   reading("r-nxp", `NXP's firmware V3.174: ${h.stock} KiB/s at ${h.stockAt} MHz, the fastest clock it reads right at`,
-    `<b>NXP's firmware V3.174</b><br>${h.stock} KiB/s at ${h.stockAt} MHz, the fastest<br>clock it reads right at`, lines(RISER - 16, "end", "NXP 3.174", h.stock));
+    `<b>NXP's firmware V3.174</b><br>${h.stock} KiB/s at ${h.stockAt} MHz, the fastest<br>clock it reads right at`, lines(RISER - 16, "end", "NXP's firmware", "V3.174", h.stock));
   reading("r-verge", `Verge, ${h.oursName}: ${h.ours} KiB/s at ${h.oursAt} MHz`,
-    `<b>Verge, ${h.oursName}</b><br>${h.ours} KiB/s at ${h.oursAt} MHz`, lines(RISER_RIGHT + 16, "start", "VERGE", h.ours));
+    `<b>Verge, ${h.oursName}</b><br>${h.ours} KiB/s at ${h.oursAt} MHz`, lines(RISER_RIGHT + 16, "start", "Verge", h.oursName, h.ours));
   s.push(`<g class="reading" id="r-ratio" tabindex="0" role="img" aria-label="${h.ratio} times: Verge's ${h.ours} KiB/s over NXP's ${h.stock}" data-tip="<b>${h.ratio}×</b><br>Verge's ${h.ours} KiB/s over NXP's ${h.stock}">`
     + `<rect class="hit" fill="transparent" x="141" y="297" width="118" height="46" rx="6"/><rect class="focus" fill="none" style="stroke: var(--ink)" stroke-width="2" x="141" y="297" width="118" height="46" rx="6"/>`
     + `<text id="ratio" x="200" y="${300 + 20 + 22 * .36}" text-anchor="middle" ${figures} font-size="22" style="fill: var(--on-lume)">${h.ratio}×</text></g>`);
@@ -121,24 +125,55 @@ function dial() {
       r.setAttribute("x", f1(x0 - pad)); r.setAttribute("y", f1(y0 - pad));
       r.setAttribute("width", f1(x1 - x0 + 2 * pad)); r.setAttribute("height", f1(y1 - y0 + 2 * pad));
     }
-    // A band per line, its height the line's, and the right edge of each character on it in order.
+    // Each line's band, its height the line's, and the right edge of each character on it in order.
     texts.forEach((t, i) => {
-      const band = g.querySelectorAll("clipPath rect")[i], b = boxes[i];
-      band.setAttribute("y", f1(b.y - 2)); band.setAttribute("height", f1(b.height + 4)); band.setAttribute("x", 0);
-      band.dataset.edges = [...Array(t.getNumberOfChars()).keys()].map((c) => { const e = t.getExtentOfChar(c); return f1(e.x + e.width); }).join(" ");
+      const b = boxes[i];
+      t.dataset.band = `${f1(b.y - 2)} ${f1(b.height + 4)}`;
+      t.dataset.edges = [...Array(t.getNumberOfChars()).keys()].map((c) => { const e = t.getExtentOfChar(c); return f1(e.x + e.width); }).join(" ");
     });
     g.dataset.at = passes(x0);
   }
   dialFrame();
 }
+// The sweep's clips: the trace drawn up to the sweep, and each reading's characters it has passed. They
+// exist only while it sweeps, so the dial at rest refers to nothing by id, as reader view needs.
+function sweepClips(svg, on) {
+  const NS = "http://www.w3.org/2000/svg", clips = [...svg.querySelectorAll("clipPath")];
+  if (!on) {
+    for (const c of clips) c.remove();
+    for (const g of svg.querySelectorAll("[clip-path]")) g.removeAttribute("clip-path");
+    return;
+  }
+  if (clips.length) return;
+  const clip = (id, rects, g) => {
+    const c = svg.appendChild(document.createElementNS(NS, "clipPath"));
+    c.id = id;
+    for (const [y, height] of rects) {
+      const r = c.appendChild(document.createElementNS(NS, "rect"));
+      for (const [k, v] of Object.entries({ x: 0, y, width: 0, height })) r.setAttribute(k, v);
+    }
+    g.setAttribute("clip-path", `url(#${id})`);
+  };
+  clip("dial-sweep", [[0, 400]], svg.querySelector(".sweep"));
+  for (const g of svg.querySelectorAll(".reading[data-at] .shown")) {
+    clip(`${g.parentNode.id}-shown`, [...g.querySelectorAll("text")].map((t) => t.dataset.band.split(" ")), g);
+  }
+}
 function dialFrame() {
   const svg = document.querySelector("#dialface svg");
   if (!svg) return;
-  const t = seq.dial.pos, x = sweepX(t), v = readingAt(t), done = t >= SWEEP.ms;
-  svg.querySelector("#dial-sweep rect").setAttribute("width", t < 0 ? 0 : f1(x));
-  for (const band of svg.querySelectorAll("[data-edges]")) {
-    const edges = band.dataset.edges.split(" ").map(Number).filter((e) => e <= x);
-    band.setAttribute("width", done ? 400 : edges.length ? f1(Math.max(...edges)) : 0);
+  const t = seq.dial.pos, x = sweepX(t), v = readingAt(t), sweeping = t >= 0 && t < SWEEP.ms;
+  svg.querySelector(".sweep").style.visibility = t < 0 ? "hidden" : "";
+  sweepClips(svg, sweeping);
+  if (sweeping) {
+    svg.querySelector("#dial-sweep rect").setAttribute("width", f1(x));
+    for (const g of svg.querySelectorAll(".reading[data-at] .shown")) {
+      const bands = svg.querySelectorAll(`#${g.parentNode.id}-shown rect`);
+      [...g.querySelectorAll("text")].forEach((text, i) => {
+        const edges = text.dataset.edges.split(" ").map(Number).filter((e) => e <= x);
+        bands[i].setAttribute("width", edges.length ? f1(Math.max(...edges)) : 0);
+      });
+    }
   }
   for (const g of svg.querySelectorAll(".reading[data-at]")) g.style.visibility = t >= +g.dataset.at ? "" : "hidden";
   for (const tick of svg.querySelectorAll(".tick")) tick.classList.toggle("on", +tick.dataset.v <= v + 1e-9);

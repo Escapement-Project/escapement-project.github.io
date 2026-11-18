@@ -74,7 +74,7 @@ jobs:
       # the measurements page's copies of the tokens and of the shared base sheet, header, footer and
       # header scripts must be current, and the page itself must match a fresh build of its results
       # and copies, every annotation its wire section cites present in the recordings, as must every
-      # annotation Verge's page's Wires section cites.
+      # annotation Verge's page's Wires section and the landing page's tickwave section cite.
       - name: Check
         run: |
           python3 mculink-bench/page/extract.py --landing site/data/landing.json --check
@@ -83,7 +83,7 @@ jobs:
             ../mculink-bench/page/base.css ../mculink-bench/page/header.html ../mculink-bench/page/header-verge.html \
             ../mculink-bench/page/footer.html ../mculink-bench/page/face.js ../mculink-bench/page/header.js
           cd .. && python3 mculink-bench/page/build.py --check
-          python3 site/.github/wire-refs.py site/templates/verge.html mculink-recordings
+          python3 site/.github/wire-refs.py site/templates/verge.html site/templates/index.html mculink-recordings
       - name: Install Zola
         run: |
           curl -fsSL -o "$RUNNER_TEMP/zola.tar.gz" \

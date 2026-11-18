@@ -1,19 +1,9 @@
 {% extends "base.html" %}
 {% block description %}{{ section.description }}{% endblock description %}
-{% block head %}
-{%- set d = load_data(path="data/landing.json") %}{% set h = d.headline %}
-{# The link preview: static/preview.png, drawn by design/build.py from the same headline. #}
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{{ config.title }}">
-<meta property="og:title" content="{{ section.extra.statement }}">
-<meta property="og:description" content="{{ section.description }}">
-<meta property="og:url" content="{{ section.permalink | safe }}">
-<meta property="og:image" content="{{ get_url(path='preview.png') }}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Escapement Project. {{ section.extra.statement }}. {{ section.extra.lede }}">
-<meta name="twitter:card" content="summary_large_image">
-{%- endblock head %}
+{% block og_title %}{{ section.extra.statement }}{% endblock og_title %}
+{% block og_description %}{{ section.description }}{% endblock og_description %}
+{# tickwave's sheet lays the tickwave section's inset out before tickwave.js defines it. #}
+{% block head %}<link rel="stylesheet" href="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave.css">{% endblock head %}
 {% block header %}{% set current = "landing" %}{% include "partials/header.html" %}{% endblock header %}
 {% block content %}
 {% set d = load_data(path="data/landing.json") %}
@@ -32,26 +22,29 @@
   </div>
 </div></div>
 
+{#- A product's row: its mark and name, then its text and the column beside it. The name heads the
+    text in the left column; on an ultrawide screen it takes the heading column, as a section's
+    heading does (site.css). #}
 <section id="verge">
-  <div class="wrap">
+  <div class="wrap product-row">
+    {# Verge's mark, design/marks/verge.svg: a V traced by samples, in lume on the plate. The plate
+       links where the name does; the name is the link keyboards and screen readers reach. #}
+    <div class="app"><a class="plate" id="app" data-mark="verge" href="{{ get_url(path='@/verge/_index.md') }}" tabindex="-1" aria-hidden="true">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</a><div><h2 class="name"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a></h2><p>Firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
     <div class="two">
       <div>
-        {# Verge's mark, design/marks/verge.svg: a V traced by samples, in lume on the plate. The plate
-           links where the name does; the name is the link keyboards and screen readers reach. #}
-        <div class="app"><a class="plate" id="app" data-mark="verge" href="{{ get_url(path='@/verge/_index.md') }}" tabindex="-1" aria-hidden="true">{{ load_data(path="design/marks/verge.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</a><div><h2 class="name"><a href="{{ get_url(path='@/verge/_index.md') }}">Verge</a></h2><p>Firmware for NXP's <span class="nb">MCU-Link</span> and <span class="nb">MCU-Link Pro</span></p></div></div>
         <p>Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
         <p>Through probe-rs, Verge writes over SWD at {{ h.ratio }} times the rate of NXP's firmware. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
         <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
-        <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}{{ get_url(path='@/verge/_index.md') }}#install{% endif %}">Get started</a><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
+        <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}{{ get_url(path='@/verge/_index.md') }}#install{% endif %}">Get started</a> <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
       </div>
       <div class="specs-col">
         <dl class="specs">
-          <div id="wires"><dt>Wires</dt><dd><span class="ref" tabindex="0" data-cmd="swd">SWD</span>, <span class="ref" tabindex="0" data-cmd="jtag">JTAG</span>, and <span class="ref" tabindex="0" data-cmd="cjtag">cJTAG</span> in <span class="ref" tabindex="0" data-cmd="oscan">OScan1, 2, 5 and 6</span></dd></div>
+          <div id="wires"><dt>Wires</dt><dd><span data-cmd="swd">SWD</span>, <span data-cmd="jtag">JTAG</span>, and <span data-cmd="cjtag">cJTAG</span> in <span data-cmd="oscan">OScan1, 2, 5 and 6</span></dd></div>
           <div><dt>Trace</dt><dd>SWO, and serial consoles</dd></div>
-          <div><dt>Pins</dt><dd>Four <span class="ref" tabindex="0" data-cmd="dio">DIO pins</span> on each probe</dd></div>
-          <div><dt>On the Pro</dt><dd><span class="ref" tabindex="0" data-cmd="power">Target supply</span> and <span class="ref" tabindex="0" data-cmd="energy">energy capture</span></dd></div>
+          <div><dt>Pins</dt><dd>Four <span data-cmd="dio">DIO pins</span> on each probe</dd></div>
+          <div><dt>On the Pro</dt><dd><span data-cmd="power">Target supply</span> and <span data-cmd="energy">energy capture</span></dd></div>
           <div><dt>Hosts</dt><dd>Any CMSIS-DAP host; for cJTAG, verge or a probe-rs branch</dd></div>
-          <div><dt>Update</dt><dd><code>verge</code>, <span class="ref" tabindex="0" data-cmd="update">a command line</span> and a desktop app</dd></div>
+          <div><dt>Update</dt><dd><code>verge</code>, <span data-cmd="update">a command line</span> and a desktop app</dd></div>
         </dl>
         {# The console shows verge list until a term is pointed at; landing.js takes this one from here. #}
         <div class="console" id="console" aria-live="polite"><code><span aria-hidden="true">$</span><b id="cmd" style="font-weight:inherit"><i>verge</i> <i>list</i></b></code><p id="cmd-what">Say what every attached MCU-Link runs, and how each can be updated.</p></div>
@@ -60,18 +53,27 @@
   </div>
 </section>
 
+{%- set rec = config.base_url ~ "/mculink-recordings/2026-11-04/" %}
 <section id="tickwave">
-  <div class="wrap">
+  <div class="wrap product-row" data-tickwave="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/">
+    {# tickwave's mark, design/marks/tickwave.svg: a wave on its ticks, on the plate as Verge's is and
+       linked as Verge's is; static/js/mark.js plays it. #}
+    <div class="app"><a class="plate" data-mark="tickwave" href="{{ config.base_url | safe }}/tickwave/" tabindex="-1" aria-hidden="true">{{ load_data(path="design/marks/tickwave.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</a><div><h2 class="name"><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p>Web viewer for mixed-signal captures</p></div></div>
     <div class="two">
-    <div>
-      {# tickwave's mark, design/marks/tickwave.svg: a wave on its ticks, on the plate as Verge's is and
-         linked as Verge's is; static/js/mark.js plays it. #}
-      <div class="app"><a class="plate" data-mark="tickwave" href="{{ config.base_url | safe }}/tickwave/" tabindex="-1" aria-hidden="true">{{ load_data(path="design/marks/tickwave.svg", format="plain") | trim | replace(from="<svg ", to='<svg width="40" height="40" aria-hidden="true" fill="currentColor" ') | safe }}</a><div><h2 class="name"><a href="{{ config.base_url | safe }}/tickwave/">tickwave</a></h2><p>Web viewer for mixed-signal captures</p></div></div>
-      <p>tickwave shows a logic or mixed-signal capture inside a web page, beside the text that cites it.</p>
-      <p>Verge's pages use it. It draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/verge/measurements/">Verge's measurements</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
-      <p>It converts your own captures too. A Saleae Logic 2 binary export, a sigrok session or a VCD file becomes a recording in your browser, and nothing is uploaded.</p>
-      <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/#page">See it in a page</a><a href="{{ config.base_url | safe }}/tickwave/open.html">Open a recording</a></p>
-    </div>
+      <div>
+        <p>tickwave shows a logic or mixed-signal capture inside a web page, beside the text that cites it.</p>
+        <p>Verge's pages use it. It draws the charts on <a href="{{ get_url(path='@/verge/_index.md') }}#measurements">Verge's page</a> and <a href="{{ config.base_url | safe }}/verge/measurements/">Verge's measurements</a>. On the measurements page it also opens the recordings the wire figures come from, with every edge the analyser caught on the debug lines.</p>
+        <p>It converts your own captures too. A Saleae Logic 2 binary export, a sigrok session or a VCD file becomes a recording in your browser, and nothing is uploaded.</p>
+        <p class="ways"><a href="{{ config.base_url | safe }}/tickwave/#page">See it in a page</a> <a href="{{ config.base_url | safe }}/tickwave/open.html">Open a recording</a></p>
+      </div>
+      {#- One read from the recording Verge's page cites, as tickwave shows a stretch of wire beside the
+          text that cites it. The caption is what the recording's own edges measure in this read. #}
+      <figure class="product-figure">
+        <div class="chart"><tickwave-inset src="{{ rec | safe }}gcc-swd-reads.tickwave" annotation="wire_swd/read/384679581" series="verge" sweep="off" href="{{ config.base_url | safe }}/tickwave/open.html"></tickwave-inset></div>
+        <figcaption>One SWD read of the target's flash, from Verge asked for 50 MHz: the request at 50 MHz, then the turnaround and acknowledge, then 32 bits of data and parity at 37.5 MHz. Point at a part to read it.</figcaption>
+        {#- The address the inset itself opens: tickwave's Open page, the recording by its path on this site. #}
+        <p><a href="{{ config.base_url | safe }}/tickwave/open.html?src=%2Fmculink-recordings%2F2026-11-04%2Fgcc-swd-reads.tickwave&amp;annotation=wire_swd%2Fread%2F384679581">Open the recording</a></p>
+      </figure>
     </div>
   </div>
 </section>
@@ -95,4 +97,4 @@
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 <script id="tickwave-mark" type="application/json">{{ load_data(path="design/out/tickwave-mark.json", format="plain") | trim | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script src="{{ get_url(path='js/landing.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/load-tickwave.js', cachebust=true) }}" defer></script>{% endblock scripts %}

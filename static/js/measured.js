@@ -61,7 +61,11 @@
     highlight({ ...(row && { i: +row.dataset.i }), ...(cell.dataset.s && { s: cell.dataset.s }) });
   });
   tableEl.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") highlight({}); });
-  for (const ref of document.querySelectorAll(".claim .ref")) linkOn(ref, () => (ref.dataset.refs ? { refs: ref.dataset.refs.split(" ") } : {}));
+  // A claim's figures reach the keyboard only here, where they light something.
+  for (const ref of document.querySelectorAll(".claim .ref")) {
+    ref.tabIndex = 0;
+    linkOn(ref, () => (ref.dataset.refs ? { refs: ref.dataset.refs.split(" ") } : {}));
+  }
   document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".chart, #table, .claim .ref")) highlight({}); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") highlight({}); });
 })();

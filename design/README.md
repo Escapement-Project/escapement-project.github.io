@@ -35,10 +35,10 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `static/base.css` | the shared base sheet: the header, sections, type, a product's main page, figures, tables, references, the Copy buttons and the footer. A page adds a sheet of its own after it (the site's is `static/site.css`) |
 | `design/header.html` | the header every page shows: the mark, the places and the day and night switch. `{{mark}}` stands for the dial and `{{base}}` for the address the links start with. On a product's pages the product's link gives way to its group, below (the site's `templates/partials/header.html` fills the header in for Zola) |
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
-| `design/footer.html` | the footer every page shows |
+| `design/footer.html` | the footer every page shows: the project's name and statement, and under them a line saying the project is not affiliated with NXP |
 | `static/js/face.js` | the day and night switch, and the turn between faces: the page dips to the new face's background and comes back up in it (base.css's `.face-cover`) |
-| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back on the way up where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
-| `static/js/mark.js` | the marks in motion on their plates, below |
+| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back when the reader scrolls up where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
+| `static/js/mark.js` | the marks in motion on their plates, below. A plate's mark waits for any mark the page plays first, `window.marksWait`, so two never play at once |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text or output, which is a program's output |
 | `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
 | `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |

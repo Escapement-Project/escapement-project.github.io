@@ -15,7 +15,7 @@ the index, and serve `public/` to try the search.
 
 | Path | What |
 |---|---|
-| `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `verge.html` for Verge's page, `verge-docs.html` and `verge-doc.html` for its docs, `404.html` for any address without a page |
+| `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `verge.html` for Verge's page, `verge-docs.html` and `verge-doc.html` for its docs, `404.html` for any address without a page, and `sitemap.xml`, Zola's with the measurements page added |
 | `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
 | `content/verge/_index.md` | Verge's page, and its docs: their groups, order, addresses and where each lives |
 | `static/base.css` | the base every page of the project shares: header, sections, type, a product's main page, figures, tables, Copy buttons and footer, naming colour roles, never values |
@@ -25,16 +25,16 @@ the index, and serve `public/` to try the search.
 | `static/js/header.js` | the header's hairline, the mark on the section in view, the header brought back on the way up where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
 | `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
-| `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives, and its Verge section's commands |
+| `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives and the plates' marks wait for, and its Verge section's commands |
 | `static/js/dial.js` | Verge's headline as a dial, at the head of Verge's page |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
-| `static/js/wires.js` | loads tickwave's elements for the Wires section on Verge's page as it nears the view |
+| `static/js/load-tickwave.js` | loads tickwave's elements as the first part that shows a recording nears the view: the Wires section on Verge's page, the tickwave section on the landing page |
 | `static/js/mark.js` | the marks in motion: Verge's on the landing page and Verge's page, tickwave's on the landing page and tickwave's page, shared with tickwave's site |
 | `static/js/copy.js` | click-to-copy for the commands in consoles and docs, on every page |
 | `data/landing.json` | the headline the landing page and Verge's page show, and Figure 1 and Table 1 on Verge's page, written by mculink-bench's `page/extract.py --landing` |
 | `design/` | the design tokens and fonts, and the script that generates them: see `design/README.md` |
 | `.github/verge-docs.py` | copies Verge's docs from their repositories into `content/verge/docs/` |
-| `.github/wire-refs.py` | checks every recording Verge's page's Wires section cites against the recordings' annotations, before the site publishes |
+| `.github/wire-refs.py` | checks every annotation Verge's page's Wires section and the landing's tickwave section cite against the recordings' annotations, before the site publishes |
 | `.github/search-index.py` | writes the docs' search index, `verge/docs/search.json`, from the built site: each doc's sections as plain text |
 | `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, writes the search index, and publishes it to GitHub Pages |
 
@@ -50,10 +50,13 @@ and the mark's motion from `design/out/`. `design/README.md` says how the
 copies are checked.
 
 The landing page and Verge's page work without scripts: their figures are in the text, and Verge's
-page has Table 1, which Zola renders from `data/landing.json`. Scripts add Verge's dial, Figure 1 and
-the highlights that link the claim, the figure and the table, all on Verge's page.
-tickwave's `<tickwave-chart>` draws Figure 1, loaded from tickwave's own site on this origin at the
-version `config.toml` pins; the pages load no fonts or scripts from anywhere else.
+page has Table 1, which Zola renders from `data/landing.json`, and a download link under each
+recording. Scripts add Verge's dial, Figure 1 and the highlights that link the claim, the figure and
+the table, all on Verge's page, and the landing's commands and tickwave's read of a recording. What
+only a script makes work stays out without one: the day and night switch, the underlines that point
+at something, and the figures it draws. tickwave's `<tickwave-chart>` draws Figure 1, loaded from
+tickwave's own site on this origin at the version `config.toml` pins; the pages load no fonts or
+scripts from anywhere else.
 
 ## The measurements page
 
@@ -77,11 +80,12 @@ this repository's Pages settings to deploy from GitHub Actions.
 
 ## Verge's docs
 
-Verge's docs live beside the code they describe, in mculink-verge and verge, so a change to a
-command updates its doc in the same commit. `content/verge/_index.md` lists them: their groups,
-order, addresses under `/verge/docs/`, and the file each comes from. `.github/verge-docs.py` copies
-them into `content/verge/docs/`, which git ignores, from checkouts beside this one (or the ones
-`--repo NAME=PATH` names). Links between listed docs become page links, which `zola build` checks;
+Verge's docs live beside the code they describe, in mculink-verge, verge and verge-probe, so a
+change to a command updates its doc in the same commit. `content/verge/_index.md` lists them: their
+groups, order, addresses under `/verge/docs/`, and the file each comes from. `.github/verge-docs.py`
+copies them into `content/verge/docs/`, which git ignores, from checkouts beside this one (or the
+ones `--repo NAME=PATH` names). Links between listed docs become page links, which `zola build`
+checks, and one that names its doc by file name reads as the doc's name, as the contents list it;
 other links go to the file on GitHub. An SVG image from the doc's own repository, on a line of its
 own, is copied into the page as a figure, so the site's colours, fonts and day and night faces reach
 it; its alt text becomes the figure's accessible name. A listed doc that does not exist yet shows as

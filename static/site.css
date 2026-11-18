@@ -41,6 +41,22 @@
   .dial-head .dial-figure { grid-column: 2; grid-row: 1 / span 2; }
 }
 
+/* A product's row on the landing: its name over its text in the left column, and the column beside
+   them level with the name, as Verge's page sets its head. On an ultrawide screen the name takes the
+   heading column, as a section's heading does, and the rest the content column (base.css). */
+@media (min-width: 861px) {
+  /* The name's row as tall as the name: a taller column beside them lengthens the text's row. */
+  .product-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: var(--gutter); align-items: start; }
+  .product-row > .app { grid-column: 1; grid-row: 1; }
+  .product-row > .two { display: contents; }
+  .product-row > .two > :first-child { grid-column: 1; grid-row: 2; }
+  .product-row > .two > :last-child { grid-column: 2; grid-row: 1 / span 2; }
+}
+@media (min-width: 2000px) {
+  .product-row > .app { align-items: start; margin: 0; }
+  .product-row > .two { display: grid; grid-column: 2; grid-row: 1; }
+  .product-row > .two > :first-child, .product-row > .two > :last-child { grid-column: auto; grid-row: auto; }
+}
 .app { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
 .app .plate { width: 58px; height: 58px; border-radius: 13px; }
 .app .plate svg { width: 40px; height: 40px; }
@@ -51,8 +67,12 @@
 .specs-col .console { margin-top: 18px; }
 /* A program's name in the list, set as the console below sets it. */
 .specs code { font: 500 .88em var(--font-code); font-stretch: var(--code-stretch); }
-/* A term pinned by a click keeps its command in the console. */
-#verge .ref.pinned { text-decoration-style: solid; text-decoration-color: var(--ink); background: var(--wash); }
+/* A term shows its command in the console: a solid hair underline in rule, apart from the dotted
+   line of a figure that points at its evidence (.ref). landing.js makes the terms; without it they
+   are plain words. A term pinned by a click keeps its command in the console. */
+.term { text-decoration: underline solid var(--rule); text-decoration-thickness: 1px; text-underline-offset: .22em; cursor: default; }
+.term:hover, .term:focus-visible, .term.pinned { text-decoration-color: var(--ink); }
+.term.pinned { background: var(--wash); }
 
 /* Verge's Wires: a row for each wire, as the docs below list theirs. Its figures are tickwave
    references that open the stretch of recording they come from, and its recordings sit under the
@@ -74,6 +94,9 @@ html:not(.js) .wire-hint { display: none; }
   --tickwave-open-button-size: 14px; --tickwave-open-button-padding: 5px 14px; --tickwave-open-button-height: 32px; }
 .wire-rows tickwave-view::part(viewer) { background: var(--surface); border: 0; border-radius: 14px; margin: 10px 0 4px; }
 tickwave-ref { cursor: help; }
+/* Without scripts a recording has no buttons of tickwave's, so the page gives its download link
+   under it. */
+.recordings .download { margin: 4px 0 0; font-size: 14px; }
 @media (max-width: 860px) {
   .wire-rows > div { grid-template-columns: minmax(0, 1fr); }
   .wire-rows dd { margin-top: 4px; }
@@ -92,11 +115,6 @@ tickwave-ref { cursor: help; }
 .repos .licence { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-2); }
 .repos dd { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
 
-@media (min-width: 2000px) {
-  /* The hero takes the sections' content column (base.css), its text over theirs. */
-  .wrap:has(> .hero) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 4fr); gap: var(--gutter); }
-  .hero { grid-column: 2; }
-}
 @media (max-width: 860px) {
   .repos-cols { display: none; }
   .repos > div { grid-template-columns: minmax(0, 1fr); }
@@ -104,6 +122,20 @@ tickwave-ref { cursor: help; }
 }
 
 #tickwave .ways { margin: 22px 0 0; }
+/* tickwave's section shows one read from a recording, on a panel as Verge's Figure 1 is, its caption
+   and the way to the whole recording under it. The inset takes no margin of its own, so the panel
+   spaces it. */
+#tickwave .product-figure figcaption { font-size: 15px; margin: 12px 0 14px; max-width: none; text-wrap: pretty; }
+/* tickwave draws the read; without scripts there is nothing to show. */
+html:not(.js) #tickwave .product-figure { display: none; }
+/* The inset holds its final height from the first paint, through the moment it is defined with
+   nothing to size by: its label's lines over the trace. The label, the decoder's, takes one line in
+   a panel 490 px wide or more, two down to 330 px, and three below that, in either browser. A flow
+   root, so no margin inside it reaches out and moves it as it is defined. */
+#tickwave .chart { container-type: inline-size; }
+#tickwave tickwave-inset { display: flow-root; height: 138.8px; overflow: clip; }
+@container (width < 490px) { #tickwave tickwave-inset { height: 155px; } }
+@container (width < 330px) { #tickwave tickwave-inset { height: 171.8px; } }
 /* The not-found page: the dial with its edge left flat, beside what to do next. */
 .notfound { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: center; padding: 88px 0 104px; }
 .notfound svg { width: 136px; height: 136px; color: var(--ink-2); }
@@ -168,5 +200,7 @@ tickwave-ref { cursor: help; }
 }
 
 .chart tickwave-chart { display: block; }
+/* Figure 1 is drawn by a script; without one, Table 1 holds every figure. */
+html:not(.js) #measurements figure:has(.chart) { display: none; }
 /* Figure 1's plot height, stated once: tickwave's sheet reserves it before the chart is defined. */
 #chart { --tickwave-chart-height: 300px; }

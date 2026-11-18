@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Verge – {{ config.title }}{% endblock title %}
 {% block description %}{{ section.description }}{% endblock description %}
+{% block og_title %}Verge{% endblock og_title %}
+{% block og_description %}{{ section.description }}{% endblock og_description %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
 {# tickwave's sheet lays a recording's row out before tickwave.js defines its view. #}
 {% block head %}<link rel="stylesheet" href="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave.css">{% endblock head %}
@@ -25,7 +27,7 @@
       <p class="lede">Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
       <p>Through probe-rs, Verge is faster than NXP's firmware at every clock both complete. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
       <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
-      <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a><a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a><a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
+      <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a> <a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a> <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
       <p class="status">In development. The firmware and verge publish with the first release.</p>
     </div>
     <div class="product-figure dial-figure">
@@ -45,7 +47,7 @@
     <p class="status">These steps work from the first release, which isn't out yet.</p>
     <ol class="steps">
       <li><h3>Get verge</h3><p>Download the archive for your system from <a href="{{ config.extra.github | safe }}/verge/releases">verge's releases</a>. Each holds the command line and the desktop app, with a checksum and a signature.</p></li>
-      <li><h3>See what is attached</h3><div class="console"><code><span aria-hidden="true">$</span>verge</code><p>Each MCU-Link, the firmware it runs, and how it can update.</p></div></li>
+      <li><h3>See what is attached</h3><div class="console"><code><span aria-hidden="true">$</span>verge list</code><p>Each MCU-Link, the firmware it runs, and how it can update.</p></div></li>
       <li><h3>Update</h3><div class="console"><code><span aria-hidden="true">$</span>verge update</code><p>The latest release, its signature checked first. A probe running NXP's firmware from V3.122 needs no jumper.</p></div></li>
     </ol>
     <p class="after">To put NXP's firmware back, <code>verge update --stock</code> installs it from your LinkServer installation. {% if ",getting-started," in written %}<a href="{{ get_url(path='@/verge/docs/getting-started.md') }}">Getting started</a>{% else %}Getting started{% endif %} has the details.</p>
@@ -59,15 +61,15 @@
     <table class="probes">
       <thead><tr><th scope="col"></th><th scope="col">MCU-Link</th><th scope="col">MCU-Link Pro</th></tr></thead>
       <tbody>
-        <tr><th scope="row">Wires</th><td colspan="2">SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td></tr>
-        <tr><th scope="row">SWO</th><td colspan="2">UART encoding, up to 30 Mbaud</td></tr>
+        <tr><th scope="row">Wires</th><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td></tr>
+        <tr><th scope="row">SWO</th><td>UART encoding, up to 30 Mbaud</td><td>UART encoding, up to 30 Mbaud</td></tr>
         <tr><th scope="row">Serial ports</th><td>One</td><td>Two; the second is 3.3 V only</td></tr>
         <tr><th scope="row">DIO pins</th><td>Four, on J8's pads; 3.3 V only</td><td>Four, on J19</td></tr>
         <tr><th scope="row">SPI and I2C</th><td class="no">No</td><td>Bridges through vendor commands</td></tr>
         <tr><th scope="row">Target supply</th><td class="no">No</td><td>1.8 or 3.3 V, up to 400 mA</td></tr>
         <tr><th scope="row">Energy capture</th><td class="no">No</td><td>Voltage, current and energy, on two current ranges</td></tr>
-        <tr><th scope="row">Verge Aux</th><td colspan="2">A second interface, for tools to use while a debugger holds the probe</td></tr>
-        <tr><th scope="row">Updates</th><td colspan="2">With verge, without the ISP jumper</td></tr>
+        <tr><th scope="row">Verge Aux</th><td>A second interface, for tools to use while a debugger holds the probe</td><td>A second interface, for tools to use while a debugger holds the probe</td></tr>
+        <tr><th scope="row">Updates</th><td>With verge, without the ISP jumper</td><td>With verge, without the ISP jumper</td></tr>
       </tbody>
     </table>
   </div>
@@ -86,15 +88,15 @@
       <dl class="wire-rows">
         <div><dt>SWD</dt><dd>
           <p>One read of the debug port's ID register: the <tickwave-ref for="w-swd" annotation="wire_swd/request/381228451">request</tickwave-ref>, the <tickwave-ref for="w-swd" annotation="wire_swd/ack/381228624">turnaround and acknowledge</tickwave-ref>, and <tickwave-ref for="w-swd" annotation="wire_swd/data/381228731">32 bits of data and parity</tickwave-ref>. Asked for 50 MHz, Verge sends each request at <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">50 MHz</tickwave-ref> and reads data at <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">37.5 MHz</tickwave-ref>.</p>
-          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" series="verge" download><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 412&nbsp;KiB</span></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" series="verge" download><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 412&nbsp;KiB</span></tickwave-view><noscript><p class="download"><a href="{{ rec | safe }}gcc-swd-reads.tickwave" download>Download gcc-swd-reads.tickwave</a></p></noscript></div>
         </dd></div>
         <div><dt>JTAG</dt><dd>
           <p>Asked for 30 or 50 MHz, Verge's TCK runs at 30 MHz in its fast bursts: <tickwave-ref for="w-jtag" annotation="wire_clock/clock/9969845407">85% of their periods</tickwave-ref> are 33 ns.</p>
-          <div class="recordings"><tickwave-view id="w-jtag" src="{{ rec | safe }}gcc-jtag-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs JTAG throughput</span><span slot="facts">10.8&nbsp;s; 4 channels: TCK, TMS, TDI, TDO; 4.3&nbsp;MiB</span></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-jtag" src="{{ rec | safe }}gcc-jtag-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs JTAG throughput</span><span slot="facts">10.8&nbsp;s; 4 channels: TCK, TMS, TDI, TDO; 4.3&nbsp;MiB</span></tickwave-view><noscript><p class="download"><a href="{{ rec | safe }}gcc-jtag-probe-rs.tickwave" download>Download gcc-jtag-probe-rs.tickwave</a></p></noscript></div>
         </dd></div>
         <div><dt>cJTAG</dt><dd>
           <p>Every JTAG bit is a frame of packets on TMSC. In OScan1 a frame has three: inverted TDI, TMS and TDO. With packets at 50 MHz, a frame takes <tickwave-ref for="w-oscan1" annotation="wire_cjtag/frame/28412491163">127 ns</tickwave-ref>, a JTAG clock of 7.9 MHz. In OScan5 a bit in a shift takes two packets, <tickwave-ref for="w-oscan5" annotation="wire_cjtag/frame/21271888413">100 ns</tickwave-ref>. The TDO packet is the long one: the probe waits out <tickwave-ref for="w-oscan1" annotation="wire_cjtag/tdo/28412491210">the target's TDO delay</tickwave-ref> before ending it.</p>
-          <div class="recordings"><tickwave-view id="w-oscan1" src="{{ rec | safe }}gcc-oscan1-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs cJTAG OScan1 throughput</span><span slot="facts">29.5&nbsp;s; 2 of 3 channels: TCKC, TMSC; 11&nbsp;MiB</span></tickwave-view><tickwave-view id="w-oscan5" src="{{ rec | safe }}gcc-oscan5-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs cJTAG OScan5 throughput</span><span slot="facts">22.3&nbsp;s; 2 of 3 channels: TCKC, TMSC; 9.5&nbsp;MiB</span></tickwave-view></div>
+          <div class="recordings"><tickwave-view id="w-oscan1" src="{{ rec | safe }}gcc-oscan1-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs cJTAG OScan1 throughput</span><span slot="facts">29.5&nbsp;s; 2 of 3 channels: TCKC, TMSC; 11&nbsp;MiB</span></tickwave-view><noscript><p class="download"><a href="{{ rec | safe }}gcc-oscan1-probe-rs.tickwave" download>Download gcc-oscan1-probe-rs.tickwave</a></p></noscript><tickwave-view id="w-oscan5" src="{{ rec | safe }}gcc-oscan5-probe-rs.tickwave" series="verge" download><span slot="title">Verge (GCC): probe-rs cJTAG OScan5 throughput</span><span slot="facts">22.3&nbsp;s; 2 of 3 channels: TCKC, TMSC; 9.5&nbsp;MiB</span></tickwave-view><noscript><p class="download"><a href="{{ rec | safe }}gcc-oscan5-probe-rs.tickwave" download>Download gcc-oscan5-probe-rs.tickwave</a></p></noscript></div>
         </dd></div>
       </dl>
       <p class="after">The measurements page has every recording, with NXP's firmware's wire beside Verge's. <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
@@ -106,7 +108,7 @@
   <div class="wrap">
     <div class="head"><h2><a href="{{ config.base_url | safe }}/verge/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
     <div>
-      <p class="claim">Verge writes <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" tabindex="0" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" tabindex="0" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, the fastest clock its firmware reads right at.</p>
+      <p class="claim">Verge writes <span class="ref" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, the fastest clock its firmware reads right at.</p>
       <div class="two">
         <figure>
           <div class="chart"><tickwave-chart id="chart" end-labels readout="tooltip" table="table"></tickwave-chart></div>
@@ -116,7 +118,7 @@
           {# The table is the page's own: a reader without scripts gets every figure. The script adds the
              highlights, by these rows' clocks, cells' series and "series@MHz" references. #}
           <table id="table">
-            <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP</th></tr>
+            <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP's firmware</th></tr>
             <tr><th data-s="clang">Clang</th><th data-s="gcc">GCC</th><th data-s="stock">V3.174</th></tr>
             {%- for m in landing.clocks %}{% set i = loop.index0 %}
             <tr data-i="{{ i }}"><td class="clock">{{ m }}</td>
@@ -166,7 +168,7 @@
 
 <section id="docs">
   <div class="wrap">
-    <div class="head"><h2><a href="{{ get_url(path='@/verge/docs/_index.md') }}">Docs</a></h2><p class="kicker">Written beside the code, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a> and <a href="{{ config.extra.github | safe }}/verge">verge</a></p></div>
+    <div class="head"><h2><a href="{{ get_url(path='@/verge/docs/_index.md') }}">Docs</a></h2><p class="kicker">Written beside the code, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a>, <a href="{{ config.extra.github | safe }}/verge">verge</a> and <a href="{{ config.extra.github | safe }}/verge-probe">verge-probe</a></p></div>
     <dl class="doc-rows">
       {%- for g in section.extra.groups %}
       <div><dt><a href="{{ get_url(path='@/verge/docs/_index.md') }}#{{ g.title | slugify }}">{{ g.title }}</a></dt><dd>{{ g.about }}</dd></div>
@@ -177,4 +179,4 @@
 <script id="mark" type="application/json">{{ load_data(path="design/out/mark.json", format="plain") | trim | safe }}</script>
 <script id="data" type="application/json">{{ landing | json_encode() | safe }}</script>
 {% endblock content %}
-{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/measured.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/dial.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/wires.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}
+{% block scripts %}<script type="module" src="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave-chart.js"></script><script src="{{ get_url(path='js/measured.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/dial.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/load-tickwave.js', cachebust=true) }}" defer></script><script src="{{ get_url(path='js/mark.js', cachebust=true) }}" defer></script>{% endblock scripts %}

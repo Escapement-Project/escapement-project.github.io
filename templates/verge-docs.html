@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Docs – Verge – {{ config.title }}{% endblock title %}
 {% block description %}Verge's docs: using the firmware and verge, the host interface, building it, and how it works inside.{% endblock description %}
+{% block og_title %}Verge's docs{% endblock og_title %}
+{% block og_description %}Verge's docs: using the firmware and verge, the host interface, building it, and how it works inside.{% endblock og_description %}
 {% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">{% endblock head %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
 {% block header %}{% set current = "verge/docs" %}{% include "partials/header.html" %}{% endblock header %}
@@ -13,7 +15,7 @@
     <h1>Verge's docs</h1>
     {% include "partials/find.html" %}
   </div>
-  <p class="intro">Each doc is written beside the code it describes, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a> and <a href="{{ config.extra.github | safe }}/verge">verge</a>.</p>
+  <p class="intro">Each doc is written beside the code it describes, in <a href="{{ config.extra.github | safe }}/mculink-verge">mculink-verge</a>, <a href="{{ config.extra.github | safe }}/verge">verge</a> and <a href="{{ config.extra.github | safe }}/verge-probe">verge-probe</a>.</p>
   <div class="found" id="found" role="listbox" aria-label="Sections found" hidden></div>
   {%- set groups = verge.extra.groups %}{% set level = 2 %}
   {% include "partials/verge-docs.html" %}
