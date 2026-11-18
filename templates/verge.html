@@ -26,14 +26,14 @@
     <div>
       <p class="lede">Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's.</p>
       <p>Through probe-rs, Verge is faster than NXP's firmware at every clock both complete. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
-      <p>Verge generates the SWD and JTAG transfer code at run time for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
+      <p>Verge generates the SWD and JTAG transfer code at runtime for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
       <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a> <a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a> <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
-      <p class="status">In development. The firmware and verge publish with the first release.</p>
+      <p class="status">In development. We publish the firmware and verge with the first release.</p>
     </div>
     <div class="product-figure dial-figure">
       {# Verge's headline as a dial, drawn by static/js/dial.js; without scripts the caption carries it. #}
       <div class="dialface" id="dialface"></div>
-      <p class="reading">{{ h.ratio }}× the write rate of NXP's own firmware, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
+      <p class="reading">{{ h.ratio }}× the write rate of NXP's firmware V3.174, over SWD through probe-rs: Verge {{ h.ours }} KiB/s at {{ h.oursAt }} MHz, NXP's firmware {{ h.stock }} KiB/s at {{ h.stockAt }} MHz, the fastest clock it reads right at.</p>
     </div>
   </div>
 </div>
@@ -57,9 +57,9 @@
 
 <section id="probes">
   <div class="wrap">
-    <div class="head"><h2>{% if ",probes," in written %}<a href="{{ get_url(path='@/verge/docs/probes.md') }}">On each probe</a>{% else %}On each probe{% endif %}</h2><p class="kicker">The standalone boards; not the MCU-Links built into evaluation boards</p></div>
+    <div class="head"><h2>{% if ",probes," in written %}<a href="{{ get_url(path='@/verge/docs/probes.md') }}">On each probe</a>{% else %}On each probe{% endif %}</h2><p class="kicker">The two probes, not the MCU-Links built into evaluation boards</p></div>
     <table class="probes">
-      <thead><tr><th scope="col"></th><th scope="col">MCU-Link</th><th scope="col">MCU-Link Pro</th></tr></thead>
+      <thead><tr><th scope="col"></th><th scope="col">Standalone MCU-Link</th><th scope="col">MCU-Link Pro</th></tr></thead>
       <tbody>
         <tr><th scope="row">Wires</th><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td></tr>
         <tr><th scope="row">SWO</th><td>UART encoding, up to 30 Mbaud</td><td>UART encoding, up to 30 Mbaud</td></tr>
@@ -84,10 +84,10 @@
   <div class="wrap" id="wire-box" data-tickwave="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/">
     <div class="head"><h2>{% if ",wires," in written %}<a href="{{ get_url(path='@/verge/docs/wires.md') }}">Wires</a>{% else %}Wires{% endif %}</h2><p class="kicker">As an analyser recorded them at 1 ns, <span class="nb">2026-11-04</span></p></div>
     <div>
-      <p class="wire-intro">Every figure here comes from a recording of Verge's wire.<span class="wire-hint"> Hover over or tap an underlined one to see the stretch of wire it comes from.</span></p>
+      <p class="wire-intro">Every figure here comes from a recording of Verge's wire.<span class="wire-hint"> Point at, tap or tab to an underlined one to see the stretch of wire it comes from.</span></p>
       <dl class="wire-rows">
         <div><dt>SWD</dt><dd>
-          <p>One read of the debug port's ID register: the <tickwave-ref for="w-swd" annotation="wire_swd/request/381228451">request</tickwave-ref>, the <tickwave-ref for="w-swd" annotation="wire_swd/ack/381228624">turnaround and acknowledge</tickwave-ref>, and <tickwave-ref for="w-swd" annotation="wire_swd/data/381228731">32 bits of data and parity</tickwave-ref>. Asked for 50 MHz, Verge sends each request at <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">50 MHz</tickwave-ref> and reads data at <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">37.5 MHz</tickwave-ref>.</p>
+          <p>One read of the target's flash: the <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">request</tickwave-ref>, the <tickwave-ref for="w-swd" annotation="wire_swd/ack/384679754">turnaround and acknowledge</tickwave-ref>, and <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">32 bits of data and parity</tickwave-ref>. Asked for 50 MHz, Verge sends each request at <tickwave-ref for="w-swd" annotation="wire_swd/request/384679581">50 MHz</tickwave-ref> and reads data at <tickwave-ref for="w-swd" annotation="wire_swd/data/384679862">37.5 MHz</tickwave-ref>.</p>
           <div class="recordings"><tickwave-view id="w-swd" src="{{ rec | safe }}gcc-swd-reads.tickwave" series="verge" download><span slot="title">Verge (GCC): 64 KiB flash reads at 50, 37.5, 30 and 10 MHz</span><span slot="facts">928&nbsp;ms; 2 channels: SWCLK, SWDIO; 412&nbsp;KiB</span></tickwave-view><noscript><p class="download"><a href="{{ rec | safe }}gcc-swd-reads.tickwave" download>Download gcc-swd-reads.tickwave</a></p></noscript></div>
         </dd></div>
         <div><dt>JTAG</dt><dd>
@@ -108,11 +108,11 @@
   <div class="wrap">
     <div class="head"><h2><a href="{{ config.base_url | safe }}/verge/measurements/">Measured</a></h2><p class="kicker">Against NXP's firmware, <span class="nb">{{ landing.date }}</span></p></div>
     <div>
-      <p class="claim">Verge writes <span class="ref" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> as fast as NXP's firmware over SWD through probe-rs: <span class="ref" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span> against <span class="ref" data-refs="stock@{{ h.stockAt }}">NXP's {{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, the fastest clock its firmware reads right at.</p>
+      <p class="claim">Through probe-rs, Verge writes over SWD at <span class="ref" data-refs="clang@{{ h.oursAt }} stock@{{ h.stockAt }}">{{ h.ratio }}×</span> the rate of NXP's firmware V3.174: <span class="ref" data-refs="clang@{{ h.oursAt }}">{{ h.ours }} KiB/s at {{ h.oursAt }} MHz</span>, against <span class="ref" data-refs="stock@{{ h.stockAt }}">{{ h.stock }} KiB/s at {{ h.stockAt }} MHz</span>, the fastest clock NXP's firmware reads right at.</p>
       <div class="two">
         <figure>
           <div class="chart"><tickwave-chart id="chart" end-labels readout="tooltip" table="table"></tickwave-chart></div>
-          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes through probe-rs against the SWD clock asked for, on an MSPM0L1306, Verge's Clang build against NXP's firmware V3.174. {{ landing.hostNote }} {{ landing.figureNote }}</figcaption>
+          <figcaption id="fig1"><b>Figure 1.</b> 4 KiB writes to an MSPM0L1306 through probe-rs, by the SWD clock asked for: Verge's Clang build and NXP's firmware V3.174. {{ landing.hostNote }} {{ landing.figureNote }}</figcaption>
         </figure>
         <figure>
           {# The table is the page's own: a reader without scripts gets every figure. The script adds the
@@ -129,7 +129,7 @@
             </tr>
             {%- endfor %}
           </table>
-          <figcaption><b>Table 1.</b> The same writes in KiB/s, the median of two runs, both of Verge's builds. {% if landing.tableNote %}{{ landing.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
+          <figcaption><b>Table 1.</b> The same writes in KiB/s, for both of Verge's builds. Each figure is the median of two runs. {% if landing.tableNote %}{{ landing.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
         </figure>
       </div>
     </div>
@@ -149,7 +149,7 @@
         <div class="core">
           <h3>CPU 0</h3>
           <p class="core-job">Answers the host</p>
-          <ul><li>USB and every endpoint</li><li>The serial consoles</li><li>The energy stream</li><li>LEDs, reboots</li></ul>
+          <ul><li>USB and every endpoint</li><li>The serial ports</li><li>The energy stream</li><li>LEDs, restarts</li></ul>
         </div>
         <div class="mailbox"><span>mailbox</span></div>
         <div class="core">
@@ -161,7 +161,7 @@
       {# The target's wires as a trace: across on a wide screen, down on a phone. #}
       <div class="arch-line wire" aria-hidden="true"><svg class="across" viewBox="0 0 120 24" preserveAspectRatio="none"><path d="M0,18 H14 V6 H34 V18 H44 V6 H74 V18 H84 V6 H96 V18 H120" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg><svg class="down" viewBox="0 0 24 64"><path d="M6,0 V8 H18 V20 H6 V28 H18 V44 H6 V52 H18 V58 H6 V64" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
       <div class="arch-end"><b>Target</b><span>SWD, JTAG, cJTAG</span></div>
-      <figcaption>CPU 1 takes no interrupts: it waits for work by polling a mailbox that CPU 0 raises, so nothing on its own core lands in the middle of a transfer. Every pin change of a transfer sits on one of the 150 MHz core's cycles. <a href="{{ get_url(path='@/verge/docs/architecture.md') }}">Architecture</a> and <a href="{{ get_url(path='@/verge/docs/code-generation.md') }}">Code generation</a> have the detail.</figcaption>
+      <figcaption>CPU 1 takes no interrupts. It waits for work by polling a mailbox that CPU 0 raises, so nothing on its own core lands in the middle of a transfer. Every pin change of a transfer sits on one of the 150 MHz core's cycles. <a href="{{ get_url(path='@/verge/docs/architecture.md') }}">Architecture</a> and <a href="{{ get_url(path='@/verge/docs/code-generation.md') }}">Code generation</a> have the detail.</figcaption>
     </figure>
   </div>
 </section>

@@ -1,5 +1,5 @@
 {
-  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+  "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; NXP's firmware reads right up to 20 MHz",
   "date": "2026-11-04",
   "clocks": [
     1,
@@ -68,7 +68,7 @@
   },
   "figure1": {
     "format": "tickwave-chart/1",
-    "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; stock reads right up to 20 MHz",
+    "source": "mculink-bench results/throughput/2026-11-04: SWD, probe-rs 17beb8e80 4 KiB writes on an MSPM0L1306, the median of two runs; NXP's firmware reads right up to 20 MHz",
     "x": {
       "name": "SWD clock asked for",
       "unit": "MHz",

@@ -1,6 +1,6 @@
 +++
 title = "Escapement Project"
-description = "Open debug tools that are correct, fast and easy to use. The first is Verge, open firmware for NXP's MCU-Link debug probes; tickwave is a web viewer for mixed-signal captures."
+description = "The first is Verge, open firmware for NXP's MCU-Link debug probes. tickwave is a web viewer for mixed-signal captures."
 
 # The hero's statement and its lede, which the link preview carries too (design/build.py).
 # The Source section's index, in this order. `summary` is the line on its link preview
@@ -23,7 +23,7 @@ name = "verge"
 summary = "Install, update and control Verge on NXP's MCU-Link, from the command line or a desktop app."
 icon = "verge"
 language = "Rust"
-about = "A command-line tool and a desktop app to install, update and control the firmware. A unit running Verge, or NXP's firmware from V3.122, updates without the ISP jumper. The app also records energy captures."
+about = "A command-line tool and a desktop app to install, update and control the firmware. A probe running Verge, or NXP's firmware from V3.122, updates without the ISP jumper. The app also records energy captures."
 
 [[extra.repos]]
 name = "verge-probe"
@@ -36,13 +36,13 @@ about = "The library under verge: probe discovery, firmware identification and u
 name = "mculink-bench"
 summary = "How Verge compares with NXP's firmware, and the tools that measure it."
 language = "Python, Rust"
-about = "The measurements, and the tools that take them: throughput through probe-rs and our own host, requested clocks checked on the wire, flash programming times. It builds the measurements page."
+about = "The measurements, and the tools that take them: throughput through probe-rs and our own host, the clocks asked for, checked on the wire, flash programming times. It builds the measurements page."
 
 [[extra.repos]]
 name = "mculink-stock-notes"
-summary = "What NXP's firmware for the MCU-Link does, observed on running units."
+summary = "What NXP's firmware for the MCU-Link does, observed on running probes."
 language = "Notes"
-about = "What NXP's firmware does, observed on running units: how it identifies itself, how it updates, and the clocks it puts on the wire. Each note says how it was observed."
+about = "What NXP's firmware does, observed on running probes: how it identifies itself, how it updates, and the clocks it puts on the wire. Each note says how it was observed."
 
 [[extra.repos]]
 name = "tickwave"

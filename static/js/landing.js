@@ -24,17 +24,17 @@ if (hero) {
 // The Verge section. A term names a wire or a feature, and the verge command that drives it shows
 // under the list, described in the tool's own help text. The page itself shows verge list, for a
 // reader without scripts.
-const READS = "Read target memory over SWD, JTAG or cJTAG, as probe-rs's read does.";
+const READS = "Read target memory through a probe over SWD, JTAG or cJTAG, as probe-rs's read does.";
 const COMMANDS = {
   list: [document.getElementById("cmd").textContent, document.getElementById("cmd-what").textContent],
   swd: ["verge read --chip MSPM0L1306 b32 0x20000000 4", READS],
   jtag: ["verge read --chip CC1312R --protocol jtag b32 0 64", READS],
   cjtag: ["verge read --chip CC1312R --protocol cjtag b32 0 64", READS],
-  oscan: ["verge read --chip CC1312R --protocol cjtag --cjtag-format oscan5 b32 0 64", "Read target memory over cJTAG in the scan format you ask for; OScan1 when left out."],
+  oscan: ["verge read --chip CC1312R --protocol cjtag --cjtag-format oscan5 b32 0 64", "The cJTAG scan format to connect in. OScan1 when left out."],
   power: ["verge power on", "Read or switch the target supply of an MCU-Link Pro running Verge."],
-  energy: ["verge energy watch", "Show the capture live: the newest pair, the total, and graphs of current and power."],
-  dio: ["verge dio --high 0,1,2", "Drive and read the four DIO pins of an MCU-Link or MCU-Link Pro running Verge."],
-  update: ["verge update", "Install a firmware on a unit, the best way its state allows."],
+  energy: ["verge energy watch", "Show the capture live: the newest sample, the total, and graphs of current and power."],
+  dio: ["verge dio --high 0,1,2", "Drive and read the four DIO pins of a probe running Verge: on an MCU-Link Pro's J19 header, or on a standalone MCU-Link's J8 pads."],
+  update: ["verge update", "Install a firmware on a probe, the best way its state allows."],
 };
 let commandShown = "list";
 function showCommand(key) {
