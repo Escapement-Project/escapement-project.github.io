@@ -1,14 +1,14 @@
 # Design tokens
 
-The colours, line patterns and type that the Escapement Project's pages and verge-gui share. One
-source, `tokens.toml`, generates everything else:
+This folder holds the colours, line patterns and type that the Escapement Project's pages and
+verge-gui share. One source, `tokens.toml`, generates everything else:
 
 | Output | For |
 |---|---|
 | `static/tokens.css` | the site, and any page that keeps a copy |
 | `static/fonts/` | the web fonts `tokens.css` loads, subset to Latin |
 | `design/out/tokens.rs` | verge-gui's colours, patterns, font list and Verge's mark in motion |
-| `design/out/mark.json`, `design/out/tickwave-mark.json` | Verge's and tickwave's marks in motion, which the landing page embeds |
+| `design/out/mark.json`, `design/out/tickwave-mark.json` | Verge's and tickwave's marks in motion, which the pages that show them embed |
 | `design/out/fonts/` | the fixed font files verge-gui embeds |
 | `static/favicon.ico`, `static/apple-touch-icon.png` | the sites' favicon and iOS icon |
 | `static/favicon-verge.ico` | the favicon on Verge's page and docs |
@@ -28,7 +28,7 @@ the repositories, from `content/_index.md`.
 
 ## Shared files
 
-Besides what the build generates, these hand-written files are shared by the project's pages:
+The project's pages also share these hand-written files:
 
 | File | What |
 |---|---|
@@ -37,29 +37,33 @@ Besides what the build generates, these hand-written files are shared by the pro
 | `design/header-verge.html` | Verge's group, for the header on Verge's pages: the site's and the measurements page's |
 | `design/footer.html` | the footer every page shows: the project's name and statement, and under them a line saying the project is not affiliated with NXP |
 | `static/js/face.js` | the day and night switch, and the turn between faces: the page dips to the new face's background and comes back up in it (base.css's `.face-cover`) |
-| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header brought back when the reader scrolls up where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
+| `static/js/header.js` | the header's hairline once the page has scrolled, the mark on the section of the page the reader is in, the header's return when the reader scrolls up on a page where it scrolls away, the published address for a page opened from disk, and the project's mark in motion, below |
 | `static/js/mark.js` | the marks in motion on their plates, below. A plate's mark waits for any mark the page plays first, `window.marksWait`, so two never play at once |
 | `static/js/copy.js` | a Copy button on each command (`.console`) and on each code block in a doc (`article.doc pre`), except a block marked as text or output, which is a program's output |
-| `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame (the contents in a rail beside the text, where the reader is marked on it, and narrow, a bar naming the section that opens the contents as a sheet). The markup is below |
+| `static/doc.css`, `static/js/doc.js` | a product's docs: the docs index, a doc's text, and its frame. The frame is the contents in a rail beside the text, with the reader's place marked on it. On a narrow screen it is a bar that names the section and opens the contents as a sheet. The markup is below |
 | `static/js/search.js` | a product's docs search: a field on the docs index and at the top of the rail, the sections found in the contents' place, the words marked in the page a result opens. Each product's build writes its index, below |
 
-Edit them here; the copies follow.
+Edit them here. The copies elsewhere are taken from these.
 
 ### A product's group in the header
 
-On a product's own pages the header shows the product's pages beside its name, on one rule, the
-page shown on a heavier stretch of it (base.css). A page's build puts the group in place of the
-product's link, which `design/header.html` has once:
+On a product's own pages the header shows the product's pages beside its name, on one rule. The page
+shown sits on a heavier stretch of the rule (base.css). A page's build puts the group in place of
+the product's link, which `design/header.html` has once:
 
 ```html
 <span class="product"><a href="{{base}}/verge/" data-page="verge">Verge</a><a href="{{base}}/verge/docs/" data-page="verge/docs">Docs</a><a href="{{base}}/verge/measurements/" data-page="verge/measurements">Measurements</a></span>
 ```
 
 The product's link comes first, then its pages. The build marks where the reader is with
-`aria-current`: the page's own entry `"page"`; the entry a page sits inside, as Docs is for a doc,
-`"true"`; and the product's link `"true"`, or `"page"` on the product's main page. Verge's group is
-`design/header-verge.html`, which the site and the measurements page both use; tickwave's site
-writes its own.
+`aria-current`:
+
+- the page's own entry: `"page"`;
+- the entry a page sits inside, as Docs is for a doc: `"true"`;
+- the product's link: `"true"`, or `"page"` on the product's main page.
+
+Verge's group is `design/header-verge.html`, which the site and the measurements page both use.
+tickwave's site writes its own.
 
 ### A product's main page
 
@@ -85,9 +89,9 @@ command, `.after` for a line after them and `.doc-rows` for the product's docs.
 
 ### A product's docs
 
-Each product's docs are built by that product, into the markup below; doc.css, doc.js, search.js
-and copy.js do the rest, so the docs read and work the same whoever built them. The site's are
-`templates/verge-docs.html` and `templates/verge-doc.html`; tickwave's site writes its own.
+Each product builds its own docs, into the markup below. doc.css, doc.js, search.js and copy.js do
+the rest, so the docs read and work the same whoever built them. The site's templates are
+`templates/verge-docs.html` and `templates/verge-doc.html`. tickwave's site writes its own.
 
 The docs index:
 
@@ -141,46 +145,47 @@ A doc page:
 </div>
 ```
 
-- The docs sit in groups or in one list. Grouped, the index has a `.group` heading over each list
-  and the rail a `<details class="group">` with a `<summary>` and its `<ul>`, the reader's group
-  open; in one list, the index has one `<div>` with no heading and the rail a bare `<ul>`. A doc
-  not yet written can be a `<span class="coming">` in place of its link.
-- The search field is `templates/partials/find.html`'s markup with the product's index at
-  `data-index` and its label naming the product's docs. Without it the page works as a plain list.
+- The docs sit in groups or in one list. In groups, the index has a `.group` heading over each list.
+  The rail has a `<details class="group">` for each, with a `<summary>` and its `<ul>`, and the
+  reader's group is open. In one list, the index has one `<div>` with no heading, and the rail a
+  bare `<ul>`. A doc not yet written can be a `<span class="coming">` in place of its link.
+- The search field is `templates/partials/find.html`'s markup, with the product's index at
+  `data-index`. Its label names the product's docs. Without it the page works as a plain list.
 - Each `.toc` link's fragment is the `id` of its heading in the doc. A subsection's list shows
   while the reader is in its section.
 - Headings h2 to h4 end with the link to themselves; the h1 has none.
-- In inline code (a `<code>` outside a `<pre>`), each word of up to 22 characters, a run between
-  spaces, is a `<span class="word">`, which doc.css keeps on one line: `<code><span
-  class="word">verge</span> <span class="word">update</span></code>`. A longer word, a path, is left
-  bare and breaks anywhere. A list item at 320 px holds 23 characters of code in Firefox, whose
-  code face is the wider, and the 23rd is left for punctuation against the word. A list inside a
+- In inline code (a `<code>` outside a `<pre>`), each word of up to 22 characters is a `<span
+  class="word">`, which doc.css keeps on one line. A word is a run between spaces: `<code><span
+  class="word">verge</span> <span class="word">update</span></code>`. A longer word, such as a path,
+  is left bare and breaks anywhere. A list item at 320 px holds 23 characters of code in Firefox,
+  whose code face is the wider. The 23rd is left for punctuation against the word. A list inside a
   list holds 19, so a longer word kept whole there sticks out past the text. The site's pass is
   `.github/code-words.py`, run after `zola build`.
 - The page's title is the doc's name as the rail lists it, then the product, then the project:
   "Host interface – Verge – Escapement Project", and the index's "Docs – Verge – Escapement
   Project".
-- The root needs the `js` class before the page draws, as the header needs it: without it, a narrow
-  page shows the contents above the text and no bar.
+- The root needs the `js` class before the page draws, as the header does. Without it, a narrow page
+  shows the contents above the text and no bar.
 
 ### The search index
 
 search.js reads `{"docs": [[title, address], ...], "sections": [[doc, id, heading, text], ...]}`
-from the field's `data-index`: the docs in the index's order, each doc's sections in page order,
-`doc` a doc's place in `docs`, every address relative to the index file. Each product's build writes
-it (the site's is `.github/search-index.py`, run after `zola build`), to this definition:
+from the field's `data-index`. The docs are in the index's order, and each doc's sections in page
+order. `doc` is a doc's place in `docs`. Every address is relative to the index file. Each product's
+build writes the index to this definition (the site's is `.github/search-index.py`, run after `zola
+build`):
 
 - A doc's text is its `article.doc` and nothing outside it.
 - A doc's title is its name as the rail lists it.
-- The first section is the text after the h1 and before the first h2 or h3 with an id, headed by
-  the doc's title, with id `""`, left out when it is empty.
+- The first section is the text after the h1 and before the first h2 or h3 with an id. Its heading
+  is the doc's title and its id is `""`. It is left out when it is empty.
 - Then each h2 or h3 with an id starts a section, which runs to the next h2 or h3 with an id. A
   heading without an id does not start one: its text joins the section it is in. A heading's
   section is kept even with no text of its own, as when an h3 follows its h2 directly. h4 and
   deeper stay in their section.
-- Text, a heading's included, is plain, its whitespace collapsed, with a space between blocks.
-  Left out wherever they sit, headings included: `svg`, `script`, `style`, the heading link
-  (`.anchor`) and the source line (`.doc-source`).
+- Text, a heading's included, is plain, with its whitespace collapsed and a space between blocks.
+  These are left out wherever they sit, headings included: `svg`, `script`, `style`, the heading
+  link (`.anchor`) and the source line (`.doc-source`).
 
 ## Keeping copies current
 
@@ -201,14 +206,13 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../tickwave/site/favicon-tickwave.ico
 ```
 
-Today's copies:
+The copies:
 
 - the measurements page in mculink-bench: `page/tokens.css`, `page/out/fonts/`, `page/dial.svg`,
   Verge's favicon `page/favicon-verge.ico`, and the shared files `page/base.css`,
   `page/header.html`, `page/header-verge.html`, `page/footer.html`, `page/face.js` and
-  `page/header.js`. The page inlines all but the fonts, so
-  after updating a copy, rebuild the page; `page/build.py --check` fails while the page still
-  carries the old one.
+  `page/header.js`. The page inlines all but the fonts, so after updating a copy, rebuild the page.
+  `page/build.py --check` fails while the page still carries the old one.
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
@@ -222,17 +226,17 @@ The check rebuilds everything from `tokens.toml`, the marks and the content the 
 fails if a committed output differs from that build, if the build no longer makes a file it made
 before (`design/out/outputs.txt` lists what the last build wrote), or if a copy differs from the
 output, mark or shared file of the same name. Copies are matched by name, so the build refuses two
-outputs, marks or shared files that share a name and differ. It always writes the same bytes for
-the same source, on any system, which is why it pins fontTools, Brotli, resvg and Pillow exactly.
-The publish workflow runs the check, and the measurements page's, before it builds the site.
+outputs, marks or shared files that share a name and differ. It always writes the same bytes for the
+same source, on any system. That is why it pins fontTools, Brotli, resvg and Pillow exactly. The
+publish workflow runs the check, and the measurements page's, before it builds the site.
 
 ## Colours
 
-Every colour has a role, and a role keeps its meaning wherever it appears. Each has a day and a
+Every colour has a role, and a role keeps its meaning wherever it appears. Each role has a day and a
 night value. `tokens.css` sets the day values on `:root`. It sets the night values when the page
 sets `data-face="night"` on `<html>`, or when the system prefers dark and the page has not set
-`data-face="day"`. Any element with `data-face` takes that face's values, as the switch's turn
-does to show the new face over the old.
+`data-face="day"`. Any element with `data-face` takes that face's values. The switch's turn uses
+that to show the new face over the old.
 
 | Role | Day | Night | For |
 |---|---|---|---|
@@ -258,30 +262,30 @@ does to show the new face over the old.
 | `series-context` | `#47525c` | `#aab5be` | reference probes in data |
 
 Every text role (`ink`, `ink-2` and both status inks) keeps at least 4.5:1 on page, surface, raised
-and sunken, in both faces. Ink is for text and lines and fill is for areas, in each status pair. A
-status colour always comes with an icon or words: fault and attention sit close, 10.3 apart in
-normal vision and 2.1 under deuteranopia by day (OKLab ΔE ×100).
+and sunken, in both faces. In each status pair, the ink is for text and lines, and the fill for
+areas. A status colour always comes with an icon or words, because fault and attention sit close:
+10.3 apart in normal vision and 2.1 under deuteranopia by day (OKLab ΔE ×100).
 
 Interaction has no hue. Focus is a 2 px ink ring. What the pointer is on gets a wash of ink at
 12 % (`--wash`), and what is selected an ink fill with page text.
 
 Nothing moves under the reader. A readout's words and figures hold their places as the values
 change: the figures are tabular, and a word that changes is set as wide as its widest form. A label
-keeps off what it reads. An embedded chart or capture holds its height from the first paint, before
-its script loads, and keeps it. A control stays where the reader pressed it. One that opens or
-switches something undoes it when pressed again: Open becomes Close.
+keeps off what it reads. An embedded chart or recording holds its height from the first paint,
+before its script loads, and keeps it. A control stays where the reader pressed it. One that opens
+or switches something undoes it when pressed again: Open becomes Close.
 
 ## Data
 
 A colour follows the probe it measures, never its rank, so a filter never repaints what remains.
 Verge and NXP's firmware are 18.0 apart under colour-vision deficiency and 18.9 in normal vision
 (OKLab ΔE ×100) on both faces' surfaces. Both status inks are at least 9.7 from both. The status
-fills come closer: by day the fault fill is 6.1 from Verge's teal under protanopia, which their icon
-or words make up for. Data sits on page, surface or raised, never in a sunken well: by day Verge's
-teal is 2.98:1 on sunken, under the 3:1 a line needs. No third hue
+fills come closer: by day the fault fill is 6.1 from Verge's teal under protanopia. The icon or
+words that come with a status colour make up for that. Data sits on page, surface or raised, never
+in a sunken well: by day Verge's teal is 2.98:1 on sunken, under the 3:1 a line needs. No third hue
 passed against all of these, so reference probes share the context colour and are told apart by
-pattern and name. The day context is a step darker than `ink-2`: at `ink-2` it sat 12.7 from
-Verge's teal, under the floor of 15.
+pattern and name. The day context is a step darker than `ink-2`, because at `ink-2` it would sit
+12.7 from Verge's teal, under the floor of 15.
 
 Patterns, as stroke dash arrays at a 2 px line:
 
@@ -313,20 +317,20 @@ has one Catppuccin colour, set in `[code]` in `tokens.toml` and written as `--co
 
 Comments and punctuation take `ink-2`. Nothing is set in italics.
 
-The highlighters paint with Catppuccin Latte's theme, and `[code-latte]` gives the role each Latte
-colour becomes. `build.py` refuses a role's day colour that is not one of its own. tickwave's docs
-map them as they highlight. Verge's docs are highlighted by Zola in class mode, and
+The highlighters paint with Catppuccin Latte's theme. `[code-latte]` gives the role each Latte
+colour becomes, and `build.py` refuses a role whose day colour is not one that `[code-latte]` gives
+it. tickwave's docs map the colours as they highlight. Zola highlights Verge's docs in class mode.
 `.github/code-colours.py`, run after `zola build`, rewrites Zola's `giallo.css` so each class takes
 its role. Zola's highlighter reads a block marked `text` as plain, like one with no language, so
-`.github/verge-docs.py` marks program output `output` instead. `config.toml` gives `output` a grammar
-that highlights nothing.
+`.github/verge-docs.py` marks program output `output` instead. `config.toml` gives `output` a
+grammar that highlights nothing.
 
 Latte gets its look from chroma, not contrast. Seven of its nine colours are under 4.5:1 on the
-surface a code block sits on, `type` at 2.4:1 the lowest. So each day colour has a second value at
-its own hue, darkened until it keeps 4.5:1 on page, surface, raised and sunken. The pages use these
-when the reader's system asks for more contrast (`prefers-contrast: more`). Darkening brings red and
-maroon together, so `parameter` sits darker than the rest, as far from `builtin` as Latte has it.
-Mocha keeps at least 7.5:1 on every ground, so night has one set.
+surface a code block sits on, and the lowest is `type`, at 2.4:1. So each day colour has a second
+value at its own hue, darkened until it keeps 4.5:1 on page, surface, raised and sunken. The pages
+use these when the reader's system asks for more contrast (`prefers-contrast: more`). Darkening
+brings red and maroon together, so `parameter` sits darker than the rest, as far from `builtin` as
+Latte has it. Mocha keeps at least 7.5:1 on every ground, so night has one set.
 
 These colours appear only in code. They never mark status or data, so they are not held apart
 from those colours: by day `type`, `number`, `builtin` and `parameter` sit close to the status
@@ -346,11 +350,11 @@ egui has no variable axes, so verge-gui gets fixed instances, named as the fonts
 name them: Saira Expanded Medium and SemiBold, Hanken Grotesk Regular, Medium and SemiBold, and
 Martian Mono Medium and SemiExpanded Medium.
 
-Until a web font loads, its text sets in a fallback face: Arial, or Courier New for Martian Mono,
-scaled so the site's text takes the same width on average, with the web font's ascent and descent.
-Most lines then break where they will in the web font, so little moves when it arrives.
-`design/fallbacks.py` fits the numbers in `[[fallbacks]]` from the fixed instances and the built
-site's text.
+Until a web font loads, its text sets in a fallback face: Arial, or Courier New for Martian Mono.
+The fallback is scaled so the site's text takes the same width on average, and it has the web font's
+ascent and descent. Most lines then break where they will in the web font, so little moves when it
+arrives. `design/fallbacks.py` fits the numbers in `[[fallbacks]]` from the fixed instances and the
+built site's text.
 
 The fonts are under the SIL Open Font License 1.1, with no Reserved Font Name. Each family's
 licence sits beside its files.
@@ -359,11 +363,10 @@ licence sits beside its files.
 
 There are three marks in `marks/`: the project's dial with one rising edge, Verge's V of samples,
 and tickwave's wave on its ticks. They and every image drawn from them are under CC BY 4.0, with a
-note on their use in the repository's README.
-Each has a master on a 64-unit grid. At 16, 24 and 32 px, a master fitted to the pixel grid takes
-over (`dial-16.svg`, `verge-24.svg` and so on). Its straight edges sit on whole pixels, so the mark
-stays sharp where the scaled master would blur. A fitted master fills its plate at the size it
-names.
+note on their use in the repository's README. Each has a master on a 64-unit grid. At 16, 24 and
+32 px, a master fitted to the pixel grid takes over (`dial-16.svg`, `verge-24.svg` and so on). Its
+straight edges sit on whole pixels, so the mark stays sharp where the scaled master would blur. A
+fitted master fills its plate at the size it names.
 
 An icon is a mark on a plate, both set in `tokens.toml` by colour role:
 
@@ -373,21 +376,21 @@ An icon is a mark on a plate, both set in `tokens.toml` by colour role:
 | `verge` | the V in `lume` | `plate` | verge-gui's app icon, the favicon on Verge's page and docs |
 | `tickwave` | the wave in `lume`, its other ticks in `plate-line` | `plate` | tickwave's icon and its pages' favicon, its repository's preview |
 
-A mark's parts with `class="line"` take the icon's `line` colour at its `line-opacity`; the rest take
-its `ink`. tickwave's mark is the one that has them: the ticks under the wave's edges are lume, the
-ticks between them grey. Its fitted masters keep two pulses at every size, with fewer, thinner
-ticks than the scaled master would draw.
+A mark's parts with `class="line"` take the icon's `line` colour at its `line-opacity`. The rest
+take its `ink`. tickwave's mark is the one that has them: the ticks under the wave's edges are lume,
+and the ticks between them grey. Its fitted masters keep two pulses at every size, with fewer,
+thinner ticks than the scaled master would draw.
 
 The plate's corners round by 14/64 of its side, and a 64-unit master sits an eighth of the side in
 from each edge. iOS and GitHub round an icon's corners themselves, so the iOS icon and the avatar
 are square. The macOS icon follows Apple's grid: an 824 plate on a 1024 canvas.
 
-The shared header (`design/header.html`, through `{{mark}}`) and the landing page's Verge plate
-inline the 64-unit masters. Those two masters must not refer to anything by `url(#id)`: a page that
-sets another base URL breaks the reference. The fitted masters are only ever drawn into images, so
-their clips are fine. Two drawings carry their own copy of the dial's geometry, which nothing
-checks: the dial's larger step in `static/js/dial.js`, and the not-found page's dial with its
-edge left flat in `templates/404.html`.
+The shared header (`design/header.html`, through `{{mark}}`), the landing page's hero and plates,
+and Verge's page's plate inline the 64-unit masters of the dial, the V and the wave. An inlined
+master must not refer to anything by `url(#id)`: a page that sets another base URL breaks the
+reference. The fitted masters are only ever drawn into images, so their clips are fine. Two drawings
+carry their own copy of the dial's geometry, which nothing checks: the dial's larger step in
+`static/js/dial.js`, and the not-found page's dial with its edge left flat in `templates/404.html`.
 
 Verge's app icon as SVG is `verge-icon.svg`, not `verge.svg`: that is the mark's name. tickwave's is
 `tickwave-icon.svg`, for the same reason.
@@ -397,17 +400,17 @@ The org's avatar is uploaded by hand, in the org's settings on GitHub:
 
 ## The marks in motion
 
-Verge's mark moves on the landing page's Verge plate, on Verge's page and in verge-gui. It takes
-tickwave's grammar of a capture taken again. The V dims to grey as a floor and stems grow under it.
-A beam sweeps the plate. As it reaches each sample, the grey one fades and a new one rises in lume
-from the floor to its place on the project's step. The step has the low run, the middle sample
-half-way up the riser, then the high run. The riser's stem is lume: the step's edge, as tickwave's
-ruler and the project's mark show one. The mark holds on the step, and the step dims over the
-hold's end. The next sweep takes the V again the same way.
+Verge's mark moves on the landing page's Verge plate, on Verge's page and in verge-gui. Its motion
+is a capture taken again, drawn in tickwave's visual language. The V dims to grey while a floor and
+stems grow under it. A beam sweeps the plate. As it reaches each sample, the grey one fades and a
+new one rises in lume from the floor to its place on the project's step. The step has the low run,
+the middle sample half-way up the riser, then the high run. The riser's stem is lume: it is the
+step's edge, shown as tickwave's ruler and the project's mark show one. The mark holds on the step,
+and the step dims as the hold ends. The next sweep takes the V again the same way.
 
-Both draw it from one source, so they cannot drift apart. The samples' places come from the marks:
-`marks/verge.svg`, and `marks/verge-24.svg` for verge-gui's 24 px strip. Everything else is in
-`tokens.toml`'s `[motion.mark]`:
+The site and verge-gui draw it from one source, so they cannot drift apart. The samples' places come
+from the marks: `marks/verge.svg`, and `marks/verge-24.svg` for verge-gui's 24 px strip. Everything
+else is in `tokens.toml`'s `[motion.mark]`:
 
 - **Times:** the sweep, a sample's rise, the hold on the step, the dim before each sweep (which is
   also how long the stems take to grow and retract), and the rest between plays where it loops.
@@ -418,18 +421,18 @@ Both draw it from one source, so they cannot drift apart. The samples' places co
   samples draw under the lit samples, and the beam over them.
 
 The build writes the result twice: as `tokens.rs`'s `mark` module for verge-gui, and as
-`out/mark.json`, which `templates/index.html` embeds for `static/js/mark.js`. Each drawing comes
-with its places and widths in its own units: the 64-unit master on its plate, the fitted 24 px
+`out/mark.json`, which the landing page and Verge's page embed for `static/js/mark.js`. Each drawing
+comes with its places and widths in its own units: the 64-unit master on its plate, the fitted 24 px
 master, and the landing page's 64-unit box.
 
-To change the timing, edit `tokens.toml` and rebuild, then copy `tokens.rs` into verge
-(`--check` reports the copy until then).
+To change the timing, edit `tokens.toml` and rebuild, then copy `tokens.rs` into verge. `--check`
+reports the copy until then.
 
-tickwave's mark moves on the landing page's tickwave plate and on tickwave's page. The time axis zooms in on one rising
-edge, which glides to the middle, until it is the only edge in view: the project's step. It holds
-there and zooms back out. Its times are Verge's, so both marks reach the step, hold and return
-together: it stays still while Verge's samples dim, then zooms in over Verge's sweep and rise. The
-zoom's own tokens are in `[motion.tickwave-mark]`:
+tickwave's mark moves on the landing page's tickwave plate and on tickwave's page. The time axis
+zooms in on one rising edge, which glides to the middle, until it is the only edge in view: the
+project's step. It holds there and zooms back out. Its times are Verge's, so both marks reach the
+step, hold and return together. It stays still while Verge's samples dim, then zooms in over Verge's
+sweep and rise. The zoom's own tokens are in `[motion.tickwave-mark]`:
 
 - **The edge:** the rising edge it zooms to.
 - **The scale:** how far it zooms. The build fails unless every other edge leaves the wave's run.
@@ -437,20 +440,20 @@ zoom's own tokens are in `[motion.tickwave-mark]`:
   as at rest.
 
 The wave and ruler come from `marks/tickwave.svg`. The build writes them with the times to
-`out/tickwave-mark.json`, which the landing page and tickwave's page embed for `static/js/mark.js`. A plate names its
-mark with `data-mark="verge"` or `data-mark="tickwave"`.
+`out/tickwave-mark.json`, which the landing page and tickwave's page embed for `static/js/mark.js`.
+A plate names its mark with `data-mark="verge"` or `data-mark="tickwave"`.
 
-The project's mark moves in the header, as the logo on every page of the project, and in the
-landing page's hero. Its edge is a signal through the ring. In Lock, which the hero plays as it
-comes into view, the ring opens on the mark's low run alone, flat as the not-found page draws it.
-Then a chirp passes through the ring at one speed, its pulses widening. It slows to rest
-as one rising edge reaches the centre, which is the mark. In Again, which the logo plays when a
-mouse or pen reaches it, the signal moves on from the mark through a new chirp and locks again. It
-gathers speed as Lock sheds it. A tap follows the logo's link and plays nothing. tickwave's ruler
-runs under the signal while it moves and fades once it stops: a raised tick on every edge, lower
-ones between, in `[icon.tickwave]`'s colours, so a change to tickwave's icon carries into it. The
-ruler passes behind the ring, so a page that shows the mark faint mixes the ring's colour opaque
-rather than lowering its opacity, as the hero does.
+The project's mark moves in the header, as the logo on every page of the project, and in the landing
+page's hero. Its edge is a signal through the ring. In Lock, which the hero plays as it comes into
+view, the ring opens on the mark's low run alone, flat as the not-found page draws it. Then a chirp
+passes through the ring at one speed, its pulses widening. It slows to rest as one rising edge
+reaches the centre, which is the mark. In Again, which the logo plays when a mouse or pen reaches
+it, the signal moves on from the mark through a new chirp and locks again. It gathers speed as Lock
+sheds it. A tap follows the logo's link and plays nothing. tickwave's ruler runs under the signal
+while it moves, and fades once it stops. It has a raised tick on every edge and lower ones between,
+in `[icon.tickwave]`'s colours, so a change to tickwave's icon carries into it. The ruler passes
+behind the ring. So a page that shows the mark faint, as the hero does, mixes the ring's colour
+opaque rather than lowering its opacity.
 
 Its tokens are in `[motion.project-mark]`:
 
@@ -469,10 +472,11 @@ Its tokens are in `[motion.project-mark]`:
 The build reads the mark's geometry from `marks/dial.svg` (the ring's radii, the edge's width, its
 runs and riser) and writes it with the tokens into `tokens.css` as `--project-mark-*` properties.
 `static/js/header.js` reads them there, so every page that has the shared header and tokens has the
-logo's motion without embedding anything; a page whose `tokens.css` lacks them keeps the mark still.
-The two routes are the rule: a mark that belongs to the header takes its motion from `tokens.css`, a
-mark on a plate from the JSON its page embeds. At rest the mark is the page's own markup and refers
-to nothing by id. Its clips exist only while it moves, as Firefox's reader view breaks such references.
+logo's motion without embedding anything. A page whose `tokens.css` lacks them keeps the mark still.
+The two routes are the rule: a mark that belongs to the header takes its motion from `tokens.css`,
+and a mark on a plate takes it from the JSON its page embeds. At rest the mark is the page's own
+markup and refers to nothing by id. Its clips exist only while it moves, because Firefox's reader
+view breaks such references.
 
 ## Link previews
 
@@ -485,8 +489,8 @@ social preview with its name, the `summary` from `content/_index.md`, its langua
 The previews are drawn on the night face, with the plate as ground. They use the fixed fonts the
 build makes and never the system's, so any machine draws the same bytes. The build fails when a
 character has no glyph in its font, or when text would run past its room: a name into the icon, a
-summary into the rule below it. Change the headline or a summary and `--check` reports the preview
-as stale.
+summary into the rule below it. Change the statement, the lede or a summary, and `--check` reports
+the preview as stale.
 
-GitHub takes a repository's preview by hand, in the repository's settings:
+A repository's preview is uploaded to GitHub by hand, in the repository's settings:
 `design/out/previews/<repository>.png`.

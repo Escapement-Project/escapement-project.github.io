@@ -18,13 +18,13 @@ the index, and serve `public/` to try the search.
 | `templates/` | the page templates: `base.html` for every page, `index.html` for the landing page, `verge.html` for Verge's page, `verge-docs.html` and `verge-doc.html` for its docs, `404.html` for any address without a page, and `sitemap.xml`, Zola's with the measurements page added |
 | `content/_index.md` | the landing page's description and the Source section's repositories, with each one's preview summary |
 | `content/verge/_index.md` | Verge's page, and its docs: their groups, order, addresses and where each lives |
-| `static/base.css` | the base every page of the project shares: header, sections, type, a product's main page, figures, tables, Copy buttons and footer, naming colour roles, never values |
+| `static/base.css` | the sheet every page of the project shares: header, sections, type, a product's main page, figures, tables, Copy buttons and footer. It names colour roles, never values |
 | `static/site.css` | the site's own pages' parts (the landing page, Verge's page and docs, the not-found page), after `base.css` |
 | `design/header.html`, `design/header-verge.html`, `design/footer.html` | the header and footer every page of the project shows, and Verge's group in the header on Verge's pages; `templates/partials/header.html` fills the header in for Zola |
 | `static/js/face.js` | the day and night switch, on every page |
-| `static/js/header.js` | the header's hairline, the mark on the section in view, the header brought back on the way up where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
+| `static/js/header.js` | the header's hairline, the mark on the section in view, the header's return when the reader scrolls up on a page where it scrolls away, and the project's mark in motion (the logo on hover, the landing's hero), on every page |
 | `static/doc.css`, `static/js/doc.js` | the docs, shared with tickwave's: the docs index, a doc's text, the contents in a rail, the section the reader is in, and the sheet narrow screens open from the bar |
-| `static/js/search.js` | the docs' search, on the docs' index and every doc page, shared with tickwave's docs |
+| `static/js/search.js` | the docs' search, on the docs index and every doc page, shared with tickwave's docs |
 | `static/js/landing.js` | the landing page's hero mark, which it has `header.js` play as it arrives and the plates' marks wait for, and its Verge section's commands |
 | `static/js/dial.js` | Verge's headline as a dial, at the head of Verge's page |
 | `static/js/measured.js` | Figure 1 and Table 1 on Verge's page, and the links between them and the claim |
@@ -39,24 +39,21 @@ the index, and serve `public/` to try the search.
 | `.github/workflows/publish.yml` | checks the generated files, builds the site with the measurements page and Verge's docs, writes the search index, and publishes it to GitHub Pages |
 
 `static/tokens.css`, `static/fonts/`, `static/favicon.ico`, `static/favicon-verge.ico`,
-`static/apple-touch-icon.png`, `static/preview.png` and `design/out/` are generated: edit
-`design/tokens.toml`, the marks in `design/marks/` or the content the previews show, and run
-`uv run design/build.py` rather than editing them.
+`static/apple-touch-icon.png`, `static/preview.png` and `design/out/` are generated. Don't edit
+them. Edit `design/tokens.toml`, the marks in `design/marks/` or the content the previews show, then
+run `uv run design/build.py`.
 
-The measurements page keeps copies of `base.css`, the header, Verge's group, the footer, `face.js`
-and `header.js`, as it does of the tokens. tickwave's site keeps those and `copy.js`, `doc.css`,
-`doc.js`, `search.js` and `mark.js`, its favicon from `design/out/icons/`, its mark from `design/marks/`
-and the mark's motion from `design/out/`. `design/README.md` says how the
-copies are checked.
+The measurements page and tickwave's site keep copies of the shared files: `design/README.md` lists
+them and says how they are checked.
 
-The landing page and Verge's page work without scripts: their figures are in the text, and Verge's
+The landing page and Verge's page work without scripts. Their figures are in the text. Verge's
 page has Table 1, which Zola renders from `data/landing.json`, and a download link under each
-recording. Scripts add Verge's dial, Figure 1 and the highlights that link the claim, the figure and
-the table, all on Verge's page, and the landing's commands and tickwave's read of a recording. What
-only a script makes work stays out without one: the day and night switch, the underlines that point
-at something, and the figures it draws. tickwave's `<tickwave-chart>` draws Figure 1, loaded from
-tickwave's own site on this origin at the version `config.toml` pins; the pages load no fonts or
-scripts from anywhere else.
+recording. On Verge's page, scripts add the dial, Figure 1, and the highlights that link the claim,
+the figure and the table. On the landing page they add the Verge section's commands and tickwave's
+read of a recording. Without scripts, a page leaves out what only a script makes work: the day and
+night switch, the underlines that point at something, and the figures a script draws. tickwave's
+`<tickwave-chart>` draws Figure 1. It loads from tickwave's own site on this origin, at the version
+`config.toml` pins. The pages load no fonts or scripts from anywhere else.
 
 ## The measurements page
 
@@ -70,25 +67,25 @@ ln -s ../../../mculink-bench/page/out static/verge/measurements
 Git ignores the link. `zola serve` follows it, so a rebuilt measurements page shows on the next
 reload.
 
-To publish, the workflow copies `page/out` from mculink-bench's default branch in place of the link,
-with `.github/measurements.py`. The copy loads the site's fonts rather than its own, so a reader
-downloads each font once. A new measurements page goes live on the workflow's next run: push here,
-or run it by hand. The page's wire section cites annotations in the recordings, so the workflow
-also checks out their sidecars from mculink-recordings (the recordings themselves load from that
-repository's own site). The workflow needs mculink-bench and mculink-recordings to be public, and
-this repository's Pages settings to deploy from GitHub Actions.
+To publish, the workflow runs `.github/measurements.py`, which copies `page/out` from
+mculink-bench's default branch in place of the link. The copy loads the site's fonts rather than its
+own, so a reader downloads each font once. A new measurements page goes live on the workflow's next
+run: push here, or run it by hand. The page's wire section cites annotations in the recordings, so
+the workflow also checks out their sidecars from mculink-recordings. The recordings themselves load
+from that repository's own site. The workflow needs mculink-bench and mculink-recordings to be
+public, and this repository's Pages settings to deploy from GitHub Actions.
 
 ## Verge's docs
 
 Verge's docs live beside the code they describe, in mculink-verge, verge and verge-probe, so a
 change to a command updates its doc in the same commit. `content/verge/_index.md` lists them: their
 groups, order, addresses under `/verge/docs/`, and the file each comes from. `.github/verge-docs.py`
-copies them into `content/verge/docs/`, which git ignores, from checkouts beside this one (or the
-ones `--repo NAME=PATH` names). Links between listed docs become page links, which `zola build`
-checks, and one that names its doc by file name reads as the doc's name, as the contents list it;
-other links go to the file on GitHub. An SVG image from the doc's own repository, on a line of its
+copies them into `content/verge/docs/`, which git ignores, from checkouts beside this one or the
+ones `--repo NAME=PATH` names. A link between listed docs becomes a page link, which `zola build`
+checks. A link that names its doc by file name reads as the doc's name, as the contents list it.
+Other links go to the file on GitHub. An SVG image from the doc's own repository, on a line of its
 own, is copied into the page as a figure, so the site's colours, fonts and day and night faces reach
-it; its alt text becomes the figure's accessible name. A listed doc that does not exist yet shows as
+it. Its alt text becomes the figure's accessible name. A listed doc that does not exist yet shows as
 coming. Run it again after a doc changes. The workflow does the same from each repository's default
 branch, so those repositories must be public too.
 
