@@ -52,11 +52,12 @@ shown sits on a heavier stretch of the rule (base.css). A page's build puts the 
 the product's link, which `design/header.html` has once:
 
 ```html
-<span class="product"><a href="{{base}}/verge/" data-page="verge">Verge</a><a href="{{base}}/verge/docs/" data-page="verge/docs">Docs</a><a href="{{base}}/verge/measurements/" data-page="verge/measurements">Measurements</a></span>
+<span class="product"><a href="{{base}}/verge/" data-page="verge">Verge</a><a href="{{base}}/verge/docs/" data-page="verge/docs" aria-label="Verge docs">Docs</a><a href="{{base}}/verge/measurements/" data-page="verge/measurements">Measurements</a></span>
 ```
 
-The product's link comes first, then its pages. The build marks where the reader is with
-`aria-current`:
+The product's link comes first, then its pages. Docs shows as "Docs", and its accessible name
+names the product (`aria-label="Verge docs"`), so a screen reader that lists the page's links
+says whose docs they are. The build marks where the reader is with `aria-current`:
 
 - the page's own entry: `"page"`;
 - the entry a page sits inside, as Docs is for a doc: `"true"`;
