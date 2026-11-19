@@ -43,7 +43,6 @@
   <div class="wrap">
     <div class="head"><h2>{% if ",getting-started," in written %}<a href="{{ get_url(path='@/verge/docs/getting-started.md') }}">Install and update</a>{% else %}Install and update{% endif %}</h2><p class="kicker">With verge, a command line and a desktop app for Linux, Windows and macOS</p></div>
     <div>
-    <p class="status">These steps work from the first release, which isn't out yet.</p>
     <ol class="steps">
       <li><h3>Get verge</h3><p>Download the archive for your system from <a href="{{ config.extra.github | safe }}/verge/releases">verge's releases</a>. Each holds the command line and the desktop app, with a checksum and a signature.</p></li>
       <li><h3>See what is attached</h3><div class="console"><code><span aria-hidden="true">$</span>verge list</code><p>Each MCU-Link, the firmware it runs, and how it can update.</p></div></li>

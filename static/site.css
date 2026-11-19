@@ -146,9 +146,7 @@ html:not(.js) #tickwave .product-figure { display: none; }
   .notfound svg { width: 96px; height: 96px; }
 }
 
-/* Verge's page: its head (base.css), then sections as the landing page's. Until the first release a
-   line over the install steps says so, as one under the ways in does. */
-#install .status { margin-bottom: 24px; }
+/* Verge's page: its head (base.css), then sections as the landing page's. */
 /* What each probe has: features down the side, the two probes across, read from the left. */
 .probes th, .probes td { text-align: left; white-space: normal; vertical-align: top; padding: 9px 12px 9px 0; }
 .probes thead th { font: 600 15px/1.3 var(--font-text); }
