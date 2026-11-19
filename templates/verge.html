@@ -56,7 +56,7 @@
 <section id="probes">
   <div class="wrap">
     <div class="head"><h2>{% if ",probes," in written %}<a href="{{ get_url(path='@/verge/docs/probes.md') }}">On each probe</a>{% else %}On each probe{% endif %}</h2><p class="kicker">The two probes, not the MCU-Links built into evaluation boards</p></div>
-    <table class="probes">
+    <div class="scroll-x"><table class="probes">
       <thead><tr><th scope="col"></th><th scope="col">Standalone MCU-Link</th><th scope="col">MCU-Link Pro</th></tr></thead>
       <tbody>
         <tr><th scope="row">Wires</th><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td><td>SWD, JTAG, and cJTAG in OScan1, 2, 5 and 6</td></tr>
@@ -69,7 +69,7 @@
         <tr><th scope="row">Verge Aux</th><td>A second interface, for tools to use while a debugger holds the probe</td><td>A second interface, for tools to use while a debugger holds the probe</td></tr>
         <tr><th scope="row">Updates</th><td>With verge, without the ISP jumper</td><td>With verge, without the ISP jumper</td></tr>
       </tbody>
-    </table>
+    </table></div>
   </div>
 </section>
 
@@ -115,7 +115,7 @@
         <figure>
           {# The table is the page's own: a reader without scripts gets every figure. The script adds the
              highlights, by these rows' clocks, cells' series and "series@MHz" references. #}
-          <table id="table">
+          <div class="scroll-x"><table id="table">
             <tr><th rowspan="2" class="clock">MHz</th><th colspan="2" class="group">Verge</th><th class="group">NXP's firmware</th></tr>
             <tr><th data-s="clang">Clang</th><th data-s="gcc">GCC</th><th data-s="stock">V3.174</th></tr>
             {%- for m in landing.clocks %}{% set i = loop.index0 %}
@@ -126,7 +126,7 @@
               {%- endif %}{% endfor %}{% endfor %}
             </tr>
             {%- endfor %}
-          </table>
+          </table></div>
           <figcaption><b>Table 1.</b> The same writes in KiB/s, for both of Verge's builds. Each figure is the median of two runs. {% if landing.tableNote %}{{ landing.tableNote }} {% endif %}* NXP's firmware reads wrong at that clock.</figcaption>
         </figure>
       </div>
