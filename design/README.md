@@ -207,7 +207,7 @@ uv run design/build.py --check ../mculink-bench/page/tokens.css ../mculink-bench
     ../tickwave/site/footer.html ../tickwave/site/face.js ../tickwave/site/header.js \
     ../tickwave/site/copy.js ../tickwave/site/doc.css ../tickwave/site/doc.js ../tickwave/site/search.js \
     ../tickwave/site/mark.js ../tickwave/site/tickwave.svg ../tickwave/site/tickwave-mark.json \
-    ../tickwave/site/favicon-tickwave.ico
+    ../tickwave/site/favicon-tickwave.ico ../tickwave/site/card-tickwave.png
 ```
 
 The copies:
@@ -220,11 +220,11 @@ The copies:
 - verge-gui in verge: `gui/src/tokens.rs`, the fixed fonts and their licences in `gui/fonts/`, and
   the app icon's PNGs in `gui/icons/`.
 - tickwave's site: `site/tokens.css`, the web fonts and their licences in `site/fonts/`,
-  `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, its mark
-  `site/tickwave.svg` from `marks/`, the mark's motion `site/tickwave-mark.json` from `out/`, and
-  the shared files `site/base.css`, `site/header.html`, `site/footer.html`, `site/face.js`,
-  `site/header.js`, `site/copy.js`, `site/doc.css`, `site/doc.js`, `site/search.js` and
-  `site/mark.js`.
+  `site/dial.svg`, its favicon `site/favicon-tickwave.ico` from `out/icons/`, its link preview
+  `site/card-tickwave.png` from `out/cards/`, its mark `site/tickwave.svg` from `marks/`, the mark's
+  motion `site/tickwave-mark.json` from `out/`, and the shared files `site/base.css`,
+  `site/header.html`, `site/footer.html`, `site/face.js`, `site/header.js`, `site/copy.js`,
+  `site/doc.css`, `site/doc.js`, `site/search.js` and `site/mark.js`.
 
 The check rebuilds everything from `tokens.toml`, the marks and the content the previews show. It
 fails if a committed output differs from that build, if the build no longer makes a file it made
