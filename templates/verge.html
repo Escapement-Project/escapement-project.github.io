@@ -28,7 +28,6 @@
       <p>Through probe-rs, Verge is faster than NXP's firmware at every clock both complete. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
       <p>Verge generates the SWD and JTAG transfer code at runtime for the clock you ask for. At a fast clock it calibrates read sampling against your target when it attaches. One image runs on both probes.</p>
       <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}#install{% endif %}">Get started</a> <a href="{{ get_url(path='@/verge/docs/_index.md') }}">All docs</a> <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
-      <p class="status">In development. We publish the firmware and verge with the first release.</p>
     </div>
     <div class="product-figure dial-figure">
       {# Verge's headline as a dial, drawn by static/js/dial.js; without scripts the caption carries it. #}

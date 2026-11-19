@@ -18,7 +18,6 @@
     <div class="hero-mark" aria-hidden="true">{{ load_data(path="design/marks/dial.svg", format="plain") | trim | replace(from="<svg ", to='<svg fill="currentColor" ') | safe }}</div>
     <h1>{{ section.extra.statement }}</h1>
     <p class="lede">{{ section.extra.lede }}</p>
-    <p class="status">In development. We publish the firmware, the tools and the measurements with the first release.</p>
   </div>
 </div></div>
 
@@ -79,7 +78,7 @@
 
 <section id="source">
   <div class="wrap">
-    <div class="head"><h2>Source</h2><p class="kicker">Published with the first release, under the {{ section.extra.licence }} unless a row says otherwise</p></div>
+    <div class="head"><h2>Source</h2></div>
     {# A description list laid out as an index: its column labels are for the eye alone. One
        element beside the head, so the widest layout puts all of it in the content column. #}
     <div>
