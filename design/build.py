@@ -736,7 +736,7 @@ def previews(tokens, out_root):
     y = c.text(72, 262, site["extra"]["statement"], "Saira", 60, c.ink, 500, "expanded",
                "Saira-Expanded-Medium", 940, 1.16, max_lines=2)
     c.text(72, y + 88, site["extra"]["lede"], "Hanken Grotesk", 28, c.ink2, 400, "normal", "HankenGrotesk-Regular",
-           820, 1.4, max_lines=3)
+           1056, 1.4, max_lines=4)
     (out_root / "static" / "preview.png").write_bytes(c.png())
 
     out = out_root / "design" / "out" / "previews"

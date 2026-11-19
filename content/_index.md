@@ -8,7 +8,7 @@ description = "The first is Verge, open firmware for NXP's MCU-Link debug probes
 # `licence` one that differs from the default below.
 [extra]
 statement = "Open debug tools that are correct, fast and easy to use"
-lede = "We build tools for debugging embedded targets, starting with Verge and tickwave. We publish the measurements behind every claim we make, with the code that takes them."
+lede = "Verge is open firmware for NXP's MCU-Link debug probes. tickwave shows recordings of what Verge does on the wire, and opens your own from Saleae Logic, sigrok or VCD. We publish the measurements behind every claim we make, with the code that takes them."
 licence = "Apache License 2.0"
 
 [[extra.repos]]
