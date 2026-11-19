@@ -37,7 +37,7 @@ import resvg_py
 from fontTools import subset
 from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
-from PIL import Image, ImageFont
+from PIL import ImageFont
 
 DESIGN = pathlib.Path(__file__).resolve().parent
 ROOT = DESIGN.parent
@@ -579,10 +579,6 @@ def png(svg_text, px):
     return bytes(resvg_py.svg_to_bytes(svg_string=svg_text, width=px, height=px))
 
 
-def image(svg_text, px):
-    return Image.open(io.BytesIO(png(svg_text, px))).convert("RGBA")
-
-
 def icons(tokens, out_root):
     for key in ("project", "verge", "tickwave"):
         if key not in tokens["icon"]:
@@ -602,8 +598,7 @@ def icons(tokens, out_root):
     # themselves: theirs are square.
     for key, path in (("project", static / "favicon.ico"), ("verge", static / "favicon-verge.ico"),
                       ("tickwave", out / "favicon-tickwave.ico")):
-        ico = [image(icon_svg(tokens, key, px), px) for px in (16, 32, 48, 64)]
-        ico[-1].save(path, format="ICO", sizes=[i.size for i in ico], append_images=ico[:-1])
+        path.write_bytes(ico({px: png(icon_svg(tokens, key, px), px) for px in (16, 32, 48, 64)}))
     (static / "apple-touch-icon.png").write_bytes(png(icon_svg(tokens, "project", corners=False), 180))
     (out / "escapement-project-avatar.png").write_bytes(png(icon_svg(tokens, "project", corners=False), 512))
     # Verge's app icon: SVG and PNGs for Linux, ICO for Windows, ICNS on Apple's grid for macOS.
@@ -611,14 +606,26 @@ def icons(tokens, out_root):
     write_text(out / "verge-icon.svg", icon_svg(tokens, "verge") + "\n")
     for px in (16, 24, 32, 48, 64, 128, 256, 512):
         (out / f"verge-{px}.png").write_bytes(png(icon_svg(tokens, "verge", px), px))
-    win = [image(icon_svg(tokens, "verge", px), px) for px in (16, 24, 32, 48, 64, 256)]
-    win[-1].save(out / "verge.ico", format="ICO", sizes=[i.size for i in win], append_images=win[:-1])
+    win = {px: png(icon_svg(tokens, "verge", px), px) for px in (16, 24, 32, 48, 64, 256)}
+    (out / "verge.ico").write_bytes(ico(win))
     mac = {px: png(icon_svg(tokens, "verge", plate=MACOS_PLATE), px) for px in (16, 32, 64, 128, 256, 512, 1024)}
     (out / "verge.icns").write_bytes(icns(mac))
     # tickwave's icon: SVG and PNGs. Not tickwave.svg, the mark's name.
     write_text(out / "tickwave-icon.svg", icon_svg(tokens, "tickwave") + "\n")
     for px in (16, 24, 32, 48, 64, 128, 256, 512):
         (out / f"tickwave-{px}.png").write_bytes(png(icon_svg(tokens, "tickwave", px), px))
+
+
+def ico(pngs):
+    """An ICO of PNG-coded entries, one for each size in pixels. Pillow's writer encodes each
+    frame again, and its bytes differ between machines with the same Pillow, so the container is
+    written here around resvg's PNGs: a header, a directory entry per image, then the images."""
+    offset, entries = 6 + 16 * len(pngs), b""
+    for px, data in pngs.items():
+        # A side of 256 is written as 0.
+        entries += struct.pack("<BBBBHHII", px % 256, px % 256, 0, 0, 1, 32, len(data), offset)
+        offset += len(data)
+    return struct.pack("<HHH", 0, 1, len(pngs)) + entries + b"".join(pngs.values())
 
 
 # Each ICNS entry by its size in pixels, every one PNG-coded. Pillow's writer leaves out the 16 and
