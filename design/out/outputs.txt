@@ -1,3 +1,4 @@
+design/out/cards/card-tickwave.png
 design/out/fonts/HankenGrotesk-Medium.ttf
 design/out/fonts/HankenGrotesk-Regular.ttf
 design/out/fonts/HankenGrotesk-SemiBold.ttf
@@ -40,6 +41,8 @@ design/out/previews/verge.png
 design/out/tickwave-mark.json
 design/out/tokens.rs
 static/apple-touch-icon.png
+static/cards/card-measurements.png
+static/cards/card-verge.png
 static/favicon-verge.ico
 static/favicon.ico
 static/fonts/hanken-grotesk-OFL.txt

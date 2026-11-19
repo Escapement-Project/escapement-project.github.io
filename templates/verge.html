@@ -3,6 +3,8 @@
 {% block description %}{{ section.description }}{% endblock description %}
 {% block og_title %}Verge{% endblock og_title %}
 {% block og_description %}{{ section.description }}{% endblock og_description %}
+{% block og_image %}{{ get_url(path='cards/card-verge.png') }}{% endblock og_image %}
+{% block og_image_alt %}{% set verge = get_section(path="verge/_index.md", metadata_only=true) %}{{ config.title }}. Verge. {{ verge.description }}{% endblock og_image_alt %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
 {# tickwave's sheet lays a recording's row out before tickwave.js defines its view. #}
 {% block head %}<link rel="stylesheet" href="{{ config.base_url | safe }}/tickwave/{{ config.extra.tickwave }}/tickwave.css">{% endblock head %}

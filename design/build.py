@@ -48,7 +48,7 @@ MARKS = DESIGN / "marks"
 OUT_FILES = tuple(map(pathlib.Path, ("static/tokens.css", "static/favicon.ico", "static/favicon-verge.ico",
                                      "static/apple-touch-icon.png",
                                      "static/preview.png")))
-OUT_DIRS = (pathlib.Path("static/fonts"), pathlib.Path("design/out"))
+OUT_DIRS = (pathlib.Path("static/fonts"), pathlib.Path("static/cards"), pathlib.Path("design/out"))
 # What the last build wrote. A loose file it no longer makes is found here, as an orphan.
 MANIFEST = pathlib.Path("design/out/outputs.txt")
 # Written by hand, not built, and copied by the project's other pages: the shared base sheet, the
@@ -738,6 +738,32 @@ def previews(tokens, out_root):
     c.text(72, y + 88, site["extra"]["lede"], "Hanken Grotesk", 28, c.ink2, 400, "normal", "HankenGrotesk-Regular",
            1056, 1.4, max_lines=4)
     (out_root / "static" / "preview.png").write_bytes(c.png())
+
+    # A page's own preview, for a page that is a product's or about one: the page's name, one line of
+    # what it is, and the product's mark beside them. The site's pages take theirs from static/cards/;
+    # tickwave's site copies its card from design/out/cards/.
+    verge = front_matter(ROOT / "content" / "verge" / "_index.md")
+    landing = json.loads((ROOT / "data" / "landing.json").read_text())
+    tickwave = next((r for r in site["extra"]["repos"] if r["name"] == "tickwave"), None)
+    if tickwave is None:
+        content_fail("content/_index.md lists no tickwave repository, whose summary its card shows")
+    cards = (
+        ("static/cards/card-verge.png", "Verge", verge["description"], "verge"),
+        # The landing page's headline (templates/index.html), from the same figures.
+        ("static/cards/card-measurements.png", "MCU-Link throughput",
+         f"Through probe-rs, Verge writes over SWD at {landing['headline']['ratio']} times the rate of NXP's firmware V3.174.",
+         "verge"),
+        ("design/out/cards/card-tickwave.png", "tickwave", tickwave["summary"], "tickwave"),
+    )
+    for path, title, line, icon in cards:
+        c = Card(tokens, fonts, 1200, 630, path)
+        c.place(icon_svg(tokens, icon), 832, 180, 296)
+        c.brand(72, 72, 56)
+        y = c.text(72, 290, title, "Saira", 72, c.ink, 500, "expanded", "Saira-Expanded-Medium", 720, 1.1, max_lines=2)
+        c.text(72, y + 76, line, "Hanken Grotesk", 30, c.ink2, 400, "normal", "HankenGrotesk-Regular", 700, 1.4,
+               max_lines=3)
+        (out_root / path).parent.mkdir(parents=True, exist_ok=True)
+        (out_root / path).write_bytes(c.png())
 
     out = out_root / "design" / "out" / "previews"
     out.mkdir(parents=True, exist_ok=True)

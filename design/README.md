@@ -14,6 +14,8 @@ verge-gui share. One source, `tokens.toml`, generates everything else:
 | `static/favicon-verge.ico` | the favicon on Verge's page and docs |
 | `design/out/icons/` | Verge's app icon for Linux (SVG and PNGs), Windows (ICO) and macOS (ICNS); tickwave's icon (SVG and PNGs) and its pages' favicon; and the org's avatar |
 | `static/preview.png` | the site's link preview |
+| `static/cards/` | the link previews of Verge's pages and docs, and of the measurements page |
+| `design/out/cards/` | the link preview of tickwave's pages, which tickwave's site copies |
 | `design/out/previews/` | each repository's social preview, to upload on GitHub |
 
 Edit `tokens.toml`, then rebuild:
@@ -24,7 +26,8 @@ uv run design/build.py
 
 The source fonts download once, from google/fonts at the commit `tokens.toml` pins. The icons
 come from the marks in `marks/`. The link previews also read the landing's statement and lede, and
-the repositories, from `content/_index.md`.
+the repositories, from `content/_index.md`; Verge's description from `content/verge/_index.md`; and
+the landing's headline figure from `data/landing.json`.
 
 ## Shared files
 
@@ -486,6 +489,17 @@ over the project's mark, large and faint and cropped at the card's edges. Each r
 social preview with its name, the `summary` from `content/_index.md`, its language and licence
 (the content's default, or its own `licence`). Verge's three repositories also carry Verge's icon
 (`icon = "verge"`), and tickwave its own.
+
+A product's pages show their own card, with the product's icon beside a name and one line:
+
+- Verge's page and docs: `static/cards/card-verge.png`, "Verge" and the page's description;
+- the measurements page: `static/cards/card-measurements.png`, its title and the landing's headline
+  sentence, from the same figures;
+- tickwave's pages: `design/out/cards/card-tickwave.png`, its name and its repository's summary.
+  tickwave's site copies it.
+
+A site page names its card in `templates/base.html`'s `og_image` block, and the card's words in
+`og_image_alt`. The measurements page names its own in mculink-bench's `page/template.html`.
 
 The previews are drawn on the night face, with the plate as ground. They use the fixed fonts the
 build makes and never the system's, so any machine draws the same bytes. The build fails when a

@@ -3,6 +3,8 @@
 {% block description %}{{ page.description }}{% endblock description %}
 {% block og_title %}{{ page.title }} – Verge{% endblock og_title %}
 {% block og_description %}{{ page.description }}{% endblock og_description %}
+{% block og_image %}{{ get_url(path='cards/card-verge.png') }}{% endblock og_image %}
+{% block og_image_alt %}{% set verge = get_section(path="verge/_index.md", metadata_only=true) %}{{ config.title }}. Verge. {{ verge.description }}{% endblock og_image_alt %}
 {% block head %}<link rel="stylesheet" href="{{ get_url(path='doc.css', cachebust=true) }}">
 <link rel="stylesheet" href="{{ get_url(path='giallo.css', cachebust=true) }}">{% endblock head %}
 {% block icon %}<link rel="icon" href="{{ get_url(path='favicon-verge.ico') }}">{% endblock icon %}
