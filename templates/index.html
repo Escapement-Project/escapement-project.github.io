@@ -69,8 +69,6 @@
       <figure class="product-figure">
         <div class="chart"><tickwave-inset src="{{ rec | safe }}gcc-swd-reads.tickwave" annotation="wire_swd/read/384679581" series="verge" sweep="off" href="{{ config.base_url | safe }}/tickwave/open.html"></tickwave-inset></div>
         <figcaption>One SWD read of the target's flash by Verge, asked for 50 MHz: the request at 50 MHz, the turnaround and acknowledge, then 32 bits of data and parity at 37.5 MHz. Point at a part to read it.</figcaption>
-        {#- The address the inset itself opens: tickwave's Open page, the recording by its path on this site. #}
-        <p><a href="{{ config.base_url | safe }}/tickwave/open.html?src=%2Fmculink-recordings%2F2026-11-04%2Fgcc-swd-reads.tickwave&amp;annotation=wire_swd%2Fread%2F384679581">Open the recording</a></p>
       </figure>
     </div>
   </div>

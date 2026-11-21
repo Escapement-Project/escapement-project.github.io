@@ -19,4 +19,4 @@ extra_grammars = ["highlighting/output.json"]
 # The organisation the repository links go to, in both zola serve and zola build.
 github = "https://github.com/Escapement-Project"
 # The version of tickwave's elements the site loads from tickwave's own site, under /tickwave/.
-tickwave = "v0.1.0"
+tickwave = "v0.1.2"

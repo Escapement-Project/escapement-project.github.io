@@ -122,10 +122,9 @@ tickwave-ref { cursor: help; }
 }
 
 #tickwave .ways { margin: 22px 0 0; }
-/* tickwave's section shows one read from a recording, on a panel as Verge's Figure 1 is, its caption
-   and the way to the whole recording under it. The inset takes no margin of its own, so the panel
-   spaces it. */
-#tickwave .product-figure figcaption { font-size: 15px; margin: 12px 0 14px; max-width: none; text-wrap: pretty; }
+/* tickwave's section shows one read from a recording, on a panel as Verge's Figure 1 is, with its
+   caption under it. The inset takes no margin of its own, so the panel spaces it. */
+#tickwave .product-figure figcaption { font-size: 15px; margin: 12px 0 0; max-width: none; text-wrap: pretty; }
 /* tickwave draws the read; without scripts there is nothing to show. */
 html:not(.js) #tickwave .product-figure { display: none; }
 /* The inset holds its final height from the first paint, through the moment it is defined with
