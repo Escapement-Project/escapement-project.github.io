@@ -129,12 +129,12 @@ tickwave-ref { cursor: help; }
 html:not(.js) #tickwave .product-figure { display: none; }
 /* The inset holds its final height from the first paint, through the moment it is defined with
    nothing to size by: its label's lines over the trace. The label, the decoder's, takes one line in
-   a panel 490 px wide or more, two down to 330 px, and three below that, in either browser. A flow
+   a panel 470 px wide or more, two down to 311 px, and three below that, in either browser. A flow
    root, so no margin inside it reaches out and moves it as it is defined. */
 #tickwave .chart { container-type: inline-size; }
 #tickwave tickwave-inset { display: flow-root; height: 138.8px; overflow: clip; }
-@container (width < 490px) { #tickwave tickwave-inset { height: 155px; } }
-@container (width < 330px) { #tickwave tickwave-inset { height: 171.8px; } }
+@container (width < 470px) { #tickwave tickwave-inset { height: 155px; } }
+@container (width < 311px) { #tickwave tickwave-inset { height: 171.8px; } }
 /* The not-found page: the dial with its edge left flat, beside what to do next. */
 .notfound { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: center; padding: 88px 0 104px; }
 .notfound svg { width: 136px; height: 136px; color: var(--ink-2); }
