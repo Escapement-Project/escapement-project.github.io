@@ -751,7 +751,9 @@ def previews(tokens, out_root):
         ("static/cards/card-verge.png", "Verge", verge["description"], "verge"),
         # The landing page's headline (templates/index.html), from the same figures.
         ("static/cards/card-measurements.png", "MCU-Link throughput",
-         f"Through probe-rs, Verge writes over SWD at {landing['headline']['ratio']} times the rate of NXP's firmware V3.174.",
+         f"Over SWD through probe-rs, Verge at {landing['headline']['oursAt']} MHz writes {landing['headline']['ratio']} "
+         f"times as fast as NXP's firmware V3.174 at {landing['headline']['stockAt']} MHz, the fastest clock it reads "
+         "right at.",
          "verge"),
         ("design/out/cards/card-tickwave.png", "tickwave", tickwave["summary"], "tickwave"),
     )

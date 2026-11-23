@@ -32,7 +32,7 @@
     <div class="two">
       <div>
         <p>Verge takes the place of NXP's firmware on the probe. Any <span class="nb">CMSIS-DAP</span> host drives it, as it drives NXP's. One image runs on both probes.</p>
-        <p>Through probe-rs, Verge writes over SWD at {{ h.ratio }} times the rate of NXP's firmware V3.174. It speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
+        <p>Over SWD through probe-rs, Verge at <span class="nb">{{ h.oursAt }} MHz</span> writes {{ h.ratio }} times as fast as NXP's firmware V3.174 at <span class="nb">{{ h.stockAt }} MHz</span>, the fastest clock it reads right at. Verge speaks cJTAG, which NXP's firmware doesn't. And it reads right at clocks where NXP's firmware misreads.</p>
         <p class="ways"><a href="{% if ",getting-started," in written %}{{ get_url(path='@/verge/docs/getting-started.md') }}{% else %}{{ get_url(path='@/verge/_index.md') }}#install{% endif %}">Get started</a> <a href="{{ config.base_url | safe }}/verge/measurements/">All measurements</a></p>
       </div>
       <div class="specs-col">
